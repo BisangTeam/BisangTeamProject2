@@ -20,5 +20,7 @@ namespace Seonho._01.Scripts
         {
             _writing.SetText(_documentDataSO.writing);
         }
+        
+        //test
     }
 }
