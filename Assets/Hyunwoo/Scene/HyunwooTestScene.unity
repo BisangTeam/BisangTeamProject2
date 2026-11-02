@@ -207,7 +207,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
-  wantGauge: 0
+  updateTime: 0.5
+  reduceGauge: 1
+  wantGaugeList: []
 --- !u!1 &245786637
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +631,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
-  wantGauge: 0
+  updateTime: 0.5
+  reduceGauge: 1
+  wantGaugeList: []
 --- !u!114 &1013672288
 MonoBehaviour:
   m_ObjectHideFlags: 0
