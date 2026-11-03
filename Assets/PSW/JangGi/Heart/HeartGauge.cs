@@ -1,19 +1,19 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 
 public class HeartGauge : MonoBehaviour
 {
-    [SerializeField] private Transform bldtrm;
+    // Transform 대신 RectTransform 사용
+    [SerializeField] private RectTransform bloodRect;
 
     [Range(0f, 100f)] [SerializeField] private float gauge;
 
-    [SerializeField] private float emptyPosY = -0.785f;
-    [SerializeField] private float fullPosY = 0.0f;
+    // UI 캔버스 픽셀 단위 (예: 높이가 200px라면 -200f에서 0f 등)
+    [SerializeField] private float emptyPosY = -200f;
+    [SerializeField] private float fullPosY = 0f;
 
-    [SerializeField] private float fillduration = 0.4f;
+    [SerializeField] private float fillDuration = 0.4f;
     [SerializeField] private Ease fillEase = Ease.OutQuad;
-
 
     private void Start()
     {
@@ -22,23 +22,29 @@ public class HeartGauge : MonoBehaviour
 
     private void OnValidate()
     {
-        if (bldtrm != null && Application.isPlaying)
+        if (bloodRect != null && Application.isPlaying)
         {
             UpdateGauge(gauge);
         }
     }
 
-    private void UpdateGauge(float newguage)
+    public void UpdateGauge(float newGauge)
     {
-        gauge = Mathf.Clamp(newguage, 0, 100);
+        gauge = Mathf.Clamp(newGauge, 0f, 100f);
         float chg = gauge / 100f;
         float targetY = Mathf.Lerp(emptyPosY, fullPosY, chg);
-        bldtrm.DOKill();
-        bldtrm.DOLocalMoveY(targetY, fillduration).SetEase(fillEase).SetLink(bldtrm.gameObject);   
+
+        bloodRect.DOKill();
+        bloodRect.DOAnchorPosY(targetY, fillDuration)
+            .SetEase(fillEase)
+            .SetLink(bloodRect.gameObject);
     }
 
     private void OnDestroy()
     {
-        bldtrm.DOKill();
+        if (bloodRect != null)
+        {
+            bloodRect.DOKill();
+        }
     }
 }
