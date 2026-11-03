@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -16,7 +17,7 @@ namespace Seonho._01.Scripts.LineRenderer
         [SerializeField] private int _heartCount;
         [SerializeField] private int _heartWaveCount;
 
-        [SerializeField] private bool _onMonitoring;
+        [SerializeField] private float _degree;
 
         private void Awake()
         {
@@ -25,16 +26,8 @@ namespace Seonho._01.Scripts.LineRenderer
             _heartRate2 = transform.GetChild(2).GetComponentInChildren<HeartRate>();
 
             Initialize();
-
-            _heartRate1.StartCoroutine(_heartRate1.ComingLineLogic());
-        }
-
-        private void Update()
-        {
-            if (_heartRate1.end && !_onMonitoring)
-            {
-                _onMonitoring = true;
-            }
+            
+            StartCoroutine(HeartRateLogic(_degree));
         }
 
         IEnumerator HeartRateLogic(float value)

@@ -17,7 +17,7 @@ namespace Seonho._01.Scripts.LineRenderer
         [SerializeField] private int _currentDoingLine;
 
         [SerializeField] private float _currentPositionX;
-        public float goingTime { get; private set; }
+        [field:SerializeField] public float goingTime { get; private set; }
         [SerializeField] private float _rollbackTime;
 
         public bool end { get; private set; }
