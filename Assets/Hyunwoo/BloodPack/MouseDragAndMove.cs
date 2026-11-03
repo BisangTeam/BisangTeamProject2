@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -5,24 +6,51 @@ namespace Hyunwoo.BloodPack
 {
     public class MouseDragAndMove : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        // Begin : 시작했음을 알림
         // Drag : 위치만 계속해서 반환 + 현재 위치가 기관이면 확대
-        // End : 끝났음을 알림 + 현재 위치가 기관이면 사라지고 AbstractHumanBody.ConnectionBlood 실행시켜주기
+        // End : 현재 위치가 기관이면 사라지고 AbstractHumanBody.ConnectionBlood 실행시켜주기
         
+        [SerializeField] private RectTransform canvasRect;
+        private RectTransform _myRect;
+
+        private bool _isTouched;
+        
+        private void Awake()
+        {
+            _myRect = GetComponent<RectTransform>();
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
-                        
+            
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            //eventData.position;
-            //eventData.delta;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, eventData.position, null, out Vector2 pos);
+            _myRect.anchoredPosition = pos;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.CompareTag("Heart")) return;
+
+            Debug.Log("Trigger");
+            _isTouched = true;
+            _myRect.sizeDelta *= 6/5f;
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.CompareTag("Heart")) return;
+
+            Debug.Log("Trigger Ou");
+            _isTouched = false;
+            _myRect.sizeDelta *= 5/6f;
         }
     }
 }

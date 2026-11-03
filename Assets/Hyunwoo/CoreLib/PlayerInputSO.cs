@@ -8,7 +8,7 @@ namespace Hyunwoo.CoreLib
     public class PlayerInputSO : ScriptableObject, Controls.IPlayerActions
     {
         public Controls Controls;
-
+        
         public event Action OnUpKeyPressed;
         public event Action OnDownKeyPressed;
         public event Action OnLeftKeyPressed;
