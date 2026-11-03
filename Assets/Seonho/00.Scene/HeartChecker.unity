@@ -743,7 +743,7 @@ MonoBehaviour:
   _endPointTrm: {fileID: 1882771981}
   _currentDoingLine: 0
   _currentPositionX: 0
-  _goingTime: 0.05
+  <goingTime>k__BackingField: 0.05
   _rollbackTime: 0.2
 --- !u!120 &1400436482
 LineRenderer:
@@ -1102,7 +1102,7 @@ MonoBehaviour:
   _endPointTrm: {fileID: 406083159}
   _currentDoingLine: 0
   _currentPositionX: 0
-  _goingTime: 0.05
+  <goingTime>k__BackingField: 0.05
   _rollbackTime: 0.2
 --- !u!1 &1882771980
 GameObject:
@@ -1186,10 +1186,9 @@ MonoBehaviour:
   _heartRate1: {fileID: 0}
   _heartRateWave: {fileID: 0}
   _heartRate2: {fileID: 0}
-  _heartWaveRateListSO: {fileID: 11400000, guid: e895a1628224e3d40b9b52fd4a23629c, type: 2}
   _heartCount: 50
   _heartWaveCount: 5
-  _onMonitoring: 0
+  _degree: 4
 --- !u!1 &2051798891
 GameObject:
   m_ObjectHideFlags: 0
