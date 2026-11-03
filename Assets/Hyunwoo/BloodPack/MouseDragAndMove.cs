@@ -48,7 +48,7 @@ namespace Hyunwoo.BloodPack
         {
             if (!other.CompareTag("Heart")) return;
 
-            Debug.Log("Trigger Out");
+            Debug.Log("Trigger Ou");
             _isTouched = false;
             _myRect.sizeDelta *= 5/6f;
         }
