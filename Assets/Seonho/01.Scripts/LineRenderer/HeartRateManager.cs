@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 namespace Seonho._01.Scripts.LineRenderer
@@ -11,8 +13,6 @@ namespace Seonho._01.Scripts.LineRenderer
         [SerializeField] private HeartRateWave _heartRateWave;
         [SerializeField] private HeartRate _heartRate2;
         
-        [SerializeField] private HeartWaveRateListSO _heartWaveRateListSO;
-
         [SerializeField] private int _heartCount;
         [SerializeField] private int _heartWaveCount;
 
@@ -34,17 +34,33 @@ namespace Seonho._01.Scripts.LineRenderer
             if (_heartRate1.end && !_onMonitoring)
             {
                 _onMonitoring = true;
-                HeartWave();
             }
         }
-        
-        void HeartWave()
-        {
-            int randomValue = Random.Range(0, _heartWaveRateListSO.list.Length);
 
+        IEnumerator HeartRateLogic(float value)
+        {
+            _heartRate1.StartCoroutine(_heartRate1.ComingLineLogic());
+            yield return new WaitForSeconds(_heartRate1.lineRenderer.positionCount * _heartRate1.goingTime);
+            HeartWave(value);
+        }
+        
+        void HeartWave(float value)
+        {
             for (int i = 1; i < _heartRateWave.lineRenderer.positionCount - 1; i++)
             {
-                _heartRateWave.ChangeLine(i, _heartWaveRateListSO.list[randomValue].value[i - 1]);
+                if (i == 1)
+                {
+                    _heartRateWave.ChangeLine(i, -value / 2.5f); // 0.6 1.5 0.4
+                }
+                else if (i == 2)
+                {
+                    _heartRateWave.ChangeLine(i, value); // 0.6 1.5 0.4
+                }
+                else if (i == 3)
+                {
+                    _heartRateWave.ChangeLine(i, -value / 3.8f); // 0.6 1.5 0.4
+                }
+
                 _heartRateWave.ResetLine(i);
             }
 

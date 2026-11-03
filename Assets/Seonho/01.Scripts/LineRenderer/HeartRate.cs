@@ -17,7 +17,7 @@ namespace Seonho._01.Scripts.LineRenderer
         [SerializeField] private int _currentDoingLine;
 
         [SerializeField] private float _currentPositionX;
-        [SerializeField] private float _goingTime;
+        public float goingTime { get; private set; }
         [SerializeField] private float _rollbackTime;
 
         public bool end { get; private set; }
@@ -63,7 +63,7 @@ namespace Seonho._01.Scripts.LineRenderer
         {
             ComingLine(_currentDoingLine);
             _currentDoingLine++;
-            yield return new WaitForSeconds(_goingTime);
+            yield return new WaitForSeconds(goingTime);
 
             if (_currentDoingLine < lineRenderer.positionCount - 1)
                 StartCoroutine(ComingLineLogic());
