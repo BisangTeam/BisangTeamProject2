@@ -1,4 +1,5 @@
 using System;
+using Hyunwoo.BloodPack;
 using Hyunwoo.CoreLib;
 using Hyunwoo.CoreLib.ModuleSystem;
 using Hyunwoo.HumanBodySystem;
@@ -10,12 +11,14 @@ namespace Hyunwoo.Player
     {
         [SerializeField] private PlayerInputSO playerInput;
 
+        private Camera _cam;
         private IModule _eyeModule;
         private IModule _earModule;
 
         protected override void Awake()
         {
             base.Awake();
+            _cam = Camera.main;
             _eyeModule = GetModule<EyeModule>();
             _earModule = GetModule<EarModule>();
         }
@@ -25,6 +28,7 @@ namespace Hyunwoo.Player
             playerInput.OnUpKeyPressed += OnHandleUp;
             playerInput.OnLeftKeyPressed += OnHandleLeft;
         }
+
 
         private void Update()
         {

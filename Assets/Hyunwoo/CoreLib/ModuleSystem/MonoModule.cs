@@ -11,9 +11,11 @@ namespace Hyunwoo.CoreLib.ModuleSystem
             Owner = owner;
         }
 
-        public void Work()
+        public virtual void Work()
         {
             
         }
+        
+        
     }
 }

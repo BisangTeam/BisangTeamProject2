@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeartWaveRateListSO
   valueCount: 3
   list:
-  - {fileID: 11400000, guid: 23177581181d67b4082e82e50bc4b9bc, type: 2}
+  - {fileID: 11400000, guid: 9629d93cc5b341c48b85d2ffd0fa5de2, type: 2}
