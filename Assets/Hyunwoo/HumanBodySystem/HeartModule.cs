@@ -11,7 +11,24 @@ namespace Hyunwoo.HumanBodySystem
         [Header("Settings/HeartModule")]
         [field: SerializeField] public float DelaySeconds { get; set; } = 2;
         [field: SerializeField] public float DefaultGetBloodValue { get; set; } = 5f;
+        
+        [Header("Compo")]
+        [SerializeField] private HeartGauge heartGauge;
 
+        private float _bloodGauge;
+        public float BloodGauge
+        {
+            get => _bloodGauge;
+            set
+            {
+                if (ConnectCount >= 1) return;
+                
+                _bloodGauge = Mathf.Clamp(value, 0, 100);
+                heartGauge.Gauge = BloodGauge;
+            }
+        }
+        
+        private int _connectCount;
         public int ConnectCount
         {
             get => _connectCount;
@@ -22,14 +39,11 @@ namespace Hyunwoo.HumanBodySystem
                     _getBloodValue = DefaultGetBloodValue;
                 else
                     _getBloodValue = DefaultGetBloodValue / _connectCount;
-
-                //Debug.Log("Blood : " + _getBloodValue);
             } 
         }
         
         public event Action<float> OnHeartRate;
         
-        private int _connectCount = 0;
         private float _getBloodValue;
         
         public void Initialize(ModuleOwner owner)
@@ -39,7 +53,6 @@ namespace Hyunwoo.HumanBodySystem
 
         public void Work()
         {
-            
         }
 
         private void Start()
@@ -50,7 +63,9 @@ namespace Hyunwoo.HumanBodySystem
         // Unitask로 왜 썻는지
         private async UniTask TestAsync()
         {
+            BloodGauge += _getBloodValue;
             OnHeartRate?.Invoke(_getBloodValue);
+            _bloodGauge -= _getBloodValue * ConnectCount;
 
             await UniTask.Delay((int)(DelaySeconds * 1000));
             

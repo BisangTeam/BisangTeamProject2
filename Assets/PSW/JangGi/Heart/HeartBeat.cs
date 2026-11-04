@@ -14,8 +14,11 @@ public class Heartbeat : MonoBehaviour
     [Header("쉬는 시간")]
     [SerializeField] private float restTime = 0.5f;
 
+    private float _scale;
+    
     private void Start()
     {
+        _scale = transform.localScale.x;
         PlayHeartbeat();
     }
 
@@ -23,11 +26,11 @@ public class Heartbeat : MonoBehaviour
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Append(transform.DOScale(firstScale, firstDuration));
-        sequence.Append(transform.DOScale(1f, firstDuration));
+        sequence.Append(transform.DOScale(_scale * firstScale, firstDuration));
+        sequence.Append(transform.DOScale(_scale, firstDuration));
 
-        sequence.Append(transform.DOScale(secondScale, secondDuration));
-        sequence.Append(transform.DOScale(1f, secondDuration));
+        sequence.Append(transform.DOScale(_scale * secondScale, secondDuration));
+        sequence.Append(transform.DOScale(_scale, secondDuration));
 
         sequence.AppendInterval(restTime);
 
