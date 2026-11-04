@@ -6,7 +6,17 @@ public class HeartGauge : MonoBehaviour
     // Transform 대신 RectTransform 사용
     [SerializeField] private RectTransform bloodRect;
 
-    [Range(0f, 100f)] [SerializeField] private float gauge;
+    private float _gauge;
+    public float Gauge 
+    { 
+        get => _gauge;
+        set
+        {
+            _gauge = Mathf.Clamp(value, 0f, 100f);
+            UpdateGauge();
+            Debug.Log(_gauge);
+        } 
+    }
 
     // UI 캔버스 픽셀 단위 (예: 높이가 200px라면 -200f에서 0f 등)
     [SerializeField] private float emptyPosY = -200f;
@@ -17,21 +27,20 @@ public class HeartGauge : MonoBehaviour
 
     private void Start()
     {
-        UpdateGauge(gauge);
+        UpdateGauge();
     }
 
-    private void OnValidate()
-    {
-        if (bloodRect != null && Application.isPlaying)
-        {
-            UpdateGauge(gauge);
-        }
-    }
+    // private void OnValidate()
+    // {
+    //     if (bloodRect != null && Application.isPlaying)
+    //     {
+    //         UpdateGauge(Gauge);
+    //     }
+    // }
 
-    public void UpdateGauge(float newGauge)
+    public void UpdateGauge()
     {
-        gauge = Mathf.Clamp(newGauge, 0f, 100f);
-        float chg = gauge / 100f;
+        float chg = Gauge / 100f;
         float targetY = Mathf.Lerp(emptyPosY, fullPosY, chg);
 
         bloodRect.DOKill();
