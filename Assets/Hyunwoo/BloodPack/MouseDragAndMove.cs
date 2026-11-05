@@ -35,22 +35,5 @@ namespace Hyunwoo.BloodPack
             
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (!other.CompareTag("Heart")) return;
-
-            Debug.Log("Trigger");
-            _isTouched = true;
-            _myRect.sizeDelta *= 6/5f;
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (!other.CompareTag("Heart")) return;
-
-            Debug.Log("Trigger Ou");
-            _isTouched = false;
-            _myRect.sizeDelta *= 5/6f;
-        }
     }
 }
