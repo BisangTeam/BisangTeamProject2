@@ -3,7 +3,7 @@ using UnityEngine;
 public class VerletIntegrationTest
 {
     public Vector3 _pos;
-    private Vector3 _prePos;
+    public Vector3 _prePos;
     private Vector3 _nextPos;
     private bool _isPinned;
     private float _damping; //감속 계수 감쇠 계수
