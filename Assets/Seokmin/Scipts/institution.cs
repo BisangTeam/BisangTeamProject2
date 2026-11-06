@@ -26,12 +26,15 @@ public class institution : MonoBehaviour
         {
             _mouse = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             _mouse.z = 0;
-            if (_isCon2)
+            if (_nowLine != null)
             {
-                IsRelease();
-                if (!_isCon)
+                if (_isCon2)
                 {
-                    _isCon2 = false;
+                    IsRelease();
+                    if (!_isCon)
+                    {
+                        _isCon2 = false;
+                    }
                 }
             }
         }
