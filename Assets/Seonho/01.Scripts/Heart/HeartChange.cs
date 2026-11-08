@@ -4,6 +4,7 @@
  using DG.Tweening;
  using Unity.VisualScripting;
  using UnityEngine;
+ using UnityEngine.InputSystem;
  using Sequence = DG.Tweening.Sequence;
  using Vector3 = UnityEngine.Vector3;
 
@@ -11,46 +12,32 @@
  {
      public class HeartChange : MonoBehaviour
      {
-         [SerializeField] private Vector3[] _heartSequence;
+         [SerializeField] private Vector3[] _heartSequenceAct;
          
          [SerializeField] private float _nextTime;
          
-         [SerializeField] private float _contractTime;
-         [SerializeField] private float _expandTime;
-
          private Sequence heartSequence;
-
-         public Action OnHeart;
 
          private void OnEnable()
          {
-             StartHeart();
+             HeartBeat();
          }
 
-         void StartHeart()
+         private void Update()
          {
-             transform.localScale = _heartSequence[1];
+             
+             if(Keyboard.current.escapeKey.wasPressedThisFrame)
+                HeartBeat();
+         }
+
+         void HeartBeat()
+         {
+             transform.localScale = _heartSequenceAct[1];
              
              heartSequence = DOTween.Sequence();
-             //heartSequence.
-             heartSequence.AppendInterval(_nextTime);
-         }
-         
-         public IEnumerator HeartChangeCoroutine()
-         {
-             //HeartContract();
-             yield return new WaitForSeconds(_nextTime + _contractTime);
-             HeartExpand();
-         }
-         
-         void HeartContract(float value)
-         {
-             transform.DOScale(new Vector3(), _contractTime);
-         }
-
-         void HeartExpand()
-         {
-             transform.DOScale(Vector3.one,  _expandTime);
+             heartSequence.Append(transform.DOScale(_heartSequenceAct[0], 0.3f));
+             heartSequence.Append(transform.DOScale(_heartSequenceAct[1], 0.3f));
+             heartSequence.Append(transform.DOScale(_heartSequenceAct[2], 0.3f));
          }
      }
  }
