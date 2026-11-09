@@ -2052,7 +2052,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Seonho._01.Scripts.Eye.Eye
   _rigidCompo: {fileID: 0}
+  _afterimage: []
   _speed: 6
+  _originSize: {x: 0, y: 0, z: 0}
   _moveDir: {x: 0, y: 0}
 --- !u!58 &9184123609023910829
 CircleCollider2D:
