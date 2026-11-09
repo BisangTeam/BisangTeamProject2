@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -7,12 +8,20 @@ namespace Hyunwoo.HumanBodySystem
     {
         private float _bloodGauge;
         
-        protected float BloodGauge
+        public event Action OnBloodGaugeChanged; 
+        
+        public float BloodGauge
         {
             get => _bloodGauge;
-            set => _bloodGauge = Mathf.Clamp(value, 0f, 100f);
+            set
+            {
+                float before = _bloodGauge;
+                _bloodGauge = Mathf.Clamp(value, 0f, 100f); 
+                
+                if (!Mathf.Approximately(_bloodGauge, before))
+                    OnBloodGaugeChanged?.Invoke();
+            }
         } 
-        // 나중에 프로퍼티로 만들어서 최솟값, 최댓값 제한하기
 
         public abstract void ConnectionBlood();
 
