@@ -44,7 +44,6 @@ namespace Hyunwoo.HumanBodySystem
         private void ReduceGauge()
         {
             BloodGauge -= reduceGauge;
-            //Debug.Log("감소 중입니다. 현재 게이지 : " +  Gauge);
         }
 
         private void OnHandleFillGauge(float value)
@@ -66,7 +65,7 @@ namespace Hyunwoo.HumanBodySystem
                 }
             }
             
-            // 리스트에 있는 값보다 높은 값이 들어왔을때 예외 처리
+            // 리스트에 있는 값보다 높은 값이 들어왔을때 예외 처리 => 최현우가 작성
             WorkFunction(wantGaugeList.Count);
         }
         

@@ -21,7 +21,9 @@ namespace Hyunwoo.HumanBodySystem
             get => _bloodGauge;
             set
             {
-                if (ConnectCount >= 1) return;
+                // 여기서 왜 return을 했더라
+                // bloodGauge가 차오르는걸 막기위해서?
+                //if (ConnectCount >= 1) return;
                 
                 _bloodGauge = Mathf.Clamp(value, 0, 100);
                 heartGauge.Gauge = BloodGauge;
@@ -65,8 +67,9 @@ namespace Hyunwoo.HumanBodySystem
         {
             BloodGauge += _getBloodValue;
             OnHeartRate?.Invoke(_getBloodValue);
-            _bloodGauge -= _getBloodValue * ConnectCount;
-
+            //_bloodGauge -= _getBloodValue * ConnectCount;
+            BloodGauge -= _getBloodValue * ConnectCount;
+            
             await UniTask.Delay((int)(DelaySeconds * 1000));
             
             TestAsync().Forget();
