@@ -11,24 +11,23 @@ public class LineTest : MonoBehaviour
     private Camera _cam;
     public Vector3 _mousePos;
     public List<VerletIntegrationTest> _points = new List<VerletIntegrationTest>();
-    [SerializeField] private float _damping;
+    [SerializeField] private float _damping; //감쇠 계수 => 관성을 얼마나 유지할지
     [SerializeField] private float _springStrength;
     [SerializeField] private int _pointCount;
-    private float _t;
     private float _dis;
     private Vector3 _dir;
     private float _error;
     private float _restLength;
     private float _bendRestLength;
     private Vector3 _correction;
-    [SerializeField, Range(0f, 1f)] private float _stiffness;
+    [SerializeField, Range(0f, 1f)] private float _stiffness; //오차거리 보정 강도
     [SerializeField, Range(0f, 1f)] private float _bendStiffness;
-    [SerializeField] private float _constraintIterations;
+    [SerializeField] private float _constraintIterations; //계산 반복 정도 사용은 안하고 있음
     private Vector3 _startPos;
-    [SerializeField, Range(0f, 100f)] private float _segSpringStrength = 20f;
+    [SerializeField, Range(0f, 100f)] private float _segSpringStrength = 20f; //당기는 강도
     private float _returnSegSpr;
     private Vector3 _spring;
-    [SerializeField, Range(0.01f, 4f)] private float _returnSpeed;
+    [SerializeField, Range(0.01f, 4f)] private float _returnSpeed; //돌아가는 힘
     public bool _isRest;
     public int nowCount;
     public Vector3 _endPos;
