@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LineTest
   _isClick: 0
+  _mousePos: {x: 0, y: 0, z: 0}
   _damping: 0.99
   _springStrength: 15
   _pointCount: 15
@@ -54,8 +55,9 @@ MonoBehaviour:
   _constraintIterations: 0
   _segSpringStrength: 10
   _returnSpeed: 1.52
+  _isRest: 0
   nowCount: 0
-  _isConnection: 0
+  _endPos: {x: 0, y: 0, z: 0}
   _isCon: 0
   _instSpeed: 0.01
 --- !u!120 &806759434721863356
@@ -131,7 +133,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.97037125
         inSlope: 0
         outSlope: 0
         tangentMode: 0

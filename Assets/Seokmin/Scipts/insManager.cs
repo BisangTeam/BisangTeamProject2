@@ -36,7 +36,7 @@ public class insManager : MonoBehaviour
     {
         for (int i = 0; i < LineTest.Length; ++i)
         {
-            if (!LineTest[i]._isCon)
+            if (!LineTest[i]._isCon) //사용 가능한 혈관 체크
             {
                 LineTest[i].nowCount = i;
                 _nowLine =  LineTest[i];

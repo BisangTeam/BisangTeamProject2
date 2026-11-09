@@ -32,7 +32,7 @@ public class Heart : MonoBehaviour
                 return;
             _mousePos = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             _mousePos.z = 0;
-            _lineTest._isClick = (_heartPos - _mousePos).magnitude < _heartRange;
+            _lineTest._isClick = (_heartPos - _mousePos).magnitude < _heartRange; //심장 범위 체크
             if (_lineTest._isClick)
             {
                 _isCl = true;
