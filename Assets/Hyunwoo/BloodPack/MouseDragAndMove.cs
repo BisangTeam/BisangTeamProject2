@@ -48,8 +48,10 @@ namespace Hyunwoo.BloodPack
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (CalculateRectCorners())
-                Debug.Log("Success");
+            if (!CalculateRectCorners()) return;
+            
+            heartModule.InsertBlood(50);
+            gameObject.SetActive(false);
         }
 
         private void MovePos(Vector2 eventDataPos)
