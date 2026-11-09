@@ -11,6 +11,11 @@ public class insManager : MonoBehaviour
     public LineTest _nowLine { get; private set; }
     [field:SerializeField]
     public Heart _Heart { get; private set; }
+    
+    [field:SerializeField]
+    public Sprite BloodSprite { get; private set; }
+    
+    [SerializeField] private GameObject _bloodCav;
 
     private void Awake()
     {
@@ -26,7 +31,8 @@ public class insManager : MonoBehaviour
     {
         for (int i = 0; i < LineTest.Length; ++i)
         {
-            GameObject inst = Instantiate(_linePrefab);
+            GameObject inst = Instantiate(_linePrefab, _bloodCav.transform);
+            inst.transform.position = Vector3.zero;
             inst.SetActive(false);
             LineTest[i] = inst.GetComponent<LineTest>();
         }
