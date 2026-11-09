@@ -41,7 +41,7 @@ namespace Hyunwoo.BloodPack
             MovePos(eventData.position);
 
             if (CalculateRectCorners())
-                _myRect.sizeDelta = _myRectSize * 1.2f;
+                _myRect.sizeDelta = _myRectSize * 1.4f;
             else
                 _myRect.sizeDelta = _myRectSize;
         }

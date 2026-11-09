@@ -9,9 +9,11 @@ namespace Hyunwoo.HumanBodySystem
 {
     public abstract class AbstractViscera : AbstractHumanBody, IModule, IAfterInitModule
     {
+        [Header("Settings")]
         [SerializeField] protected float updateTime = 0.5f;
         [SerializeField] protected float reduceGauge = 1f;
         
+        [Header("List Settings")]
         [SerializeField] protected List<float> wantGaugeList;
         
         protected ModuleOwner _owner;
