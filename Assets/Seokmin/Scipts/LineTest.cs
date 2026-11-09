@@ -145,18 +145,18 @@ public class LineTest : MonoBehaviour
     {
         for (int i = 1; i < _pointCount - 1; ++i)
         {
-            _points[i].ResetAcc();
+            _points[i].ResetAcc(); //누적된 탄성의 정도를 초기화
         }
         SpringCon();
         DistanceCon();
         BendCon();
         for (int i = 1; i < _pointCount; ++i)
         {
-            _points[i].Simulate();
+            _points[i].Simulate(); //Verlet를 사용한 자연스러운 움직임
         }
     }
     
-    private void SpringCon()
+    private void SpringCon() //탄성 구현
     {
         for (int i = 1; i < _pointCount - 1; ++i)
         {
@@ -167,7 +167,7 @@ public class LineTest : MonoBehaviour
     
             _error = _dis - _restLength;
             _spring = _dir / _dis * _error * _segSpringStrength;
-            _points[i].AddAcc(_spring);
+            _points[i].AddAcc(_spring); //탄성의 힘 추가
         }
         for (int i = 1; i < _pointCount - 1; ++i)
         {
@@ -186,9 +186,6 @@ public class LineTest : MonoBehaviour
     { 
         for (int i = 1; i < _points.Count; ++i)
         {
-            //_t = i / (float)(_pointCount - 1);
-            //Vector3.Lerp(_points[0]._pos,_points[_pointCount - 1]._pos,_t);
-            //Vector3.Lerp(_points[0]._pos, _mousePos, _t);
             _dir = _points[i]._pos - _points[i - 1]._pos;
             _dis = _dir.magnitude; // magnitude = Vector길이 구함 피타고라스 사용
             if (_dis < 0.000001f)
@@ -208,7 +205,7 @@ public class LineTest : MonoBehaviour
         }
     }
     
-    private void BendCon()
+    private void BendCon() //전에가 다음 노드랑 비교 했다면 이번에 그 다음 노드랑 비교 
     {
         for (int i = 0; i < _points.Count - 2; ++i)
         {
@@ -218,7 +215,7 @@ public class LineTest : MonoBehaviour
                 continue;
                 
             _error = _dis - _bendRestLength;
-            _correction = (_dir / _dis) * _error * _bendStiffness;
+            _correction = (_dir / _dis) * _error * _bendStiffness; // 보정값
             if (i == 0)
             {
                 _points[i + 2]._pos -= _correction;
