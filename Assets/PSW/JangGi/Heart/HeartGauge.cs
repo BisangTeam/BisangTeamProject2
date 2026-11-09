@@ -14,7 +14,6 @@ public class HeartGauge : MonoBehaviour
         {
             _gauge = Mathf.Clamp(value, 0f, 100f);
             UpdateGauge();
-            Debug.Log(_gauge);
         } 
     }
 
@@ -29,14 +28,6 @@ public class HeartGauge : MonoBehaviour
     {
         UpdateGauge();
     }
-
-    // private void OnValidate()
-    // {
-    //     if (bloodRect != null && Application.isPlaying)
-    //     {
-    //         UpdateGauge(Gauge);
-    //     }
-    // }
 
     public void UpdateGauge()
     {
