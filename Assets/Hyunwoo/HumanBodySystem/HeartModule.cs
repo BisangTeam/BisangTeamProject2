@@ -2,11 +2,10 @@ using System;
 using Cysharp.Threading.Tasks;
 using Hyunwoo.CoreLib.ModuleSystem;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Hyunwoo.HumanBodySystem
 {
-    public class HeartModule : MonoBehaviour, IModule
+    public class HeartModule : MonoModule
     {
         [Header("Settings/HeartModule")]
         [field: SerializeField] public float DelaySeconds { get; set; } = 2;
@@ -15,6 +14,8 @@ namespace Hyunwoo.HumanBodySystem
         [Header("Compo")]
         [SerializeField] private HeartGauge heartGauge;
 
+        #region Properties
+        
         private float _bloodGauge;
         public float BloodGauge
         {
@@ -44,17 +45,16 @@ namespace Hyunwoo.HumanBodySystem
             } 
         }
         
+        #endregion  
+        
         public event Action<float> OnHeartRate;
         
         private float _getBloodValue;
         
-        public void Initialize(ModuleOwner owner)
+        public override void Initialize(ModuleOwner owner)
         {
+            base.Initialize(owner);
             _getBloodValue = DefaultGetBloodValue;
-        }
-
-        public void Work()
-        {
         }
 
         private void Start()
@@ -62,12 +62,12 @@ namespace Hyunwoo.HumanBodySystem
             TestAsync().Forget();
         }
         
-        // Unitask로 왜 썻는지
+        // UniTask로 왜 썻는지
         private async UniTask TestAsync()
         {
             BloodGauge += _getBloodValue;
             OnHeartRate?.Invoke(_getBloodValue);
-            //_bloodGauge -= _getBloodValue * ConnectCount;
+
             BloodGauge -= _getBloodValue * ConnectCount;
             
             await UniTask.Delay((int)(DelaySeconds * 1000));
@@ -75,30 +75,14 @@ namespace Hyunwoo.HumanBodySystem
             TestAsync().Forget();
         }
 
-
+        public void InsertBlood(float value)
+        {
+            BloodGauge += value;
+        }
+        
         private void ChangeHeartRate(float value)
         {
             
         }
-        
-        #region Test
-        [Header("Test")]
-        [SerializeField] private EyeModule eyeModule;
-        [SerializeField] private EarModule earModule;
-        public void Update()
-        {
-            if (Keyboard.current.qKey.wasPressedThisFrame)
-                eyeModule.ConnectionBlood();
-            
-            if (Keyboard.current.aKey.wasPressedThisFrame)
-                eyeModule.DisConnectionBlood();
-            
-            if (Keyboard.current.wKey.wasPressedThisFrame)
-                earModule.ConnectionBlood();
-            
-            if (Keyboard.current.sKey.wasPressedThisFrame)
-                earModule.DisConnectionBlood();
-        }
-        #endregion
     }
 }

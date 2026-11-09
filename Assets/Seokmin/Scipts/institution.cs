@@ -1,3 +1,4 @@
+using Hyunwoo.HumanBodySystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,8 @@ public class institution : MonoBehaviour
     [SerializeField]private bool _isCon2 = false; //지금 연결된 혈관이 있는지
     private Vector3 _mouse;
 
+    [SerializeField] private AbstractViscera viscera;
+    
     private void Start()
     {
         _cam = Camera.main;
@@ -59,6 +62,7 @@ public class institution : MonoBehaviour
     {
         if ((_instpos - _nowLine._mousePos).magnitude < _instRange)
         {
+            viscera?.ConnectionBlood();
             _isCon = true;
             _nowLine._endPos = _instpos;
             _nowLine._isRest = false;
@@ -74,6 +78,7 @@ public class institution : MonoBehaviour
             {
                 _nowLine._points[_nowLine._points.Count - 1]._prePos = _nowLine._points[_nowLine._points.Count - 2]._pos;
             }
+            viscera?.DisConnectionBlood();
             _nowLine._endPos = _instpos;
             _nowLine._isRest = true;
             _nowLine._isCon = false;
