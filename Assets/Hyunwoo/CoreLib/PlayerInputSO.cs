@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,49 +10,34 @@ namespace Hyunwoo.CoreLib
     {
         public Controls Controls;
         
-        public event Action OnUpKeyPressed;
-        public event Action OnDownKeyPressed;
-        public event Action OnLeftKeyPressed;
-        public event Action OnRightKeyPressed;
+        public Vector2 MoveDir { get; private set; }
         
-        private void OnEnable()
+        // public event Action OnUpKeyPressed;
+        // public event Action OnDownKeyPressed;
+        // public event Action OnLeftKeyPressed;
+        // public event Action OnRightKeyPressed;
+        
+        public void SetEnable()
         {
             if (Controls == null)
             {
                 Controls = new Controls();
-                Controls.Enable();
+                Controls.Player.SetCallbacks(this);
             }
             
-            Controls.Player.SetCallbacks(this);
+            Controls.Player.Enable();
         }
 
-        private void OnDisable()
+        public void SetDisable()
         {
-            Controls.Disable();
+            if (Controls != null)
+                Controls.Player.Disable();
         }
 
-        public void OnUp(InputAction.CallbackContext context)
+        public void OnMove(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                OnUpKeyPressed?.Invoke();
-        }
-
-        public void OnDown(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                OnDownKeyPressed?.Invoke();
-        }
-
-        public void OnLeft(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                OnLeftKeyPressed?.Invoke();
-        }
-
-        public void OnRight(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                OnRightKeyPressed?.Invoke();
+            MoveDir = context.ReadValue<Vector2>();
+            Debug.Log(MoveDir);
         }
     }
 }

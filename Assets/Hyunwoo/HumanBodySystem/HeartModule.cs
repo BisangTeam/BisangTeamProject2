@@ -74,6 +74,7 @@ namespace Hyunwoo.HumanBodySystem
             
             TestAsync().Forget();
         }
+        // 중단 지점을 만들어놓기 => 알아보기
 
         public void InsertBlood(float value)
         {
