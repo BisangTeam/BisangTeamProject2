@@ -70,7 +70,7 @@ namespace Hyunwoo.HumanBodySystem
 
             BloodGauge -= _getBloodValue * ConnectCount;
             
-            await UniTask.Delay((int)(delaySeconds * 1000));
+            await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: destroyCancellationToken);
             
             TestAsync().Forget();
         }

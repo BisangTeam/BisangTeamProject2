@@ -39,7 +39,7 @@ namespace Hyunwoo.HumanBodySystem
         private async UniTask UpdateReduceGauge()
         {
             ReduceGauge();
-            await UniTask.Delay((int)(updateTime * 1000));
+            await UniTask.Delay((int)(updateTime * 1000), cancellationToken: destroyCancellationToken);
             UpdateReduceGauge().Forget();
         }
 
