@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +10,19 @@ namespace Hyunwoo.Raycasting2D
         [SerializeField, Min(0f)] private float moveSpeed = 3f;
         [SerializeField, Min(0f)] private float turnSpeed = 120f;
 
-        public Vector2 MoveDir { get; set; }
+        [SerializeField] private bool useKeyboardMovement = true;
+
+        private Vector2 _moveDir;
+        private bool _receivesExternalInput;
+        public Vector2 MoveDir
+        {
+            get => _moveDir;
+            set
+            {
+                _moveDir = value;
+                _receivesExternalInput = true;
+            }
+        }
 
         private const float Skin = 0.02f;
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[16];
@@ -40,6 +51,17 @@ namespace Hyunwoo.Raycasting2D
                 return;
            
             _input += MoveDir;
+
+            // Player가 MoveDir를 전달하는 씬은 그 입력을 사용한다.
+            // 이 컴포넌트만 있는 데모 씬에서는 WASD로 직접 움직일 수 있다.
+            if (useKeyboardMovement && !_receivesExternalInput)
+            {
+                if (keyboard.wKey.isPressed) _input.y += 1f;
+                if (keyboard.sKey.isPressed) _input.y -= 1f;
+                if (keyboard.dKey.isPressed) _input.x += 1f;
+                if (keyboard.aKey.isPressed) _input.x -= 1f;
+            }
+            _input = Vector2.ClampMagnitude(_input, 1f);
 
             // 2D에서는 +Z 회전이 왼쪽 회전이다. 플레이어의 위쪽이 정면이다.
             if (keyboard.qKey.isPressed || keyboard.leftArrowKey.isPressed) _turnInput += 1f;

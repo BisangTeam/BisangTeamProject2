@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -61,6 +60,7 @@ namespace Hyunwoo.Raycasting2D.Editor
             Vector3 originalPosition = default;
             Quaternion originalRotation = default;
             bool initialized = false;
+            float originalShadowStrength = 0f;
 
             try
             {
@@ -75,6 +75,8 @@ namespace Hyunwoo.Raycasting2D.Editor
                     .SingleOrDefault(component => component.GetType().Namespace == "Hyunwoo.Raycasting2D" &&
                         component.GetType().GetMethod("RenderFrame", Fields) != null);
                 Require(renderer != null, "Raycasting renderer exists in the saved scene.");
+                originalShadowStrength = Read<float>(renderer, "shadowStrength");
+                Set(renderer, "shadowStrength", 0f);
                 player = Read<Transform>(renderer, "player");
                 RawImage view = Read<RawImage>(renderer, "view");
                 int mask = Read<LayerMask>(renderer, "wallMask").value;
@@ -115,15 +117,12 @@ namespace Hyunwoo.Raycasting2D.Editor
                 Texture2D texture = view.texture as Texture2D;
                 Require(texture != null && texture.width == 320 && texture.height == 180 &&
                     texture.filterMode == FilterMode.Point, "RawImage receives a 320 x 180 point-filtered Texture2D.");
-                Dictionary<FieldInfo, object> buffers = renderer.GetType().GetFields(Fields)
-                    .Where(field => field.FieldType == typeof(Color32[]) || field.FieldType == typeof(Color[]))
-                    .Where(field => field.GetValue(renderer) != null)
-                    .ToDictionary(field => field, field => field.GetValue(renderer));
-                Require(buffers.Count > 0, "Renderer retains its pixel buffer.");
+                Color32[] buffer = PixelBuffer(renderer);
+                Require(buffer != null && buffer.Length == texture.width * texture.height,
+                    "Renderer retains its complete output pixel buffer.");
                 Invoke(renderer, "RenderFrame");
                 Require(ReferenceEquals(texture, view.texture), "Consecutive frames reuse the Texture2D.");
-                foreach (var buffer in buffers)
-                    Require(ReferenceEquals(buffer.Value, buffer.Key.GetValue(renderer)), "Consecutive frames reuse the pixel array.");
+                Require(ReferenceEquals(buffer, PixelBuffer(renderer)), "Consecutive frames reuse the pixel array.");
                 File.WriteAllBytes("Logs/Raycasting2D-validation.png", texture.EncodeToPNG());
                 report.AppendLine("PASS: RawImage output, point filtering, reused texture and pixel buffer. Preview saved.");
 
@@ -187,6 +186,7 @@ namespace Hyunwoo.Raycasting2D.Editor
             }
             finally
             {
+                if (renderer != null) Set(renderer, "shadowStrength", originalShadowStrength);
                 if (player != null && body != null)
                 {
                     player.SetPositionAndRotation(originalPosition, originalRotation);
@@ -270,6 +270,16 @@ namespace Hyunwoo.Raycasting2D.Editor
             return controller.GetComponent<Rigidbody2D>().position;
         }
 
+        private static Color32[] PixelBuffer(Component renderer)
+        {
+            object resources = Read<object>(renderer, "_resources");
+            Require(resources != null, "Renderer owns its render resources.");
+            PropertyInfo pixels = resources.GetType().GetProperty("Pixels", Fields);
+            Require(pixels != null && pixels.PropertyType == typeof(Color32[]),
+                "Render resources expose the output pixel buffer.");
+            return (Color32[])pixels.GetValue(resources);
+        }
+
         private static T Read<T>(Component component, string name)
         {
             FieldInfo field = component.GetType().GetField(name, Fields);
@@ -280,6 +290,11 @@ namespace Hyunwoo.Raycasting2D.Editor
         private static void Invoke(Component component, string method)
         {
             component.GetType().GetMethod(method, Fields).Invoke(component, null);
+        }
+
+        private static void Set(Component component, string name, object value)
+        {
+            component.GetType().GetField(name, Fields).SetValue(component, value);
         }
 
         private static void InvokeIfPresent(Component component, string method)

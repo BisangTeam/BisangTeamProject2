@@ -51,6 +51,7 @@ namespace Hyunwoo.Raycasting2D.Editor
                 Set(renderer, "view", view);
                 Set(renderer, "wallMask", (LayerMask)(1 << layer));
                 Set(renderer, "wallColor", Color.white);
+                Set(renderer, "shadowStrength", 0f);
                 Invoke(renderer, "Awake");
 
                 Texture2D gradient = Texture(resources, (x, y) => new Color32((byte)(y * 30 + 15), (byte)(240 - y * 30), 60, 255));
@@ -256,7 +257,7 @@ namespace Hyunwoo.Raycasting2D.Editor
                 entries.SetValue(entry, i);
             }
             field.SetValue(renderer, entries);
-            Invoke(renderer, "CacheWallTextures");
+            Invoke(renderer, "SetTileTexturesDict");
         }
 
         private static int ColumnColors(Color32[] pixels, int x)

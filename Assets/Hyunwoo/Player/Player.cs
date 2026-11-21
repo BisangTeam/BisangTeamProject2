@@ -18,7 +18,7 @@ namespace Hyunwoo.Player
             base.InitializeModules();
             playerInput.SetEnable();
         }
-
+    
         private void Update()
         {
             raycastPlayer2D.MoveDir = playerInput.MoveDir;
@@ -28,7 +28,7 @@ namespace Hyunwoo.Player
                 moduleDictValue.Work();
             }
         }
-
+    
         private void OnDestroy()
         {
             playerInput.SetDisable();
