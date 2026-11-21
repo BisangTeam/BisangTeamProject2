@@ -3,6 +3,7 @@ using Hyunwoo.BloodPack;
 using Hyunwoo.CoreLib;
 using Hyunwoo.CoreLib.ModuleSystem;
 using Hyunwoo.HumanBodySystem;
+using Hyunwoo.Raycasting2D;
 using UnityEngine;
 
 namespace Hyunwoo.Player
@@ -10,42 +11,27 @@ namespace Hyunwoo.Player
     public class Player : ModuleOwner
     {
         [SerializeField] private PlayerInputSO playerInput;
-
-        private Camera _cam;
-        private IModule _eyeModule;
-        private IModule _earModule;
-
-        protected override void Awake()
+        [SerializeField] private RaycastPlayer2D raycastPlayer2D;
+        
+        protected override void InitializeModules()
         {
-            base.Awake();
-            _cam = Camera.main;
-            _eyeModule = GetModule<EyeModule>();
-            _earModule = GetModule<EarModule>();
+            base.InitializeModules();
+            playerInput.SetEnable();
         }
-
-        private void OnEnable()
-        {
-            playerInput.OnUpKeyPressed += OnHandleUp;
-            playerInput.OnLeftKeyPressed += OnHandleLeft;
-        }
-
-
+    
         private void Update()
         {
+            raycastPlayer2D.MoveDir = playerInput.MoveDir;
+            
             foreach (var moduleDictValue in _moduleDict.Values)
             {
                 moduleDictValue.Work();
             }
         }
-
-        private void OnHandleLeft()
+    
+        private void OnDestroy()
         {
-            //(EyeModule)_eyeModule.
-        }
-
-        private void OnHandleUp()
-        {
-            
+            playerInput.SetDisable();
         }
     }
 }

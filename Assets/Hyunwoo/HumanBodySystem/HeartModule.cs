@@ -7,9 +7,9 @@ namespace Hyunwoo.HumanBodySystem
 {
     public class HeartModule : MonoModule
     {
-        [Header("Settings/HeartModule")]
-        [field: SerializeField] public float DelaySeconds { get; set; } = 2;
-        [field: SerializeField] public float DefaultGetBloodValue { get; set; } = 5f;
+        [Header("Settings")]
+        [SerializeField] private float delaySeconds = 2;
+        [SerializeField] private float defaultGetBloodValue = 5f;
         
         [Header("Compo")]
         [SerializeField] private HeartGauge heartGauge;
@@ -39,9 +39,9 @@ namespace Hyunwoo.HumanBodySystem
             {
                 _connectCount = value;
                 if (_connectCount <= 0)
-                    _getBloodValue = DefaultGetBloodValue;
+                    _getBloodValue = defaultGetBloodValue;
                 else
-                    _getBloodValue = DefaultGetBloodValue / _connectCount;
+                    _getBloodValue = defaultGetBloodValue / _connectCount;
             } 
         }
         
@@ -54,7 +54,7 @@ namespace Hyunwoo.HumanBodySystem
         public override void Initialize(ModuleOwner owner)
         {
             base.Initialize(owner);
-            _getBloodValue = DefaultGetBloodValue;
+            _getBloodValue = defaultGetBloodValue;
         }
 
         private void Start()
@@ -70,10 +70,11 @@ namespace Hyunwoo.HumanBodySystem
 
             BloodGauge -= _getBloodValue * ConnectCount;
             
-            await UniTask.Delay((int)(DelaySeconds * 1000));
+            await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: destroyCancellationToken);
             
             TestAsync().Forget();
         }
+        // 중단 지점을 만들어놓기 => 알아보기
 
         public void InsertBlood(float value)
         {

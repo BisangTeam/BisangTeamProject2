@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class HeartGauge : MonoBehaviour
 {
-    // Transform 대신 RectTransform 사용
     [SerializeField] private RectTransform bloodRect;
 
     private float _gauge;
@@ -17,7 +16,6 @@ public class HeartGauge : MonoBehaviour
         } 
     }
 
-    // UI 캔버스 픽셀 단위 (예: 높이가 200px라면 -200f에서 0f 등)
     [SerializeField] private float emptyPosY = -200f;
     [SerializeField] private float fullPosY = 0f;
 
