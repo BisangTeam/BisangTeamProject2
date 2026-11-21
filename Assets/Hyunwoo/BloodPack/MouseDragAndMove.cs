@@ -1,4 +1,3 @@
-using System;
 using Hyunwoo.HumanBodySystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
