@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     [RequireComponent(typeof(BoxCollider2D), typeof(RaycastWallSurface2D))]
     public class RaycastDoor2D : MonoBehaviour

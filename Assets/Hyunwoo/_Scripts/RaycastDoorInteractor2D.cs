@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     // 기존 Player 입력 코드를 바꾸지 않고 같은 플레이어에 붙여 사용한다.
     public class RaycastDoorInteractor2D : MonoBehaviour

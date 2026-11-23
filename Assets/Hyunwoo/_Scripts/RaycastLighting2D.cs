@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     public readonly struct RaycastLighting2D
     {

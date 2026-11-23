@@ -6233,12 +6233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117b983d458e4e8d951425577475d83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
-  wallMask:
-    serializedVersion: 2
-    m_Bits: 8
   moveSpeed: 3
   turnSpeed: 120
-  useKeyboardMovement: 1
 --- !u!58 &4000000011
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6283,7 +6279,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4000000008}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -6423,7 +6419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastRenderer2D
   player: {fileID: 4000000009}
-  view: {fileID: 4000000028}
+  rawImage: {fileID: 4000000028}
   wallMask:
     serializedVersion: 2
     m_Bits: 8
@@ -6446,9 +6442,6 @@ MonoBehaviour:
   shadowStartDistance: 2
   shadowEndDistance: 8
   sideWallBrightness: 0.8
-  ceilingColor: {r: 0.13, g: 0.17, b: 0.22, a: 1}
-  floorColor: {r: 0.24, g: 0.23, b: 0.22, a: 1}
-  wallColor: {r: 0.55, g: 0.73, b: 0.77, a: 1}
 --- !u!4 &4000000018
 Transform:
   m_ObjectHideFlags: 0
