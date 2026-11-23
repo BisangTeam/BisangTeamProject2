@@ -430,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
-  maxGauge: 0
+  maxGauge: 100
   defaultBloodGague: 0
   updateTime: 0.5
   reduceGauge: 1
@@ -3419,12 +3419,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
-  maxGauge: 0
+  maxGauge: 100
   defaultBloodGague: 0
   updateTime: 0.5
   reduceGauge: 1
   wantGaugeList: []
   gauge: {fileID: 280915790}
+  raycastRenderer: {fileID: 0}
 --- !u!114 &946273952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4035,7 +4036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
   defaultGetBloodValue: 12.86
   delaySeconds: 1
-  maxGauge: 0
+  maxGauge: 100
   defaultBloodGague: 0
   heartGauge: {fileID: 345904792}
 --- !u!224 &1385264449

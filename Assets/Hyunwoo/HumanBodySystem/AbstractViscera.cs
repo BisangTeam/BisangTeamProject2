@@ -18,7 +18,7 @@ namespace Hyunwoo.HumanBodySystem
         [SerializeField] protected float reduceGauge = 1f;
         
         [Header("기관별 능력 단계 수 && 각 단계에 필요한 최소 혈액량")]
-        [SerializeField] protected List<float> wantGaugeList;
+        [SerializeField] protected List<float> wantGaugeList; 
 
         [Header("Components")]
         [SerializeField] private JanggiGuage gauge;
