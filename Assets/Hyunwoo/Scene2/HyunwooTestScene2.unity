@@ -394,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
+  gauge: {fileID: 0}
   updateTime: 0.5
   reduceGauge: 1
   wantGaugeList: []
@@ -3647,6 +3648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
+  gauge: {fileID: 0}
   updateTime: 0.5
   reduceGauge: 1
   wantGaugeList: []
@@ -3853,6 +3855,7 @@ MonoBehaviour:
   <_Heart>k__BackingField: {fileID: 1949637202}
   <BloodSprite>k__BackingField: {fileID: -7843899350863918363, guid: 8ad4e6c1f3af1654b90e100958b23ab7, type: 3}
   _bloodCav: {fileID: 602549960}
+  _bloodCamera: {fileID: 0}
 --- !u!1 &1393295846
 GameObject:
   m_ObjectHideFlags: 0
