@@ -18,8 +18,6 @@ public class institution : MonoBehaviour
     private void Start()
     {
         _cam = Camera.main;
-        _instpos = _cam.ScreenToWorldPoint(_pos.position);
-        _instpos.z = 0;
     }
 
     private void Update()
@@ -27,8 +25,7 @@ public class institution : MonoBehaviour
         //해제
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            _mouse = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            _mouse.z = 0;
+            _mouse = insManager.Instance.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
             if (_nowLine != null)
             {
                 if (_isCon2)
@@ -60,7 +57,10 @@ public class institution : MonoBehaviour
     }
     public void IsConnection()
     {
-        if ((_instpos - _nowLine._mousePos).magnitude < _instRange)
+        var manager = insManager.Instance;
+        _instpos = manager.GetBloodPoint(_cam, _pos);
+        Vector3 dropPoint = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
+        if (!_nowLine._isCon && (_instpos - dropPoint).magnitude < _instRange)
         {
             viscera?.ConnectionBlood();
             _isCon = true;
@@ -72,6 +72,7 @@ public class institution : MonoBehaviour
 
     public void IsRelease()
     {
+        _instpos = insManager.Instance.GetBloodPoint(_cam, _pos);
         if ((_instpos - _mouse).magnitude < _instRange)
         {
             if (_nowLine._points.Count > 1)
