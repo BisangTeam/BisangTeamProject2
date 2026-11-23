@@ -1,52 +1,87 @@
 using UnityEngine;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
-    // 화면의 각 픽셀을 바닥·천장의 맵 좌표로 되돌려 텍스처를 읽는다.
-    internal static class RaycastFloorRenderer2D
+    public static class RaycastFloorRenderer2D
     {
-        public static void Draw(RaycastRenderResources resources, RaycastView2D camera, RaycastLighting2D lighting,
-            Texture2D floorTexture, Texture2D ceilingTexture, float surfaceTileSize, Color32 floorColor, Color32 ceilingColor)
+        public static void Draw(RaycastRenderResources resources, RaycastView2D view, RaycastLighting2D lighting,
+            Texture2D floorTexture, Texture2D ceilingTexture, float surfaceTileSize)
         {
-            // 수평선과 렌더 거리 밖에도 밝은 배경이 새지 않도록 먼저 채운다.
-            Color32 backgroundFloor = lighting.DistanceDarknessEnabled ? (Color32)Color.black : floorColor;
-            Color32 backgroundCeiling = lighting.DistanceDarknessEnabled ? (Color32)Color.black : ceilingColor;
-            resources.Clear(backgroundFloor, backgroundCeiling);
+            resources.Clear();
 
             Color32[] floorPixels = resources.GetTexturePixels(floorTexture);
             Color32[] ceilingPixels = resources.GetTexturePixels(ceilingTexture);
-            float tileSize = Mathf.Max(0.01f, surfaceTileSize);
-            Vector2 leftRay = camera.Forward - camera.Right * camera.HalfPlaneWidth;
-            Vector2 rayStep = camera.Right * (2f * camera.HalfPlaneWidth / camera.Width);
 
-            for (int y = 0; y < camera.Height; y++)
+            float tileSize = Mathf.Max(0.01f, surfaceTileSize);
+
+            Vector2 leftRay = view.Forward - view.Right * view.HalfPlaneWidth;
+            Vector2 rayStep = view.Right * (2f * view.HalfPlaneWidth / view.Width);
+
+            for (int y = 0; y < view.Height; y++)
             {
-                float fromHorizon = y + 0.5f - camera.Height * 0.5f;
-                // 정확한 수평선은 바닥·천장과 만나지 않으므로 0으로 나누지 않는다.
-                if (Mathf.Abs(fromHorizon) < 0.0001f) continue;
-                float depth = camera.WallHeight * 0.5f * camera.PixelLength / Mathf.Abs(fromHorizon);
-                Texture2D source = fromHorizon < 0f ? floorTexture : ceilingTexture;
-                Color32[] colors = fromHorizon < 0f ? floorPixels : ceilingPixels;
+                if (!TryCalculateDepth(view, y, out float depth, out bool isFloor))
+                    continue;
+
+                Texture2D source = isFloor ? floorTexture : ceilingTexture;
+                Color32[] colors = isFloor ? floorPixels : ceilingPixels;
+
                 Vector2 ray = leftRay + rayStep * 0.5f;
                 float brightness = lighting.DistanceShade(depth);
-                Color32 fallback = fromHorizon < 0f ? floorColor : ceilingColor;
 
-                for (int x = 0; x < camera.Width; x++, ray += rayStep)
+                float depthSquared = depth * depth;
+                float maxDistanceSquared = view.MaxDistance * view.MaxDistance;
+
+                for (int x = 0; x < view.Width; x++, ray += rayStep)
                 {
-                    if (depth * depth * ray.sqrMagnitude > camera.MaxDistance * camera.MaxDistance) continue;
-                    int index = y * camera.Width + x;
-                    resources.Depths[index] = depth;
-                    if (colors == null)
-                    {
-                        resources.Pixels[index] = RaycastLighting2D.Shade(fallback, brightness);
+                    if (depthSquared * ray.sqrMagnitude > maxDistanceSquared) 
                         continue;
-                    }
-                    Vector2 point = (camera.Origin + ray * depth) / tileSize;
-                    int textureX = Mathf.Min((int)(Mathf.Repeat(point.x, 1f) * source.width), source.width - 1);
-                    int textureY = Mathf.Min((int)(Mathf.Repeat(point.y, 1f) * source.height), source.height - 1);
-                    resources.Pixels[index] = RaycastLighting2D.Shade(colors[textureY * source.width + textureX], brightness);
+
+                    DrawPixel(resources, view, source, colors, ray, tileSize, depth, brightness, x, y);
                 }
             }
+        }   
+
+        private static bool TryCalculateDepth(RaycastView2D view, int y, out float depth, out bool isFloor)
+        {
+            float fromHorizon = y + 0.5f - view.Height * 0.5f;
+
+            if (Mathf.Abs(fromHorizon) < 0.0001f)
+            {
+                depth = 0;
+                isFloor = false;
+                return false;
+            }
+
+            depth = view.WallHeight * 0.5f * view.PixelLength / Mathf.Abs(fromHorizon);
+            isFloor = fromHorizon < 0f;
+
+            return true;
+        }
+
+        private static void DrawPixel(RaycastRenderResources resources, RaycastView2D view, Texture2D source, Color32[] colors,
+            Vector2 ray, float tileSize, float depth, float brightness, int x, int y)
+        {
+            int index = y * view.Width + x;
+            resources.Depths[index] = depth;
+
+            Vector2 worldPoint = view.Origin + ray * depth;
+
+            Color32 color = GetTextureColor(worldPoint, tileSize, source, colors);
+
+            resources.Pixels[index] = RaycastLighting2D.Shade(color, brightness);
+        }
+
+        private static Color32 GetTextureColor(Vector2 worldPoint, float tileSize, Texture2D source, Color32[] colors)
+        {
+            Vector2 texturePoint = worldPoint / tileSize;
+
+            float u = Mathf.Repeat(texturePoint.x, 1f);
+            float v = Mathf.Repeat(texturePoint.y, 1f);
+
+            int textureX = Mathf.Min((int)(u * source.width), source.width - 1);
+            int textureY = Mathf.Min((int)(v * source.height), source.height - 1);
+
+            return colors[textureY * source.width + textureX];
         }
     }
 }

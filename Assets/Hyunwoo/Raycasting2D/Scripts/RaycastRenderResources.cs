@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
-    // 화면 Texture2D, 픽셀·깊이 배열과 원본 이미지 캐시의 생성·재사용·해제.
-    internal sealed class RaycastRenderResources
+    public sealed class RaycastRenderResources
     {
         private readonly Dictionary<Texture2D, Color32[]> _texturePixels = new();
 
@@ -16,52 +15,56 @@ namespace Hyunwoo.Raycasting2D
         public float[] Depths { get; private set; }
         public int Height { get; private set; }
 
-        public bool Resize(RawImage view, int width)
+        public bool Resize(RawImage rawImage, int width)
         {
-            Rect rect = view.rectTransform.rect;
+            Rect rect = rawImage.rectTransform.rect;
             if (rect.width <= 0f || rect.height <= 0f) return false;
             
-            int height = Mathf.Max(1, Mathf.RoundToInt(width / rect.width * rect.height));
+            int height = Mathf.Max(1, Mathf.RoundToInt(width * rect.height / rect.width));
 
             if (Height != height || Texture == null)
             {
-                Dispose(view);
+                Dispose(rawImage);
                 Height = height;
+
                 Pixels = new Color32[width * height];
                 Depths = new float[Pixels.Length];
-                Texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
-                Texture.filterMode = FilterMode.Point;
-                Texture.wrapMode = TextureWrapMode.Clamp;
-                view.texture = Texture;
+
+                Texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
+                {
+                    filterMode = FilterMode.Point,
+                    wrapMode = TextureWrapMode.Clamp
+                };
+
+                rawImage.texture = Texture;
             }
             return true;
         }
 
-        public void Clear(Color32 floor, Color32 ceiling)
+        public void Clear()
         {
+            Array.Fill(Pixels, new Color32(0, 0, 0, 255));
             Array.Fill(Depths, float.MaxValue);
-            int width = Texture.width;
-            for (int y = 0; y < Height; y++)
-            {
-                Color32 color = y < Height / 2 ? floor : ceiling;
-                for (int x = 0; x < width; x++) Pixels[y * width + x] = color;
-            }
         }
 
         public Color32[] GetTexturePixels(Texture2D source)
         {
             if (source == null) return null;
+
             if (_texturePixels.TryGetValue(source, out Color32[] colors)) return colors;
 
-            if (source.isReadable) colors = source.GetPixels32();
-            else Debug.LogWarning($"{source.name}: 텍스처 Import Settings에서 Read/Write를 켜 주세요.", source);
+            if (source.isReadable)
+            {
+                colors = source.GetPixels32();
+            }
+            else
+            {
+                Debug.LogWarning($"{source.name}: 텍스처 Import Settings에서 Read/Write를 켜야만 해", source);
+                return null;
+            }
+
             _texturePixels[source] = colors;
             return colors;
-        }
-
-        public void ClearTextureCache()
-        {
-            _texturePixels.Clear();
         }
 
         public void Present()
@@ -70,12 +73,14 @@ namespace Hyunwoo.Raycasting2D
             Texture.Apply(false);
         }
 
-        public void Dispose(RawImage view)
+        public void Dispose(RawImage rawImage)
         {
-            if (view != null && view.texture == Texture) view.texture = null;
+            if (rawImage != null && rawImage.texture == Texture) 
+                rawImage.texture = null;
+
             if (Texture == null) return;
-            if (Application.isPlaying) Object.Destroy(Texture);
-            else Object.DestroyImmediate(Texture);
+            
+            Object.Destroy(Texture);
             Texture = null;
         }
     }
