@@ -6233,7 +6233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117b983d458e4e8d951425577475d83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
-  moveSpeed: 3
+  MoveSpeed: 3
   turnSpeed: 120
 --- !u!58 &4000000011
 CircleCollider2D:
@@ -6438,7 +6438,7 @@ MonoBehaviour:
   fieldOfView: 80
   wallHeight: 1
   maxDistance: 30
-  shadowStrength: 2
+  <ShadowStrength>k__BackingField: 1
   shadowStartDistance: 2
   shadowEndDistance: 8
   sideWallBrightness: 0.8

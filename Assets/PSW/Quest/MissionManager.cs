@@ -5,6 +5,7 @@ using UnityEngine;
 public class MissionManager : MonoBehaviour
 {
     public static MissionManager instance;
+    public event Action<MissionDataSO> MissionChanged;
     
     [Header("시작")]
     [SerializeField] private MissionDataSO startMission;
@@ -53,7 +54,12 @@ public class MissionManager : MonoBehaviour
             }
         }
 
-        MissionUI.instance.UpdateUI();
+        if (MissionUI.instance != null)
+        {
+            if (currentMission != null) MissionUI.instance.UpdateUI();
+            else MissionUI.instance.ShowAllClear();
+        }
+        MissionChanged?.Invoke(currentMission);
     }
 
     public void ProcessAction(MissionEventType eventType, string targetId)
@@ -105,20 +111,7 @@ public class MissionManager : MonoBehaviour
         {
             Debug.Log($"미션 완료 {currentMission.missionTitle}");
 
-            if (currentMission.nextMission != null)
-            {
-                SetMission(currentMission.nextMission);
-            }
-            else
-            {
-                currentMission = null;
-                Counts.Clear();
-
-                if (MissionUI.instance != null)
-                {
-                    MissionUI.instance.ShowAllClear();
-                }
-            }
+            SetMission(currentMission.nextMission);
         }
     }
 }

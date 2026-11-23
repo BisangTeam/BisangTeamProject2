@@ -5,7 +5,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMove : MonoBehaviour
     {
-        [SerializeField, Min(0f)] private float moveSpeed = 3f;
+        [field:SerializeField, Min(0f)] public float MoveSpeed = 3f;
         [SerializeField, Min(0f)] private float turnSpeed = 120f;
 
         public Vector2 MoveDir { get; set; }
@@ -24,7 +24,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
             Vector2 direction = _rb.GetRelativeVector(MoveDir);
 
-            _rb.linearVelocity = direction * moveSpeed;
+            _rb.linearVelocity = direction * MoveSpeed;
         }
         
         private void OnDisable()
