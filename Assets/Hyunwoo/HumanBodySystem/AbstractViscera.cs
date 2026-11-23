@@ -9,6 +9,8 @@ namespace Hyunwoo.HumanBodySystem
 {
     public abstract class AbstractViscera : AbstractHumanBody, IModule, IAfterInitModule
     {
+        [SerializeField] private JanggiGuage gauge;
+        
         [Header("Settings")]
         [SerializeField] protected float updateTime = 0.5f;
         [SerializeField] protected float reduceGauge = 1f;
@@ -51,6 +53,7 @@ namespace Hyunwoo.HumanBodySystem
         private void OnHandleFillGauge(float value)
         {
             BloodGauge += value;
+            gauge.Gauge = BloodGauge;
             Debug.Log($"{gameObject.name}: Gauge: {BloodGauge}");
         }
         
