@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 13654660}
   - component: {fileID: 13654659}
   m_Layer: 5
-  m_Name: EyeFrame
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 121303717}
   - component: {fileID: 121303718}
   m_Layer: 5
-  m_Name: EarRoot
+  m_Name: Ear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,6 +336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
+  gauge: {fileID: 1163783276}
   updateTime: 0.5
   reduceGauge: 1
   wantGaugeList: []
@@ -645,7 +646,7 @@ GameObject:
   - component: {fileID: 398687751}
   - component: {fileID: 398687750}
   m_Layer: 5
-  m_Name: EyeMask
+  m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -845,7 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117b983d458e4e8d951425577475d83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
-  moveSpeed: 3
+  MoveSpeed: 3
   turnSpeed: 120
 --- !u!58 &502784670
 CircleCollider2D:
@@ -1080,7 +1081,7 @@ GameObject:
   - component: {fileID: 606760380}
   - component: {fileID: 606760379}
   m_Layer: 5
-  m_Name: EarFrame
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1529,7 +1530,7 @@ GameObject:
   - component: {fileID: 946273951}
   - component: {fileID: 946273952}
   m_Layer: 5
-  m_Name: EyeRoot
+  m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1568,6 +1569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
+  gauge: {fileID: 280915790}
   updateTime: 0.5
   reduceGauge: 1
   wantGaugeList: []
@@ -1601,7 +1603,7 @@ GameObject:
   - component: {fileID: 1103363948}
   - component: {fileID: 1103363947}
   m_Layer: 5
-  m_Name: EarMask
+  m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1921,7 +1923,7 @@ GameObject:
   - component: {fileID: 1385264448}
   - component: {fileID: 1385264450}
   m_Layer: 5
-  m_Name: HeartRoot
+  m_Name: Heart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
