@@ -32,6 +32,7 @@ public class LineTest : MonoBehaviour
     public Vector3 _endPos;
     public bool _isCon = false;
     [SerializeField, Range(0.01f, 1f)] private float _instSpeed;
+    private float _timer = 0f;
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class LineTest : MonoBehaviour
         }
         if (_isClick)
         {
+            _timer = 0f;
             _mousePos = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             _mousePos.z = 0;
             _restLength = (_mousePos - _points[0]._pos).magnitude / (_points.Count - 1); //오차 거리식
@@ -77,6 +79,7 @@ public class LineTest : MonoBehaviour
         }
         else if (_isRest && !_isCon)
         {
+            _timer = 0f;
             _restLength = Mathf.MoveTowards(_restLength, 0.01f, _returnSpeed * Time.deltaTime);
             _bendRestLength = _restLength * 2;
             Reset();
@@ -106,12 +109,16 @@ public class LineTest : MonoBehaviour
             {
                 _points[i].Simulate();
             }
+            _timer += Time.deltaTime;
         }
     }
 
     private void LateUpdate()
     {
-        Render(); //왜 클릭후 다시하면 오류가 뜰까 정말 새벽 3시에 코딩하는데 미치겠다
+        if (_timer <= 5f)
+        {
+            Render();
+        }
     }
 
     public void IsDrClick(Vector3 heartPos)
@@ -131,7 +138,7 @@ public class LineTest : MonoBehaviour
         return gameObject;
     }
     
-    private void Render() //List인덱스 왜뜨지????
+    private void Render()
     {
         for (int i = 0; i < _points.Count; ++i)
         {
@@ -180,7 +187,7 @@ public class LineTest : MonoBehaviour
         }
     }
     
-    private void DistanceCon() //고통의 원인 1 자연스러운 혈관 움직임 구현이 되기 위한 계산하는 곳
+    private void DistanceCon() //자연스러운 혈관 움직임 구현이 되기 위한 계산하는 곳
     { 
         for (int i = 1; i < _points.Count; ++i)
         {
