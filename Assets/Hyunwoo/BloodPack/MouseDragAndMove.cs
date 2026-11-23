@@ -8,7 +8,10 @@ namespace Hyunwoo.BloodPack
     {
         // Drag : 위치만 계속해서 반환 + 현재 위치가 기관이면 확대
         // End : 현재 위치가 기관이면 사라지고 AbstractHumanBody.ConnectionBlood 실행시켜주기
-        
+
+        [Header("혈액팩 1개당 주입량")]
+        [SerializeField] private float insertBloodAmount = 50;
+
         [SerializeField] private HeartModule heartModule;
         
         [SerializeField] private RectTransform canvasRect;
@@ -37,7 +40,7 @@ namespace Hyunwoo.BloodPack
 
         public void OnDrag(PointerEventData eventData)
         {
-            MovePos(eventData.position);
+            MovePos(eventData);
 
             if (CalculateRectCorners())
                 _myRect.sizeDelta = _myRectSize * 1.4f;
@@ -53,11 +56,11 @@ namespace Hyunwoo.BloodPack
             gameObject.SetActive(false);
         }
 
-        private void MovePos(Vector2 eventDataPos)
+        private void MovePos(PointerEventData eventData)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, eventDataPos, null, 
-                out Vector2 pos);
-            _myRect.anchoredPosition = pos;   
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasRect, eventData.position, eventData.pressEventCamera, out Vector2 pos))
+                _myRect.anchoredPosition = pos;
         }
         
         private bool CalculateRectCorners()

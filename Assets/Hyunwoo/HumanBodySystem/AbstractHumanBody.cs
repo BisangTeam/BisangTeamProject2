@@ -1,11 +1,13 @@
 using System;
-using System.Reflection;
 using UnityEngine;
 
 namespace Hyunwoo.HumanBodySystem
 {
     public abstract class AbstractHumanBody : MonoBehaviour
     {
+        [Header("기관별 혈액 최대치")]
+        [SerializeField] private float maxGauge;
+
         private float _bloodGauge;
         
         public event Action OnBloodGaugeChanged; 
@@ -16,7 +18,7 @@ namespace Hyunwoo.HumanBodySystem
             set
             {
                 float before = _bloodGauge;
-                _bloodGauge = Mathf.Clamp(value, 0f, 100f); 
+                _bloodGauge = Mathf.Clamp(value, 0f, maxGauge); 
                 
                 if (!Mathf.Approximately(_bloodGauge, before))
                     OnBloodGaugeChanged?.Invoke();

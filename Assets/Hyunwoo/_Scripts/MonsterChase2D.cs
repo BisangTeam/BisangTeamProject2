@@ -70,6 +70,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (Vector2.Distance(monsterPosition, playerPosition) <= catchDistance &&
                 !Physics2D.Linecast(monsterPosition, playerPosition, wallMask))
             {
+                return;
+
                 _agent.isStopped = true;
                 enabled = false;
                 gameOverScreen.Show();
