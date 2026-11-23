@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using Hyunwoo.Raycasting2D.Scripts;
 
 namespace Hyunwoo.Raycasting2D.Editor
 {
@@ -40,7 +41,7 @@ namespace Hyunwoo.Raycasting2D.Editor
                 CreateCamera();
                 // 1. XY 평면에 실제로 칠해진, 수정 가능한 벽 타일맵.
                 CreateMap(wallTile, wallLayer);
-                RaycastPlayer2D player = CreatePlayer(wallTile.sprite, wallLayer);
+                PlayerMove player = CreatePlayer(wallTile.sprite, wallLayer);
                 RawImage view = CreateView();
 
                 var renderer = new GameObject("Raycast Renderer").AddComponent<RaycastRenderer2D>();
@@ -172,7 +173,7 @@ namespace Hyunwoo.Raycasting2D.Editor
             walls.GetComponent<TilemapCollider2D>().ProcessTilemapChanges();
         }
 
-        private static RaycastPlayer2D CreatePlayer(Sprite markerSprite, int wallLayer)
+        private static PlayerMove CreatePlayer(Sprite markerSprite, int wallLayer)
         {
             var player = new GameObject("Player", typeof(Rigidbody2D), typeof(CircleCollider2D));
             player.transform.position = new Vector3(2.5f, 1.5f, 0f);
@@ -181,7 +182,7 @@ namespace Hyunwoo.Raycasting2D.Editor
             body.gravityScale = 0f;
             body.constraints = RigidbodyConstraints2D.FreezeRotation;
             player.GetComponent<CircleCollider2D>().radius = 0.2f;
-            RaycastPlayer2D controller = player.AddComponent<RaycastPlayer2D>();
+            PlayerMove controller = player.AddComponent<PlayerMove>();
             var settings = new SerializedObject(controller);
             settings.FindProperty("wallMask").intValue = 1 << wallLayer;
             settings.ApplyModifiedPropertiesWithoutUndo();

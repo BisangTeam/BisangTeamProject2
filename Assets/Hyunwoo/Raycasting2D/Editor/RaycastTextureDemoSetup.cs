@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Object = UnityEngine.Object;
+using Hyunwoo.Raycasting2D.Scripts;
 
 namespace Hyunwoo.Raycasting2D.Editor
 {
