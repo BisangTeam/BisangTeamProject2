@@ -35,7 +35,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0.1f)] private float maxDistance = 30f;
 
         [Header("Distance Darkness")]
-        [SerializeField, Min(0f)] private float shadowStrength = 1f;
+        [field:SerializeField, Min(0f)] public float ShadowStrength { get; set; } = 1f;
         [SerializeField, Min(0f)] private float shadowStartDistance = 2f;
         [SerializeField, Min(0.01f)] private float shadowEndDistance = 8f;
         [SerializeField, Range(0f, 1f)] private float sideWallBrightness = 0.8f;
@@ -63,7 +63,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
             var view = new RaycastView2D(player, ScreenWidth, _resources.Height,
                 fieldOfView, wallHeight, maxDistance);
-            var lighting = new RaycastLighting2D(shadowStrength, shadowStartDistance,
+            var lighting = new RaycastLighting2D(ShadowStrength, shadowStartDistance,
                 shadowEndDistance, sideWallBrightness);
 
             RaycastFloorRenderer2D.Draw(_resources, view, lighting, floorTexture, ceilingTexture, surfaceTileSize);

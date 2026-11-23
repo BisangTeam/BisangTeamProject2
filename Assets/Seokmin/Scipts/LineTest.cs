@@ -57,8 +57,7 @@ public class LineTest : MonoBehaviour
         if (_isClick)
         {
             _timer = 0f;
-            _mousePos = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            _mousePos.z = 0;
+            _mousePos = insManager.Instance.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
             _restLength = (_mousePos - _points[0]._pos).magnitude / (_points.Count - 1); //오차 거리식
             _bendRestLength = _restLength * 2;
             _points[_points.Count - 1]._pos = _mousePos;

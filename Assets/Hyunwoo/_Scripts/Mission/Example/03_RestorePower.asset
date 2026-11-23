@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
+  m_Name: 03_RestorePower
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  missionTitle: "비상 전력 복구"
+  objectives:
+  - description: "복도의 철제 패널 두 곳에서 F를 눌러 차단기를 올리세요."
+    eventType: 0
+    targetId: HallBreaker
+    requiredCount: 2
+  nextMission: {fileID: 11400000, guid: df24eedad07147e2a04a70efd8b86ea8, type: 2}
+  monsterActions: []

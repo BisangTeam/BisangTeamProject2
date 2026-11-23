@@ -17,31 +17,23 @@ public class Heart : MonoBehaviour
         _cam = Camera.main;
     }
 
-    private void Start()
-    {
-        _heartPos = _cam.ScreenToWorldPoint(_pos.position);
-        _heartPos.z = 0;
-    }
-
     private void Update()
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            _lineTest = insManager.Instance.GetLine();
+            _isCl = false;
+            var manager = insManager.Instance;
+            _lineTest = manager.GetLine();
             if (_lineTest == null)
                 return;
-            _mousePos = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            _mousePos.z = 0;
+            _heartPos = manager.GetBloodPoint(_cam, _pos);
+            _mousePos = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
             _lineTest._isClick = (_heartPos - _mousePos).magnitude < _heartRange; //심장 범위 체크
             if (_lineTest._isClick)
             {
                 _isCl = true;
                 _lineTest.GetLineRenderer().SetActive(true);
                 _lineTest.IsDrClick(_heartPos);
-            }
-            else
-            {
-                _isCl = false;
             }
         }
     }

@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Hyunwoo/Scene2/HyunwooTestScene2.unity
     guid: fe4f7b951d0ed584484ae7cb3f463b41
+  - enabled: 1
+    path: Assets/Hyunwoo/_Scripts/Mission/Example/MissionDemo.unity
+    guid: 8e291aa6fb1d478f8e824bd5dbb20b13
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

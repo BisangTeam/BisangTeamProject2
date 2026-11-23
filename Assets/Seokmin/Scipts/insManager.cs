@@ -16,6 +16,7 @@ public class insManager : MonoBehaviour
     public Sprite BloodSprite { get; private set; }
     
     [SerializeField] private GameObject _bloodCav;
+    [SerializeField] private Camera _bloodCamera;
 
     private void Awake()
     {
@@ -33,9 +34,44 @@ public class insManager : MonoBehaviour
         {
             GameObject inst = Instantiate(_linePrefab, _bloodCav.transform);
             inst.transform.position = Vector3.zero;
+            if (_bloodCamera != null)
+                inst.GetComponent<LineRenderer>().useWorldSpace = true;
             inst.SetActive(false);
             LineTest[i] = inst.GetComponent<LineTest>();
         }
+    }
+
+    public Vector3 GetBloodPoint(Camera inputCamera, Vector2 screenPoint)
+    {
+        if (_bloodCamera == null)
+            return LegacyBloodPoint(inputCamera, screenPoint);
+
+        // The mouse uses game window coordinates even when Main Camera renders to a smaller texture.
+        Vector2 viewport = inputCamera.targetTexture == null
+            ? (Vector2)inputCamera.ScreenToViewportPoint(screenPoint)
+            : new Vector2(screenPoint.x / Screen.width, screenPoint.y / Screen.height);
+        return BloodViewportPoint(viewport);
+    }
+
+    public Vector3 GetBloodPoint(Camera inputCamera, RectTransform anchor)
+    {
+        if (_bloodCamera == null)
+            return LegacyBloodPoint(inputCamera, anchor.position);
+
+        return BloodViewportPoint(inputCamera.WorldToViewportPoint(anchor.position));
+    }
+
+    private Vector3 BloodViewportPoint(Vector2 viewport)
+    {
+        float depth = _bloodCamera.nearClipPlane + 1f;
+        return _bloodCamera.ViewportToWorldPoint(new Vector3(viewport.x, viewport.y, depth));
+    }
+
+    private static Vector3 LegacyBloodPoint(Camera inputCamera, Vector3 screenPoint)
+    {
+        Vector3 point = inputCamera.ScreenToWorldPoint(screenPoint);
+        point.z = 0;
+        return point;
     }
 
     public LineTest GetLine()
