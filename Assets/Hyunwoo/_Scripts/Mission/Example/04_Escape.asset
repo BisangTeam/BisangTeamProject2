@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
+  m_Name: 04_Escape
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  missionTitle: "비상구로 탈출"
+  objectives:
+  - description: "괴물이 따라온다. 복도 끝의 철문까지 달리세요!"
+    eventType: 1
+    targetId: EmergencyExit
+    requiredCount: 1
+  nextMission: {fileID: 0}
+  monsterActions:
+  - type: 0
+    pointName: ChaseStart
+    speed: 3
+    seconds: 0.5
+  - type: 4
+    pointName:
+    speed: 3
+    seconds: 0.5

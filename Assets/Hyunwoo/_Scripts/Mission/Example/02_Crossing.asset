@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
+  m_Name: 02_Crossing
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  missionTitle: "발소리"
+  objectives:
+  - description: "복도 끝을 살펴보세요."
+    eventType: 3
+    targetId: MonsterSequenceFinished
+    requiredCount: 1
+  nextMission: {fileID: 11400000, guid: 9f3dbce85a31446abdf4296b420e9df5, type: 2}
+  monsterActions:
+  - type: 0
+    pointName: CrossingNear
+    speed: 3
+    seconds: 0.5
+  - type: 2
+    pointName:
+    speed: 3
+    seconds: 0.55
+  - type: 1
+    pointName: CrossingFar
+    speed: 2.2
+    seconds: 0.5
+  - type: 3
+    pointName:
+    speed: 3
+    seconds: 0.5
