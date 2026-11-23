@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,12 +9,8 @@ namespace Hyunwoo.CoreLib
         public Controls Controls;
         
         public Vector2 MoveDir { get; private set; }
-        
-        // public event Action OnUpKeyPressed;
-        // public event Action OnDownKeyPressed;
-        // public event Action OnLeftKeyPressed;
-        // public event Action OnRightKeyPressed;
-        
+        public Vector2 TurnDir { get; private set; }
+
         public void SetEnable()
         {
             if (Controls == null)
@@ -37,7 +31,11 @@ namespace Hyunwoo.CoreLib
         public void OnMove(InputAction.CallbackContext context)
         {
             MoveDir = context.ReadValue<Vector2>();
-            Debug.Log(MoveDir);
+        }
+
+        public void OnTurn(InputAction.CallbackContext context)
+        {
+            TurnDir = context.ReadValue<Vector2>();
         }
     }
 }

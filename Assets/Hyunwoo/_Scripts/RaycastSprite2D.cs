@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     // Transform.position의 XY는 사물 발밑의 맵 위치다.
     // 실제 회전이나 SpriteRenderer 처리는 하지 않고 RaycastRenderer2D가 결과 화면에 그린다.

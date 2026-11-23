@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     public readonly struct RaycastView2D
     {
@@ -30,7 +30,7 @@ namespace Hyunwoo.Raycasting2D
 
         public Vector2 GetDirection(int column)
         {
-            float screenX = ((column + 0.5f) / Width * 2f - 1f) * HalfPlaneWidth;
+            float screenX = ((column + 0.5f) / Width * 2f - 1f) * HalfPlaneWidth;   
             return (Forward + Right * screenX).normalized;
         }
     }

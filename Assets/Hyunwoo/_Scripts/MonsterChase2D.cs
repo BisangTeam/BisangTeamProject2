@@ -2,7 +2,7 @@ using Hyunwoo.UI;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hyunwoo.Raycasting2D
+namespace Hyunwoo.Raycasting2D.Scripts
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class MonsterChase2D : MonoBehaviour
@@ -32,6 +32,8 @@ namespace Hyunwoo.Raycasting2D
             if (Vector2.Distance(monsterPosition, playerPosition) <= catchDistance &&
                 !Physics2D.Linecast(monsterPosition, playerPosition, wallMask))
             {
+                return;
+
                 _agent.isStopped = true;
                 enabled = false;
                 gameOverScreen.Show();
