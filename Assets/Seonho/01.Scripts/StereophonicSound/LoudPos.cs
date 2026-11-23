@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -6,6 +7,9 @@ namespace Seonho._01.Scripts.StereophonicSound
 {
     public class LoudPos : MonoBehaviour
     {
+        [SerializeField, Range(0, 1)]
+        private float _earBlood;
+        
         [Header("Compo")]
         [SerializeField] private AudioSource _audioCompo;
         
@@ -17,16 +21,16 @@ namespace Seonho._01.Scripts.StereophonicSound
         [Header("Target")]
         [SerializeField] private Transform _player; // 플레이어 위치
         [SerializeField] private Transform _soundSource; // 소리 발생 위치
+        [SerializeField] private Transform _listener;
         
         [Header("Setting")]
         [SerializeField] private int _padding = 15; // 여유 공간
         [SerializeField] private float _soundDis; // 소리 거리
-        [SerializeField] private float _soundvolume; // 소리 블륨
         [SerializeField] private float _audioMinDistance; // 음향 최대 치 범위
         [SerializeField] private float _audioMaxDistance; // 음향 감소 시작 범위
+        [SerializeField] private float _cornerVolume;
 
         private float _nextSearchTime; // 경로 탐색 시간 => 계속하면 연산 비용이 커져서 
-
 
         //동서남북 대각선
         private Vector2Int[] _directions =
@@ -71,12 +75,15 @@ namespace Seonho._01.Scripts.StereophonicSound
 
             if (FindPath())
                 DrawPath();
-            
+
             MakeSound();
+            RealizeDirection();
         }
 
         private bool FindPath()
         {
+            _path.Clear();
+            
             // WorldToCell => 월드 좌표를 타일맵 셀 좌표로 변한
             Vector3Int startCell3 = _wallTilemap.WorldToCell(_soundSource.position); // 타일맵 소리 위치
             Vector3Int endCell3 = _wallTilemap.WorldToCell(_player.position); // 타일맵 플레이어 위치
@@ -236,6 +243,12 @@ namespace Seonho._01.Scripts.StereophonicSound
 
         private void MakeSound()
         {
+            if (_path.Count <= 0)
+            {
+                _audioCompo.volume = 0;
+                return;
+            }
+            
             _soundDis = 0f;
 
             for (int i = 1; i < _path.Count; i++)
@@ -244,15 +257,32 @@ namespace Seonho._01.Scripts.StereophonicSound
             }
             
             if (_soundDis < _audioMinDistance) // 범위 내에 있을 때 => 소리 최대
-                _audioCompo.volume = 1;
+                _audioCompo.volume = 1 * _earBlood;
             else if (_soundDis > _audioMaxDistance) // 최대 범위 밖에 있을 때 => 소리 점점 감소
                 _audioCompo.volume = 0;
             else // 거리에 따라 소리 감소
             {
-                // 1 - (거리 - 최소 거리) / (최대 거리 - 최소거리)
-                float volume = 1 -((_soundDis - _audioMinDistance) / (_audioMaxDistance - _audioMinDistance));
-                _audioCompo.volume = volume;
+                float volume = 1 * _earBlood - ((_soundDis - _audioMinDistance) / (_audioMaxDistance - _audioMinDistance));
+                _audioCompo.volume = volume - (Mathf.Clamp(_path.Count,0,_path.Count - 1) * _cornerVolume);
             }
+            
+            // 코너돌 때마다 감소되는 양
+        }
+
+        void RealizeDirection()
+        {
+            if (_earBlood * 100 < 70) // 그냥 편하게 백분율
+            {
+                _audioCompo.spatialBlend = _earBlood;
+            }
+            else 
+                _audioCompo.spatialBlend = 1;
+        }
+        
+        private void LateUpdate()
+        {
+            _listener.position = _player.position; // 플레이어 위치에 따라 Audio Listener도 이동
+            _listener.rotation = _player.rotation; // 플레이어 회전에 따라 Audio Listener도 회전
         }
     }
 }
