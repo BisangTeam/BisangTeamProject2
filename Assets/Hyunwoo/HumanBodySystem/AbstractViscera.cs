@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Hyunwoo.CoreLib;
@@ -9,14 +8,20 @@ namespace Hyunwoo.HumanBodySystem
 {
     public abstract class AbstractViscera : AbstractHumanBody, IModule, IAfterInitModule
     {
-        [SerializeField] private JanggiGuage gauge;
-        
-        [Header("Settings")]
+        [Header("게임 시작 시 기관별 혈액량")]
+        [SerializeField] private float defaultBloodGague;
+
+        [Header("1회 혈액 소모량")]
         [SerializeField] protected float updateTime = 0.5f;
+
+        [Header("혈액 소모 간격(초)")]
         [SerializeField] protected float reduceGauge = 1f;
         
-        [Header("List Settings")]
+        [Header("기관별 능력 단계 수 && 각 단계에 필요한 최소 혈액량")]
         [SerializeField] protected List<float> wantGaugeList;
+
+        [Header("Components")]
+        [SerializeField] private JanggiGuage gauge;
         
         protected ModuleOwner _owner;
         protected HeartModule _heartModule;

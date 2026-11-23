@@ -7,10 +7,18 @@ namespace Hyunwoo.HumanBodySystem
 {
     public class HeartModule : MonoModule
     {
-        [Header("Settings")]
-        [SerializeField] private float delaySeconds = 2;
+        [Header("1회 혈액 생성량")]
         [SerializeField] private float defaultGetBloodValue = 5f;
-        
+
+        [Header("혈액 생성 간격(초)")]
+        [SerializeField] private float delaySeconds = 2;
+
+        [Header("심장 혈액 저장 최대치")]
+        [SerializeField] private float maxGauge;
+
+        [Header("게임 시작 시 심장 혈액량")]
+        [SerializeField] private float defaultBloodGague;
+
         [Header("Compo")]
         [SerializeField] private HeartGauge heartGauge;
 
@@ -26,7 +34,7 @@ namespace Hyunwoo.HumanBodySystem
                 // bloodGauge가 차오르는걸 막기위해서?
                 //if (ConnectCount >= 1) return;
                 
-                _bloodGauge = Mathf.Clamp(value, 0, 100);
+                _bloodGauge = Mathf.Clamp(value, 0, maxGauge);
                 heartGauge.Gauge = BloodGauge;
             }
         }
@@ -55,6 +63,7 @@ namespace Hyunwoo.HumanBodySystem
         {
             base.Initialize(owner);
             _getBloodValue = defaultGetBloodValue;
+            BloodGauge = defaultBloodGague;
         }
 
         private void Start()
