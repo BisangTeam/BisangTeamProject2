@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,8 +6,8 @@ namespace Seonho._01.Scripts.StereophonicSound
 {
     public class LoudPos : MonoBehaviour
     {
-        [SerializeField, Range(0, 1)]
-        private float _earBlood;
+        [field:SerializeField, Range(0, 1)]
+        public float EarBlood { get; set; }
         
         [Header("Compo")]
         [SerializeField] private AudioSource _audioCompo;
@@ -257,12 +256,12 @@ namespace Seonho._01.Scripts.StereophonicSound
             }
             
             if (_soundDis < _audioMinDistance) // 범위 내에 있을 때 => 소리 최대
-                _audioCompo.volume = 1 * _earBlood;
+                _audioCompo.volume = 1 * EarBlood;
             else if (_soundDis > _audioMaxDistance) // 최대 범위 밖에 있을 때 => 소리 점점 감소
                 _audioCompo.volume = 0;
             else // 거리에 따라 소리 감소
             {
-                float volume = 1 * _earBlood - ((_soundDis - _audioMinDistance) / (_audioMaxDistance - _audioMinDistance));
+                float volume = 1 * EarBlood - ((_soundDis - _audioMinDistance) / (_audioMaxDistance - _audioMinDistance));
                 _audioCompo.volume = volume - (Mathf.Clamp(_path.Count,0,_path.Count - 1) * _cornerVolume);
             }
             
@@ -271,9 +270,9 @@ namespace Seonho._01.Scripts.StereophonicSound
 
         void RealizeDirection()
         {
-            if (_earBlood * 100 < 70) // 그냥 편하게 백분율
+            if (EarBlood * 100 < 70) // 그냥 편하게 백분율
             {
-                _audioCompo.spatialBlend = _earBlood;
+                _audioCompo.spatialBlend = EarBlood;
             }
             else 
                 _audioCompo.spatialBlend = 1;
