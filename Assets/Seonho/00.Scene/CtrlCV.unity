@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f78a563669c53547a94434eab4a9df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastWallSurface2D
-  image: {fileID: 2800000, guid: 534b16fdc271a074398070f7c818b347, type: 3}
+  image: {fileID: 2800000, guid: 2f018b0f6d3fed74d8c6386fdb9af004, type: 3}
 --- !u!61 &27817460
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -818,7 +818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d86deeb2e01464ca283e3c99563f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastWallDecoration2D
-  image: {fileID: 2800000, guid: a3eb2bd3e3ea7fb42b1e819318051c0b, type: 3}
+  image: {fileID: 2800000, guid: 1811be2df9b1cc34baaac0d5522af0e0, type: 3}
   width: 0.82
   height: 0.5
   elevation: 0.3
@@ -6233,12 +6233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117b983d458e4e8d951425577475d83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
-  wallMask:
-    serializedVersion: 2
-    m_Bits: 8
   moveSpeed: 3
   turnSpeed: 120
-  useKeyboardMovement: 1
 --- !u!58 &4000000011
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6283,7 +6279,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4000000008}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -6423,7 +6419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastRenderer2D
   player: {fileID: 4000000009}
-  view: {fileID: 4000000028}
+  rawImage: {fileID: 4000000028}
   wallMask:
     serializedVersion: 2
     m_Bits: 8
@@ -6431,13 +6427,13 @@ MonoBehaviour:
   defaultWallTexture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
   wallTextures:
   - tile: {fileID: 11400000, guid: 9b3022ac15401a1499d9b9c2421a874d, type: 2}
-    texture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
+    texture: {fileID: 2800000, guid: 0fdaf8152c17359479d12f2912c282f3, type: 3}
   - tile: {fileID: 11400000, guid: 23c8724b0df30124394a146a28a3aa1c, type: 2}
     texture: {fileID: 2800000, guid: d48c9edb9abed91428d91d2afe94d9b7, type: 3}
   - tile: {fileID: 11400000, guid: 9cdb88ce61c970c4eab57f728cf7dabf, type: 2}
     texture: {fileID: 2800000, guid: 75b23e3ca75644242939bb7b4946a10b, type: 3}
-  floorTexture: {fileID: 2800000, guid: 9a9cfa8c1150782449ed915c6281cd71, type: 3}
-  ceilingTexture: {fileID: 2800000, guid: dba3af5ce8bc63c40973a4c21d71d2db, type: 3}
+  floorTexture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
+  ceilingTexture: {fileID: 2800000, guid: 85d06711f5a30b248b9e1cb7f97a36ed, type: 3}
   surfaceTileSize: 1
   fieldOfView: 80
   wallHeight: 1
@@ -6446,9 +6442,6 @@ MonoBehaviour:
   shadowStartDistance: 2
   shadowEndDistance: 8
   sideWallBrightness: 0.8
-  ceilingColor: {r: 0.13, g: 0.17, b: 0.22, a: 1}
-  floorColor: {r: 0.24, g: 0.23, b: 0.22, a: 1}
-  wallColor: {r: 0.55, g: 0.73, b: 0.77, a: 1}
 --- !u!4 &4000000018
 Transform:
   m_ObjectHideFlags: 0

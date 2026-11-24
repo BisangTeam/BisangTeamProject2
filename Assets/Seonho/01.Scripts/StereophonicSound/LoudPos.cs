@@ -165,7 +165,7 @@ namespace Seonho._01.Scripts.StereophonicSound
                         continue;
 
                     // 대각선으로 벽 모서리 통과 방지
-                    if (dir.x != 0 && dir.y != 0) // 양옆에 벽이 있는지 없는지 확인
+                    if (dir.x != 0 && dir.y != 0) // 대각선인지 확인
                     {
                         if (blocked[current.x + dir.x, current.y] || blocked[current.x, current.y + dir.y]) // 현재 x위치에서 dir.x만큼 더하고, 현재 y위치에서 dir.y를 더했을 때 하나라도 블록이 있다면?
                             continue;
