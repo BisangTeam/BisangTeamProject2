@@ -18,12 +18,14 @@ namespace Hyunwoo.HumanBodySystem
             set
             {
                 float before = _bloodGauge;
-                _bloodGauge = Mathf.Clamp(value, 0f, maxGauge); 
-                
+                _bloodGauge = Mathf.Clamp(value, 0f, maxGauge);
+
                 if (!Mathf.Approximately(_bloodGauge, before))
                     OnBloodGaugeChanged?.Invoke();
             }
-        } 
+        }
+
+        public float BloodGaugeRatio => BloodGauge / maxGauge;
 
         public abstract void ConnectionBlood();
 
