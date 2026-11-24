@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,16 +25,22 @@ public class Heart : MonoBehaviour
             _isCl = false;
             var manager = insManager.Instance;
             _lineTest = manager.GetLine();
-            if (_lineTest == null)
-                return;
-            _heartPos = manager.GetBloodPoint(_cam, _pos);
-            _mousePos = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
-            _lineTest._isClick = (_heartPos - _mousePos).magnitude < _heartRange; //심장 범위 체크
-            if (_lineTest._isClick)
+            try
             {
-                _isCl = true;
-                _lineTest.GetLineRenderer().SetActive(true);
-                _lineTest.IsDrClick(_heartPos);
+                _heartPos = manager.GetBloodPoint(_cam, _pos);
+                _mousePos = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
+                _lineTest._isClick = (_heartPos - _mousePos).magnitude < _heartRange; //심장 범위 체크
+                if (_lineTest._isClick)
+                {
+                    _isCl = true;
+                    _lineTest.GetLineRenderer().SetActive(true);
+                    _lineTest.IsDrClick(_heartPos);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Debug.Log("남은 혈관없음");
+                return;
             }
         }
     }
