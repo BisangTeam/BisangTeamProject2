@@ -58,6 +58,8 @@ namespace Hyunwoo.HumanBodySystem
         public event Action<float> OnHeartRate;
         
         private float _getBloodValue;
+        private float _getVisceraBloodValue;
+        private float _reduceBloodValue;
         
         public override void Initialize(ModuleOwner owner)
         {
@@ -74,17 +76,20 @@ namespace Hyunwoo.HumanBodySystem
         // UniTask로 왜 썻는지
         private async UniTask TestAsync()
         {
-            BloodGauge += _getBloodValue;
-            OnHeartRate?.Invoke(_getBloodValue);
+            _reduceBloodValue = BloodGauge >= 0.1f ? _getBloodValue * ConnectCount : 0;
+            BloodGauge -= _reduceBloodValue;
+            
+            _getVisceraBloodValue = BloodGauge >= 0.1f ? defaultGetBloodValue : 0;
+            OnHeartRate?.Invoke(_getVisceraBloodValue);
 
-            BloodGauge -= _getBloodValue * ConnectCount;
+            BloodGauge += _getBloodValue;
             
             await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: destroyCancellationToken);
             
             TestAsync().Forget();
         }
-        // 중단 지점을 만들어놓기 => 알아보기
 
+        
         public void InsertBlood(float value)
         {
             BloodGauge += value;
