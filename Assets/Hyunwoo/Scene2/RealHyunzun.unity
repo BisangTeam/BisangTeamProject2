@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
   maxGauge: 100
-  defaultBloodGague: 0
+  defaultBloodGague: 30
   reduceGauge: 1
   updateTime: 0.1
   wantGaugeList:
@@ -744,7 +744,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245786637}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &245786639
 Camera:
   m_ObjectHideFlags: 0
@@ -1298,6 +1298,10 @@ MonoBehaviour:
   _audioMinDistance: 5
   _audioMaxDistance: 30
   _cornerVolume: 0.01
+  _emptyEarCutoff: 500
+  _fullEarCutoff: 18000
+  _emptyEarVolume: 0.2
+  _hearingResponseTime: 0.15
 --- !u!169 &361896673
 AudioLowPassFilter:
   m_ObjectHideFlags: 0
@@ -6188,7 +6192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f4a612aee058f4b90c8a3af36afd64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::insManager
-  <InstCount>k__BackingField: 2
+  <InstCount>k__BackingField: 3
   _linePrefab: {fileID: 5633444223046486360, guid: f6f5569dd813b9d41aba8927d9e03a12, type: 3}
   <_Heart>k__BackingField: {fileID: 1385264450}
   <BloodSprite>k__BackingField: {fileID: -7843899350863918363, guid: 8ad4e6c1f3af1654b90e100958b23ab7, type: 3}

@@ -48,6 +48,7 @@ namespace Hyunwoo.HumanBodySystem
         
         private void Start()
         {
+            BloodGauge = defaultBloodGague;
             UpdateReduceGauge().Forget();
         }
         
