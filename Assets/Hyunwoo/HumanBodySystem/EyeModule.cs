@@ -1,12 +1,14 @@
+using Hyunwoo.Raycasting2D.Scripts;
 using UnityEngine;
 
 namespace Hyunwoo.HumanBodySystem
 {
     public class EyeModule : AbstractViscera
     {
-        protected override void WorkFunction(int index)
+        [SerializeField] private RaycastRenderer2D raycastRenderer;
+        protected override void WorkFunction(int index, float abillityValue)
         {
-            Debug.Log("Eye : " + index);
+            raycastRenderer.ShadowStrength = abillityValue;
         }
     }
 }

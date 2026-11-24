@@ -432,10 +432,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
   maxGauge: 100
   defaultBloodGague: 0
-  updateTime: 0.5
   reduceGauge: 1
-  wantGaugeList: []
-  gauge: {fileID: 1163783276}
+  updateTime: 0.1
+  wantGaugeList:
+  - needBloodGauge: 20
+    abillityValue: 0
+  - needBloodGauge: 40
+    abillityValue: 0
+  - needBloodGauge: 60
+    abillityValue: 0
+  - needBloodGauge: 80
+    abillityValue: 0
+  - needBloodGauge: 100
+    abillityValue: 0
+  gaugeUI: {fileID: 1163783276}
 --- !u!114 &121303718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,11 +3431,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
   maxGauge: 100
   defaultBloodGague: 0
-  updateTime: 0.5
   reduceGauge: 1
-  wantGaugeList: []
-  gauge: {fileID: 280915790}
-  raycastRenderer: {fileID: 0}
+  updateTime: 0.1
+  wantGaugeList:
+  - needBloodGauge: 0
+    abillityValue: 3
+  - needBloodGauge: 10
+    abillityValue: 2.8
+  - needBloodGauge: 20
+    abillityValue: 2.6
+  - needBloodGauge: 30
+    abillityValue: 2.4
+  - needBloodGauge: 40
+    abillityValue: 2.2
+  - needBloodGauge: 50
+    abillityValue: 2
+  - needBloodGauge: 60
+    abillityValue: 1.8
+  - needBloodGauge: 70
+    abillityValue: 1.6
+  - needBloodGauge: 80
+    abillityValue: 1.4
+  - needBloodGauge: 90
+    abillityValue: 1.2
+  - needBloodGauge: 100
+    abillityValue: 1
+  gaugeUI: {fileID: 280915790}
+  raycastRenderer: {fileID: 4000000017}
 --- !u!114 &946273952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4034,8 +4066,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3ba8faa24bdc9414f0190f156d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
-  defaultGetBloodValue: 12.86
-  delaySeconds: 1
+  defaultGetBloodValue: 2
+  delaySeconds: 0.1
   maxGauge: 100
   defaultBloodGague: 0
   heartGauge: {fileID: 345904792}
