@@ -110,11 +110,12 @@ namespace Hyunwoo.Raycasting2D.Editor
             interaction.FindProperty("interactionDistance").floatValue = 1.6f;
             interaction.ApplyModifiedProperties();
 
-            Transform group = scene.GetRootGameObjects().FirstOrDefault(item => item.name == GroupName)?.transform;
+            Transform group = FindInScene<Transform>(scene).FirstOrDefault(item => item.name == GroupName);
             if (group == null)
             {
                 var container = new GameObject(GroupName);
                 SceneManager.MoveGameObjectToScene(container, scene);
+                container.transform.SetParent(renderer.transform.parent, false);
                 Undo.RegisterCreatedObjectUndo(container, "Create environment group");
                 group = container.transform;
             }
@@ -131,7 +132,7 @@ namespace Hyunwoo.Raycasting2D.Editor
             if (group.Find("Ceiling Lamp") == null)
                 CreateLamp(group, player, map, reachable, lamp, wallHeight);
 
-            RawImage view = settings.FindProperty("view").objectReferenceValue as RawImage;
+            RawImage view = settings.FindProperty("rawImage").objectReferenceValue as RawImage;
             if (view != null)
             {
                 foreach (Text text in view.GetComponentsInChildren<Text>(true))
