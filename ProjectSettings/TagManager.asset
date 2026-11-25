@@ -17,9 +17,9 @@ TagManager:
   - Bottom
   - Wall
   - MiniMapFog
-  - 
-  - 
-  - 
+  - Corridor
+  - SmallRoom
+  - LargeRoom
   - 
   - 
   - 

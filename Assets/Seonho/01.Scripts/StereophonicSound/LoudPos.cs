@@ -9,12 +9,16 @@ namespace Seonho._01.Scripts.StereophonicSound
     {
         [field:SerializeField, Range(0, 1)]
         public float EarBlood { get; set; }
+
+        #region 변수
         
         [Header("Compo")]
         [SerializeField] private AudioSource _audioCompo;
+        private AudioLowPassFilter _audioLosPassFilter;
+        private AudioReverbFilter _audioReverbFilter;
         
         [Header("List")]
-        private List<Vector3> _path = new List<Vector3>(); // 찾아낸 경로를 저장
+        private List<Vector3> _path = new(); // 찾아낸 경로를 저장
         
         [Header("Wall Tilemap")] [SerializeField] private Tilemap _wallTilemap; // 타일맵
         
@@ -30,13 +34,14 @@ namespace Seonho._01.Scripts.StereophonicSound
         [SerializeField] private float _audioMaxDistance; // 음향 감소 시작 범위
         [SerializeField] private float _cornerVolume;
 
+        [SerializeField] private float _transitionTime = 0.7f; // 음향이 바뀌는 시간
+
         [Header("Ear Blood")]
         [SerializeField, Range(10f, 22000f)] private float _emptyEarCutoff = 500f;
         [SerializeField, Range(10f, 22000f)] private float _fullEarCutoff = 18000f;
         [SerializeField, Range(0f, 1f)] private float _emptyEarVolume = 0.2f;
         [SerializeField, Min(0.01f)] private float _hearingResponseTime = 0.15f;
 
-        private AudioLowPassFilter _lowPass;
         private float _currentEarBlood;
         private float _pathVolume;
         private float _nextSearchTime; // 경로 탐색 시간 => 계속하면 연산 비용이 커져서 
@@ -53,11 +58,14 @@ namespace Seonho._01.Scripts.StereophonicSound
             new Vector2Int(-1, 1),
             new Vector2Int(-1, -1)
         };
+        
+        #endregion
 
         private void Awake()
         {
             _audioCompo = GetComponent<AudioSource>();
-            _lowPass = GetComponent<AudioLowPassFilter>();
+            _audioReverbFilter = GetComponent<AudioReverbFilter>();
+            _audioLosPassFilter = GetComponent<AudioLowPassFilter>();
             _audioCompo.spatialBlend = 1f;
             _currentEarBlood = Mathf.Clamp01(EarBlood);
             ApplyHearing();
@@ -267,8 +275,8 @@ namespace Seonho._01.Scripts.StereophonicSound
         {
             // 같은 양의 피가 차면 컷오프도 같은 비율로 오른다. 기본값에서 절반은 3,000 Hz다.
             float cutoff = _emptyEarCutoff * Mathf.Pow(_fullEarCutoff / _emptyEarCutoff, _currentEarBlood);
-            if (!Mathf.Approximately(_lowPass.cutoffFrequency, cutoff))
-                _lowPass.cutoffFrequency = cutoff;
+            if (!Mathf.Approximately(_audioLosPassFilter.cutoffFrequency, cutoff))
+                _audioLosPassFilter.cutoffFrequency = cutoff;
 
             float hearingVolume = Mathf.Lerp(_emptyEarVolume, 1f, _currentEarBlood);
             _audioCompo.volume = _pathVolume * hearingVolume;
@@ -278,6 +286,24 @@ namespace Seonho._01.Scripts.StereophonicSound
         {
             if (_listener != null && _player != null && _listener != _player)
                 _listener.SetPositionAndRotation(_player.position, _player.rotation);
+        }
+
+        public void AudioResonance(float resonance, float time)
+        {
+            _audioReverbFilter.reverbLevel = resonance;
+            _audioReverbFilter.decayTime = time;
+        }
+
+        public void DistanceRever()
+        {
+            float distance = 0;
+            
+            for (int i = 0; i < _path.Count-1; i++)
+            {
+                distance += Vector2.Distance(_path[i], _path[i + 1]) * 100;
+            }
+
+            _audioReverbFilter.reverbLevel = distance;
         }
     }
 }
