@@ -3593,6 +3593,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   catchDistance: 0.42
+  hidingController: {fileID: 0}
+  sightDistance: 6
 --- !u!114 &962103373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4818,6 +4820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1857785674}
   - component: {fileID: 1857785675}
+  - component: {fileID: 1857785676}
   m_Layer: 7
   m_Name: RenderPivot
   m_TagString: Untagged
@@ -4854,6 +4857,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WalkFeedback
   view: {fileID: 4000000028}
   strength: 0.03
+  duration: 0.2
+  bumpStrength: 0.06
+  bumpDuration: 0.15
+  bumpDarkness: 0.15
+--- !u!114 &1857785676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857785673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40e740c48ae3b9f4ead0be26ad257fa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallBumpFeedback
+  renderPivot: {fileID: 4000000014}
+  strength: 1
   duration: 0.2
 --- !u!1 &1864451568
 GameObject:
@@ -14148,6 +14169,7 @@ MonoBehaviour:
   maxGauge: 0
   defaultBloodGague: 0
   heartGauge: {fileID: 1591676630}
+  heartVisual: {fileID: 0}
 --- !u!114 &1949637201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14463,7 +14485,7 @@ GameObject:
   - component: {fileID: 1999300204}
   m_Layer: 3
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
