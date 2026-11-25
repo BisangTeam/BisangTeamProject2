@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
   m_Name: 04_Escape
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  saveId: df24eedad07147e2a04a70efd8b86ea8
   missionTitle: "비상구로 탈출"
   objectives:
   - description: "괴물이 따라온다. 복도 끝의 철문까지 달리세요!"

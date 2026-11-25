@@ -36,14 +36,14 @@ namespace Hyunwoo.Raycasting2D.Scripts
                     if (depthSquared * ray.sqrMagnitude > maxDistanceSquared) 
                         continue;
 
-                    DrawPixel(resources, view, source, colors, ray, tileSize, depth, brightness, x, y);
+                    DrawPixel(resources, view, lighting, source, colors, ray, tileSize, depth, brightness, x, y);
                 }
             }
         }   
 
         private static bool TryCalculateDepth(RaycastView2D view, int y, out float depth, out bool isFloor)
         {
-            float fromHorizon = y + 0.5f - view.Height * 0.5f;
+            float fromHorizon = y + 0.5f - view.Horizon;
 
             if (Mathf.Abs(fromHorizon) < 0.0001f)
             {
@@ -52,13 +52,14 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 return false;
             }
 
-            depth = view.WallHeight * 0.5f * view.PixelLength / Mathf.Abs(fromHorizon);
             isFloor = fromHorizon < 0f;
+            float distanceToPlane = isFloor ? view.EyeHeight : view.WallHeight - view.EyeHeight;
+            depth = distanceToPlane * view.PixelLength / Mathf.Abs(fromHorizon);
 
             return true;
         }
 
-        private static void DrawPixel(RaycastRenderResources resources, RaycastView2D view, Texture2D source, Color32[] colors,
+        private static void DrawPixel(RaycastRenderResources resources, RaycastView2D view, RaycastLighting2D lighting, Texture2D source, Color32[] colors,
             Vector2 ray, float tileSize, float depth, float brightness, int x, int y)
         {
             int index = y * view.Width + x;
@@ -66,9 +67,9 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
             Vector2 worldPoint = view.Origin + ray * depth;
 
-            Color32 color = GetTextureColor(worldPoint, tileSize, source, colors);
+            Color32 color = colors != null ? GetTextureColor(worldPoint, tileSize, source, colors) : new Color32(0, 0, 0, 255);
 
-            resources.Pixels[index] = RaycastLighting2D.Shade(color, brightness);
+            resources.Pixels[index] = RaycastLighting2D.Shade(color, brightness * lighting.PlaceBrightness(worldPoint));
         }
 
         private static Color32 GetTextureColor(Vector2 worldPoint, float tileSize, Texture2D source, Color32[] colors)

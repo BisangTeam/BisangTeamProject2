@@ -3,6 +3,7 @@ using DG.Tweening;
 
 public class Heartbeat : MonoBehaviour
 {
+    public event System.Action StrongBeat;
     [Header("첫 번째 박동 (작게 쿵)")]
     [SerializeField] private float firstScale = 1.08f;
     [SerializeField] private float firstDuration = 0.07f;
@@ -22,6 +23,7 @@ public class Heartbeat : MonoBehaviour
         sequence.Append(transform.DOScale(baseScale * firstScale, firstDuration));
         sequence.Append(transform.DOScale(baseScale, firstDuration));
         sequence.Append(transform.DOScale(baseScale * secondScale, secondDuration));
+        sequence.AppendCallback(() => StrongBeat?.Invoke());
         sequence.Append(transform.DOScale(baseScale, secondDuration));
         sequence.AppendInterval(restTime);
 

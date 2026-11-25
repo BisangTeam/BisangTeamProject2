@@ -24,6 +24,8 @@ public class MissionObjective
 [CreateAssetMenu(fileName = "NewMission", menuName = "SO/MissionData")]
 public class MissionDataSO : ScriptableObject
 {
+    [SerializeField] private string saveId;
+    public string SaveId => string.IsNullOrEmpty(saveId) ? name : saveId;
     public string missionTitle;
     public List<MissionObjective> objectives;
     public MissionDataSO nextMission;

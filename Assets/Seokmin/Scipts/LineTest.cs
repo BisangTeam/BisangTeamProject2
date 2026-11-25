@@ -47,17 +47,18 @@ public class LineTest : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        Mouse mouse = Mouse.current;
+        if (mouse != null && mouse.leftButton.wasReleasedThisFrame)
         {
             if (_points.Count > 1)
             {
                 _points[_points.Count - 1]._prePos = _points[_points.Count - 2]._pos;
             }
         }
-        if (_isClick)
+        if (_isClick && mouse != null)
         {
             _timer = 0f;
-            _mousePos = insManager.Instance.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
+            _mousePos = insManager.Instance.GetBloodPoint(_cam, mouse.position.ReadValue());
             _restLength = (_mousePos - _points[0]._pos).magnitude / (_points.Count - 1); //오차 거리식
             _bendRestLength = _restLength * 2;
             _points[_points.Count - 1]._pos = _mousePos;

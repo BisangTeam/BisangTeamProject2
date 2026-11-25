@@ -7,7 +7,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
     public sealed class RaycastWallRenderer2D
     {
         private readonly Dictionary<TileBase, Texture2D> _tileTextures = new();
-        private readonly RaycastHit2D[] _hits = new RaycastHit2D[1];
+        private readonly RaycastHit2D[] _hits = new RaycastHit2D[32];
 
         private ContactFilter2D _filter;
 
@@ -25,7 +25,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
         }
 
         public void Draw(RaycastRenderResources resources, RaycastView2D view, RaycastLighting2D lighting,
-            LayerMask wallMask, Tilemap wallTilemap, Texture2D defaultWallTexture)
+            LayerMask wallMask, Tilemap wallTilemap, Texture2D defaultWallTexture,
+            RaycastDoor2D peekDoor = null, float slitWidth = 0.08f)
         {
             Physics2D.SyncTransforms();
 
@@ -36,11 +37,37 @@ namespace Hyunwoo.Raycasting2D.Scripts
             {
                 Vector2 direction = view.GetDirection(x);
 
-                int hitCount = Physics2D.Raycast(view.Origin, direction, _filter, _hits, view.MaxDistance);
+                bool throughSlit = peekDoor != null &&
+                                   Mathf.Abs((x + 0.5f) / view.Width - 0.5f)
+                                   <= slitWidth * 0.5f;
 
-                if (hitCount == 0) continue;
+                int hitCount = Physics2D.Raycast(
+                    view.Origin, direction, _filter, _hits, view.MaxDistance);
 
-                DrawColumn(x, _hits[0], resources, view, lighting, wallTilemap, defaultWallTexture);
+                int nearestIndex = -1;
+                float nearestDistance = float.MaxValue;
+
+                for (int i = 0; i < hitCount; i++)
+                {
+                    Collider2D hitCollider = _hits[i].collider;
+                    if (hitCollider == null)
+                        continue;
+
+                    if (throughSlit &&
+                        hitCollider.GetComponentInParent<RaycastDoor2D>() == peekDoor)
+                        continue;
+
+                    if (_hits[i].distance < nearestDistance)
+                    {
+                        nearestDistance = _hits[i].distance;
+                        nearestIndex = i;
+                    }
+                }
+
+                RaycastHit2D visibleHit = nearestIndex >= 0 ? _hits[nearestIndex] : default;
+                resources.WallHits[x] = visibleHit;
+                if (nearestIndex >= 0)
+                    DrawColumn(x, visibleHit, resources, view, lighting, wallTilemap, defaultWallTexture);
             }
         }
 
@@ -52,7 +79,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             Texture2D source = GetWallTexture(hit, wallTilemap, defaultWallTexture, out float u);
             Color32[] sourcePixels = resources.GetTexturePixels(source);
 
-            float shade = lighting.WallShade(hit.normal, drawStruct.Depth);
+            float shade = lighting.WallShade(hit.normal, drawStruct.Depth) * lighting.PlaceBrightness(hit.point);
 
             DrawColumnPixels(resources, view, drawStruct, source, sourcePixels, x, u, shade);
         }
@@ -93,6 +120,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (IsDetectDoor(hit, defaultWallTexture, out u, out Texture2D texture))
                 return texture;
 
+            if (hit.collider.TryGetComponent(out Tilemap hitMap))
+                tilemap = hitMap;
             Vector3Int cell = tilemap.WorldToCell(hit.point - hit.normal * 0.001f);
 
             Texture2D source = CalculateWallTexture(tilemap, defaultWallTexture, cell);

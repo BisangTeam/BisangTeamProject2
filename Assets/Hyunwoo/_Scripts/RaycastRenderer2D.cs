@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -31,6 +32,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         [Header("Settings")]
         [SerializeField, Range(10f, 150f)] private float fieldOfView = 80f;
+        private float activeFieldOfView;
+        private float verticalViewOffset;
         [SerializeField, Min(0.01f)] private float wallHeight = 1f;
         [SerializeField, Min(0.1f)] private float maxDistance = 30f;
 
@@ -39,6 +42,21 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0f)] private float shadowStartDistance = 2f;
         [SerializeField, Min(0.01f)] private float shadowEndDistance = 8f;
         [SerializeField, Range(0f, 1f)] private float sideWallBrightness = 0.8f;
+
+        [SerializeField, Range(0.01f, 0.3f)]
+        private float peekSlitWidth = 0.08f;
+
+        private RaycastDoor2D peekingDoor;
+
+        public void SetPeekDoor(RaycastDoor2D door)
+        {
+            peekingDoor = door;
+        }
+
+        [Header("Corridor Lighting")]
+        [SerializeField, Range(0f, 1f)] private float ambientBrightness = 1f;
+        [SerializeField] private LowBloodPulse lowBloodPulse;
+        private readonly List<RaycastLight2D.Sample> _lights = new();
 
         private const int ScreenWidth = 320;
 
@@ -50,6 +68,9 @@ namespace Hyunwoo.Raycasting2D.Scripts
         {
             _walls.SetTileTextures(wallTextures);
             _resources.Resize(rawImage, ScreenWidth);
+
+            activeFieldOfView = fieldOfView;
+            verticalViewOffset = 0f;
         }
 
         private void LateUpdate()
@@ -62,12 +83,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (!_resources.Resize(rawImage, ScreenWidth)) return;
 
             var view = new RaycastView2D(player, ScreenWidth, _resources.Height,
-                fieldOfView, wallHeight, maxDistance);
+                activeFieldOfView, wallHeight, maxDistance, lowBloodPulse != null ? lowBloodPulse.HeightOffset : 0f);
+            RaycastLight2D.Collect(gameObject.scene, view, Time.time, _lights);
             var lighting = new RaycastLighting2D(ShadowStrength, shadowStartDistance,
-                shadowEndDistance, sideWallBrightness);
+                shadowEndDistance, sideWallBrightness, ambientBrightness, _lights);
 
             RaycastFloorRenderer2D.Draw(_resources, view, lighting, floorTexture, ceilingTexture, surfaceTileSize);
-            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture);
+            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture, peekingDoor, peekSlitWidth);
             _objects.Draw(_resources, view, lighting);
             _resources.Present();
         }
@@ -75,6 +97,18 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private void OnDestroy()
         {
             _resources.Dispose(rawImage);
+        }
+
+        public void SetHideView(float fieldOfView, float verticalOffset)
+        {
+            activeFieldOfView = Mathf.Clamp(fieldOfView, 10f, 150f);
+            verticalViewOffset = Mathf.Clamp(verticalOffset, -0.3f, 0.3f);
+        }
+
+        public void ResetHideView()
+        {
+            activeFieldOfView = fieldOfView;
+            verticalViewOffset = 0f;
         }
     }
 }
