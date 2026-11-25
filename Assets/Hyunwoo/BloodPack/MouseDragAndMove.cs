@@ -1,4 +1,5 @@
 using Hyunwoo.HumanBodySystem;
+using Hyunwoo.Save;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,6 +14,9 @@ namespace Hyunwoo.BloodPack
         [SerializeField] private float insertBloodAmount = 50;
 
         [SerializeField] private HeartModule heartModule;
+        [SerializeField] private PlayerInventory inventory;
+        private const string ItemId = "blood-pack";
+        private Vector2 _homePosition;
         
         [SerializeField] private RectTransform canvasRect;
         private RectTransform _heartRect;
@@ -29,6 +33,7 @@ namespace Hyunwoo.BloodPack
         {
             _heartRect = heartModule.GetComponent<RectTransform>();
             _myRect = GetComponent<RectTransform>();
+            _homePosition = _myRect.anchoredPosition;
             
             _myRectSize = _myRect.sizeDelta;    
         }
@@ -52,8 +57,11 @@ namespace Hyunwoo.BloodPack
         {
             if (!CalculateRectCorners()) return;
             
-            heartModule.InsertBlood(50);
-            gameObject.SetActive(false);
+            if (inventory != null && !inventory.TryConsume(ItemId)) return;
+            heartModule.InsertBlood(insertBloodAmount);
+            _myRect.anchoredPosition = _homePosition;
+            _myRect.sizeDelta = _myRectSize;
+            if (inventory == null) gameObject.SetActive(false);
         }
 
         private void MovePos(PointerEventData eventData)

@@ -24,7 +24,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             float depth = Mathf.Max(0.01f, Vector2.Dot(hit.point - view.Origin, view.Forward));
 
             float height = view.WallHeight * view.PixelLength / depth;
-            float bottom = (view.Height - height) * 0.5f;
+            float bottom = view.Height * 0.5f - view.EyeHeight * view.PixelLength / depth;
 
             int first = Mathf.Clamp(Mathf.CeilToInt(bottom - 0.5f), 0, view.Height);
             int end = Mathf.Clamp(Mathf.CeilToInt(bottom + height - 0.5f), 0, view.Height);

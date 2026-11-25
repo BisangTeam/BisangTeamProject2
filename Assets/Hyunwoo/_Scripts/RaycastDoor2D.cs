@@ -23,6 +23,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public static IReadOnlyList<RaycastDoor2D> Active => ActiveDoors;
         public bool IsOpen => _openAmount >= 0.9999f;
+        public bool TargetOpen => _targetOpen;
         public bool IsMoving => !Mathf.Approximately(_openAmount, _targetOpen ? 1f : 0f);
         public float OpenAmount => _openAmount;
 
@@ -83,6 +84,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
         {
             Initialize();
             _targetOpen = open;
+        }
+
+        public void RestoreOpen(bool open)
+        {
+            SetOpen(open);
+            _openAmount = open ? 1f : 0f;
+            transform.localPosition = _closedPosition + _slide * _openAmount;
         }
 
         // 시간을 인자로 받아 에디터 검증에서도 같은 이동을 확인할 수 있다.

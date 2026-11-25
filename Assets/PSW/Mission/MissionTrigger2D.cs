@@ -1,4 +1,5 @@
 using UnityEngine;
+using Hyunwoo.Save;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,7 @@ namespace Hyunwoo.Mission
 
         private BoxCollider2D _area;
         private bool _used;
+        [SerializeField] private CheckpointDevice savedDevice;
 
         private void Reset()
         {
@@ -42,12 +44,15 @@ namespace Hyunwoo.Mission
 
         private void ResetUse(MissionDataSO current)
         {
-            if (current == mission) _used = false;
+            if (current != mission) return;
+            _used = false;
+            if (savedDevice != null) savedDevice.SetUsed(false);
         }
 
         private void Update()
         {
-            if (_used || missions.GetcurrentMission() != mission || Time.timeScale == 0f) return;
+            if (_used || (savedDevice != null && savedDevice.Used) ||
+                missions.GetcurrentMission() != mission || Time.timeScale == 0f) return;
             if (!player.IsTouching(_area)) return;
 
             MissionObjective objective = mission.objectives[objectiveIndex];
@@ -58,6 +63,7 @@ namespace Hyunwoo.Mission
 
             // 완료 처리 도중 다음 미션이 동기적으로 시작될 수 있다.
             _used = true;
+            if (savedDevice != null) savedDevice.SetUsed(true);
             missions.ProcessAction(objective.eventType, objective.targetId);
             onAccepted.Invoke();
         }

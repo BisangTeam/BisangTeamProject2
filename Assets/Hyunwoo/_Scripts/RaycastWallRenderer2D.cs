@@ -37,7 +37,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 Vector2 direction = view.GetDirection(x);
 
                 int hitCount = Physics2D.Raycast(view.Origin, direction, _filter, _hits, view.MaxDistance);
-
+                resources.WallHits[x] = hitCount > 0 ? _hits[0] : default;
                 if (hitCount == 0) continue;
 
                 DrawColumn(x, _hits[0], resources, view, lighting, wallTilemap, defaultWallTexture);
@@ -52,7 +52,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             Texture2D source = GetWallTexture(hit, wallTilemap, defaultWallTexture, out float u);
             Color32[] sourcePixels = resources.GetTexturePixels(source);
 
-            float shade = lighting.WallShade(hit.normal, drawStruct.Depth);
+            float shade = lighting.WallShade(hit.normal, drawStruct.Depth) * lighting.PlaceBrightness(hit.point);
 
             DrawColumnPixels(resources, view, drawStruct, source, sourcePixels, x, u, shade);
         }
@@ -93,6 +93,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (IsDetectDoor(hit, defaultWallTexture, out u, out Texture2D texture))
                 return texture;
 
+            if (hit.collider.TryGetComponent(out Tilemap hitMap))
+                tilemap = hitMap;
             Vector3Int cell = tilemap.WorldToCell(hit.point - hit.normal * 0.001f);
 
             Texture2D source = CalculateWallTexture(tilemap, defaultWallTexture, cell);

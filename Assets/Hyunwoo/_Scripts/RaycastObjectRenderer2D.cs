@@ -20,7 +20,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             _visibleSprites.Clear();
 
             AddRaycastSprites(view);
-            AddWallDecorations(view);
+            DrawMarksAndCollectDecorations(resources, view, lighting);
 
             _visibleSprites.Sort((a, b) => b.depth.CompareTo(a.depth));
 
@@ -54,7 +54,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             }
         }
         
-        private void AddWallDecorations(RaycastView2D view)
+        private void DrawMarksAndCollectDecorations(RaycastRenderResources resources, RaycastView2D view,
+            RaycastLighting2D lighting)
         {
             foreach (RaycastWallDecoration2D decoration in RaycastWallDecoration2D.Active)
             {
@@ -63,11 +64,16 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 Vector2 offset = (Vector2)decoration.transform.position - view.Origin;
 
                 float depth = Vector2.Dot(offset, view.Forward);
-                float halfDepth = Mathf.Abs(Vector2.Dot(decoration.transform.right, view.Forward)) * decoration.Width * 0.5f;
+                float halfWidth = decoration.Width * 0.5f + decoration.SwayAmplitude;
+                float halfDepth = Mathf.Abs(Vector2.Dot(decoration.transform.right, view.Forward)) * halfWidth;
 
-                if (depth + halfDepth <= 0.01f || offset.magnitude - decoration.Width * 0.5f > view.MaxDistance) continue;
+                if (depth + halfDepth <= 0.01f || offset.magnitude - halfWidth > view.MaxDistance) continue;
 
-                _visibleSprites.Add(new VisibleSprite { decoration = decoration, depth = depth });
+                // 벽 위에 찍은 순서대로 손자국을 먼저 겹치고, 그 앞의 사물은 나중에 그린다.
+                if (decoration.SupportingWall != null)
+                    DrawWallDecoration(decoration, resources, view, lighting);
+                else
+                    _visibleSprites.Add(new VisibleSprite { decoration = decoration, depth = depth });
             }
         }
 
@@ -86,13 +92,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
             
             float centerX = view.Width * 0.5f + item.side * scale;
             float left = centerX - width * 0.5f;
-            float bottom = view.Height * 0.5f + (item.sprite.Elevation - view.WallHeight * 0.5f) * scale;
+            float bottom = view.Height * 0.5f + (item.sprite.Elevation - view.EyeHeight) * scale;
 
             int firstX = Mathf.Clamp(Mathf.CeilToInt(left - 0.5f), 0, view.Width);
             int endX = Mathf.Clamp(Mathf.CeilToInt(left + width - 0.5f), 0, view.Width);
             int firstY = Mathf.Clamp(Mathf.CeilToInt(bottom - 0.5f), 0, view.Height);
             int endY = Mathf.Clamp(Mathf.CeilToInt(bottom + height - 0.5f), 0, view.Height);
-            float shade = lighting.DistanceShade(item.depth);
+            float shade = lighting.DistanceShade(item.depth) * lighting.PlaceBrightness(item.sprite.transform.position);
 
             for (int x = firstX; x < endX; x++)
             {
@@ -124,6 +130,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             float planeDistance = Vector2.Dot(center - view.Origin, normal);
             float halfPlaneWidth = view.Width / (2f * view.PixelLength);
             float width = Mathf.Max(0.01f, decoration.Width);
+            float sway = decoration.BottomOffset(Time.time) / width;
+            bool onWall = decoration.SupportingWall != null;
 
             for (int x = 0; x < view.Width; x++)
             {
@@ -137,24 +145,35 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 if (distance <= 0f || distance > view.MaxDistance) continue;
                 Vector2 offset = view.Origin + direction * distance - center;
                 float u = Vector2.Dot(offset, tangent) / width + 0.5f;
-                if (u < 0f || u > 1f) continue;
-                if (facing > 0f) u = 1f - u;
+                if (u < Mathf.Min(0f, sway) || u > 1f + Mathf.Max(0f, sway)) continue;
 
                 float depth = distance * Vector2.Dot(direction, view.Forward);
+                if (onWall)
+                {
+                    RaycastHit2D hit = resources.WallHits[x];
+                    if (!decoration.MatchesSurface(hit)) continue;
+                    // 손자국은 실제 벽과 같은 깊이에 그려 모서리 너머로 뜨지 않게 한다.
+                    depth = Vector2.Dot(hit.point - view.Origin, view.Forward);
+                }
                 if (depth <= 0.01f) continue;
                 float scale = view.PixelLength / depth;
                 float height = Mathf.Max(0.01f, decoration.Height) * scale;
-                float bottom = view.Height * 0.5f + (decoration.Elevation - view.WallHeight * 0.5f) * scale;
+                float bottom = view.Height * 0.5f + (decoration.Elevation - view.EyeHeight) * scale;
                 int first = Mathf.Clamp(Mathf.CeilToInt(bottom - 0.5f), 0, view.Height);
                 int end = Mathf.Clamp(Mathf.CeilToInt(bottom + height - 0.5f), 0, view.Height);
-                int textureX = Mathf.Clamp((int)(u * image.width), 0, image.width - 1);
-                float brightness = lighting.WallShade(normal, depth);
+                float brightness = lighting.WallShade(normal, depth) * lighting.PlaceBrightness(center + offset);
 
                 for (int y = first; y < end; y++)
                 {
                     int index = y * view.Width + x;
-                    if (depth >= resources.Depths[index]) continue;
-                    int textureY = Mathf.Clamp((int)((y + 0.5f - bottom) / height * image.height), 0, image.height - 1);
+                    float paintedDepth = resources.Depths[index];
+                    if (onWall ? depth > paintedDepth : depth >= paintedDepth) continue;
+                    float v = (y + 0.5f - bottom) / height;
+                    float rowU = u - sway * (1f - v);
+                    if (rowU < 0f || rowU > 1f) continue;
+                    if (facing > 0f) rowU = 1f - rowU;
+                    int textureX = Mathf.Min((int)(rowU * image.width), image.width - 1);
+                    int textureY = Mathf.Clamp((int)(v * image.height), 0, image.height - 1);
                     DrawPixel(resources, index, colors[textureY * image.width + textureX], brightness, depth);
                 }
             }

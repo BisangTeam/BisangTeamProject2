@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
   m_Name: 03_RestorePower
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  saveId: 9f3dbce85a31446abdf4296b420e9df5
   missionTitle: "비상 전력 복구"
   objectives:
   - description: "복도의 철제 패널 두 곳에서 F를 눌러 차단기를 올리세요."

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -40,6 +41,11 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0.01f)] private float shadowEndDistance = 8f;
         [SerializeField, Range(0f, 1f)] private float sideWallBrightness = 0.8f;
 
+        [Header("Corridor Lighting")]
+        [SerializeField, Range(0f, 1f)] private float ambientBrightness = 1f;
+        [SerializeField] private LowBloodPulse lowBloodPulse;
+        private readonly List<RaycastLight2D.Sample> _lights = new();
+
         private const int ScreenWidth = 320;
 
         private readonly RaycastRenderResources _resources = new();
@@ -62,9 +68,10 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (!_resources.Resize(rawImage, ScreenWidth)) return;
 
             var view = new RaycastView2D(player, ScreenWidth, _resources.Height,
-                fieldOfView, wallHeight, maxDistance);
+                fieldOfView, wallHeight, maxDistance, lowBloodPulse != null ? lowBloodPulse.HeightOffset : 0f);
+            RaycastLight2D.Collect(gameObject.scene, view, Time.time, _lights);
             var lighting = new RaycastLighting2D(ShadowStrength, shadowStartDistance,
-                shadowEndDistance, sideWallBrightness);
+                shadowEndDistance, sideWallBrightness, ambientBrightness, _lights);
 
             RaycastFloorRenderer2D.Draw(_resources, view, lighting, floorTexture, ceilingTexture, surfaceTileSize);
             _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture);
