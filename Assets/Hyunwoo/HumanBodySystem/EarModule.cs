@@ -1,14 +1,15 @@
-using Hyunwoo.CoreLib;
-using Hyunwoo.CoreLib.ModuleSystem;
+using Seonho._01.Scripts.StereophonicSound;
 using UnityEngine;
 
 namespace Hyunwoo.HumanBodySystem
 {
     public class EarModule : AbstractViscera
     {
-        protected override void WorkFunction(int index)
+        [SerializeField] private LoudPos loudPos;
+
+        protected override void WorkFunction(int index, float abillityValue)
         {
-            
+            loudPos.EarBlood = BloodGaugeRatio;
         }
     }
 }
