@@ -8,13 +8,34 @@ namespace Hyunwoo.Raycasting2D.Scripts
     {
         [SerializeField] private LayerMask wallMask;
         [SerializeField, Min(0.01f)] private float interactionDistance = 1.6f;
+        [SerializeField] private RaycastRenderer2D raycastRenderer;
+        [SerializeField] private PlayerMove playerMove;
+        [SerializeField, Min(0.05f)] private float holdToPeekTime = 0.2f;
+        [SerializeField, Range(10f, 60f)] private float peekFieldOfView = 30f;
+
+        private RaycastDoor2D pendingPeekDoor;
+        private bool isPeeking;
+        private bool canMoveBeforePeek;
+        private float interactionPressedAt;
 
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[16];
+        
+        private void Awake()
+        {
+            if (playerMove == null)
+                playerMove = GetComponent<PlayerMove>();
+        }
 
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.fKey.wasPressedThisFrame)
+            if (keyboard == null)
+            {
+                EndPeek();
+                return;
+            }
+
+            if (keyboard.fKey.wasPressedThisFrame)
             {
                 HidingController2D hiding =
                     GetComponent<HidingController2D>();
@@ -22,8 +43,43 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 if (hiding != null && hiding.TryHandleInteraction())
                     return;
 
+                RaycastDoor2D door = FindDoorInFront();
+
+                if (door != null && door.CanPeek && door.IsClosed)
+                {
+                    pendingPeekDoor = door;
+                    interactionPressedAt = Time.time;
+                    return;
+                }
+
                 TryInteract();
+                return;
             }
+
+            if (pendingPeekDoor == null)
+                return;
+
+            if (keyboard.fKey.isPressed)
+            {
+                if (!isPeeking &&
+                    Time.time - interactionPressedAt >= holdToPeekTime)
+                {
+                    BeginPeek(pendingPeekDoor);
+                }
+
+                return;
+            }
+
+            if (isPeeking)
+            {
+                EndPeek();
+            }
+            else if (pendingPeekDoor != null && pendingPeekDoor.IsClosed)
+            {
+                pendingPeekDoor.Toggle();
+            }
+
+            pendingPeekDoor = null;
         }
 
         public bool TryInteract()
@@ -80,6 +136,52 @@ namespace Hyunwoo.Raycasting2D.Scripts
             }
 
             return nearest;
+        }
+        
+        private RaycastDoor2D FindDoorInFront()
+        {
+            Physics2D.SyncTransforms();
+
+            var filter = new ContactFilter2D();
+            filter.SetLayerMask(wallMask);
+            filter.useTriggers = false;
+
+            Collider2D nearest =
+                ClosestBlocker(transform.up, interactionDistance, filter);
+
+            return nearest != null
+                ? nearest.GetComponentInParent<RaycastDoor2D>()
+                : null;
+        }
+        
+        private void BeginPeek(RaycastDoor2D door)
+        {
+            if (raycastRenderer == null || playerMove == null)
+                return;
+
+            isPeeking = true;
+            canMoveBeforePeek = playerMove.CanMove;
+            playerMove.CanMove = false;
+
+            raycastRenderer.SetPeekDoor(door);
+            raycastRenderer.SetHideView(peekFieldOfView, 0f);
+        }
+
+        private void EndPeek()
+        {
+            if (!isPeeking)
+                return;
+
+            isPeeking = false;
+
+            if (playerMove != null)
+                playerMove.CanMove = canMoveBeforePeek;
+
+            if (raycastRenderer != null)
+            {
+                raycastRenderer.SetPeekDoor(null);
+                raycastRenderer.ResetHideView();
+            }
         }
     }
 }
