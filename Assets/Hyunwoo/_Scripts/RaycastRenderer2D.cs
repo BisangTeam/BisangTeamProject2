@@ -31,6 +31,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         [Header("Settings")]
         [SerializeField, Range(10f, 150f)] private float fieldOfView = 80f;
+        private float activeFieldOfView;
+        private float verticalViewOffset;
         [SerializeField, Min(0.01f)] private float wallHeight = 1f;
         [SerializeField, Min(0.1f)] private float maxDistance = 30f;
 
@@ -50,6 +52,9 @@ namespace Hyunwoo.Raycasting2D.Scripts
         {
             _walls.SetTileTextures(wallTextures);
             _resources.Resize(rawImage, ScreenWidth);
+            
+            activeFieldOfView = fieldOfView;
+            verticalViewOffset = 0f;
         }
 
         private void LateUpdate()
@@ -62,7 +67,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (!_resources.Resize(rawImage, ScreenWidth)) return;
 
             var view = new RaycastView2D(player, ScreenWidth, _resources.Height,
-                fieldOfView, wallHeight, maxDistance);
+                activeFieldOfView, wallHeight, maxDistance, 0f);
             var lighting = new RaycastLighting2D(ShadowStrength, shadowStartDistance,
                 shadowEndDistance, sideWallBrightness);
 
@@ -75,6 +80,18 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private void OnDestroy()
         {
             _resources.Dispose(rawImage);
+        }
+        
+        public void SetHideView(float fieldOfView, float verticalOffset)
+        {
+            activeFieldOfView = Mathf.Clamp(fieldOfView, 10f, 150f);
+            verticalViewOffset = Mathf.Clamp(verticalOffset, -0.3f, 0.3f);
+        }
+
+        public void ResetHideView()
+        {
+            activeFieldOfView = fieldOfView;
+            verticalViewOffset = 0f;
         }
     }
 }

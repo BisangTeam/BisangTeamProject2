@@ -13,9 +13,10 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public readonly float PixelLength;
         public readonly float WallHeight;
         public readonly float MaxDistance;
+        public readonly float Horizon;
 
         public RaycastView2D(Transform player, int width, int height, float fieldOfView,
-            float wallHeight, float maxDistance)
+            float wallHeight, float maxDistance, float verticalViewOffset)
         {
             Width = width;
             Height = height;
@@ -26,6 +27,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             PixelLength = width / (2f * HalfPlaneWidth);
             WallHeight = wallHeight;
             MaxDistance = maxDistance;
+            Horizon = height * 0.5f;
         }
 
         public Vector2 GetDirection(int column)

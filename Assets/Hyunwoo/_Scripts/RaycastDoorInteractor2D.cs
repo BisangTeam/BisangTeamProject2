@@ -14,7 +14,16 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.fKey.wasPressedThisFrame) TryInteract();
+            if (keyboard != null && keyboard.fKey.wasPressedThisFrame)
+            {
+                HidingController2D hiding =
+                    GetComponent<HidingController2D>();
+
+                if (hiding != null && hiding.TryHandleInteraction())
+                    return;
+
+                TryInteract();
+            }
         }
 
         public bool TryInteract()
