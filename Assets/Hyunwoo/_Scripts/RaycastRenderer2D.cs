@@ -41,6 +41,16 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0f)] private float shadowStartDistance = 2f;
         [SerializeField, Min(0.01f)] private float shadowEndDistance = 8f;
         [SerializeField, Range(0f, 1f)] private float sideWallBrightness = 0.8f;
+        
+        [SerializeField, Range(0.01f, 0.3f)]
+        private float peekSlitWidth = 0.08f;
+
+        private RaycastDoor2D peekingDoor;
+
+        public void SetPeekDoor(RaycastDoor2D door)
+        {
+            peekingDoor = door;
+        }
 
         private const int ScreenWidth = 320;
 
@@ -72,7 +82,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 shadowEndDistance, sideWallBrightness);
 
             RaycastFloorRenderer2D.Draw(_resources, view, lighting, floorTexture, ceilingTexture, surfaceTileSize);
-            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture);
+            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture, peekingDoor, peekSlitWidth);
             _objects.Draw(_resources, view, lighting);
             _resources.Present();
         }
