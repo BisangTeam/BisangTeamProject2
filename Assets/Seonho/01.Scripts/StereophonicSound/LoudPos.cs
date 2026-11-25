@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 namespace Seonho._01.Scripts.StereophonicSound
 {
+    [RequireComponent(typeof(AudioSource), typeof(AudioLowPassFilter))]
     public class LoudPos : MonoBehaviour
     {
         [field:SerializeField, Range(0, 1)]
@@ -29,6 +30,15 @@ namespace Seonho._01.Scripts.StereophonicSound
         [SerializeField] private float _audioMaxDistance; // 음향 감소 시작 범위
         [SerializeField] private float _cornerVolume;
 
+        [Header("Ear Blood")]
+        [SerializeField, Range(10f, 22000f)] private float _emptyEarCutoff = 500f;
+        [SerializeField, Range(10f, 22000f)] private float _fullEarCutoff = 18000f;
+        [SerializeField, Range(0f, 1f)] private float _emptyEarVolume = 0.2f;
+        [SerializeField, Min(0.01f)] private float _hearingResponseTime = 0.15f;
+
+        private AudioLowPassFilter _lowPass;
+        private float _currentEarBlood;
+        private float _pathVolume;
         private float _nextSearchTime; // 경로 탐색 시간 => 계속하면 연산 비용이 커져서 
 
         //동서남북 대각선
@@ -44,44 +54,36 @@ namespace Seonho._01.Scripts.StereophonicSound
             new Vector2Int(-1, -1)
         };
 
-        #region Initialize
         private void Awake()
         {
-            Initialize();
-        }
-
-        void Initialize()
-        {
-            InitializeCompo();
-        }
-
-        void InitializeCompo() // 컴포너트 초기화
-        {
             _audioCompo = GetComponent<AudioSource>();
+            _lowPass = GetComponent<AudioLowPassFilter>();
+            _audioCompo.spatialBlend = 1f;
+            _currentEarBlood = Mathf.Clamp01(EarBlood);
+            ApplyHearing();
         }
-        #endregion
 
         private void Update()
         {
-            // 하나라도 없으면 리턴
-            if (_player == null || _soundSource == null || _wallTilemap == null) 
-                return;
+            if (Time.time >= _nextSearchTime)
+            {
+                _nextSearchTime = Time.time + 0.1f;
+                if (FindPath())
+                    DrawPath();
 
-            if (Time.time < _nextSearchTime) // 탐색 시간이 되지 않으면 리터
-                return;
+                _pathVolume = CalculatePathVolume();
+            }
 
-            _nextSearchTime = Time.time + 0.1f; // 위에 있는걸 보면 알겠지? 에이 설마 모르겠어?
-
-            if (FindPath())
-                DrawPath();
-
-            MakeSound();
-            RealizeDirection();
+            float blend = 1f - Mathf.Exp(-Time.deltaTime / _hearingResponseTime);
+            _currentEarBlood = Mathf.Lerp(_currentEarBlood, Mathf.Clamp01(EarBlood), blend);
+            ApplyHearing();
         }
 
         private bool FindPath()
         {
             _path.Clear();
+            if (_player == null || _soundSource == null || _wallTilemap == null)
+                return false;
             
             // WorldToCell => 월드 좌표를 타일맵 셀 좌표로 변한
             Vector3Int startCell3 = _wallTilemap.WorldToCell(_soundSource.position); // 타일맵 소리 위치
@@ -214,7 +216,7 @@ namespace Seonho._01.Scripts.StereophonicSound
                 _path.Add(_wallTilemap.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, startCell3.z))); // 타일맵에 있는 경로를 넣기
             }
 
-            _path.Add(_player.position); // 마지막에 플레이어 위치 추가
+            _path.Add(_player.position); // 마지막에 플레이어 위치 추가 
 
             return true; // 트루 반환
         }
@@ -240,48 +242,42 @@ namespace Seonho._01.Scripts.StereophonicSound
             }
         }
 
-        private void MakeSound()
+        private float CalculatePathVolume()
         {
-            if (_path.Count <= 0)
-            {
-                _audioCompo.volume = 0;
-                return;
-            }
-            
             _soundDis = 0f;
+            if (_path.Count == 0)
+                return 0f;
 
             for (int i = 1; i < _path.Count; i++)
             {
                 _soundDis += Vector3.Distance(_path[i - 1], _path[i]);
             }
-            
-            if (_soundDis < _audioMinDistance) // 범위 내에 있을 때 => 소리 최대
-                _audioCompo.volume = 1 * EarBlood;
-            else if (_soundDis > _audioMaxDistance) // 최대 범위 밖에 있을 때 => 소리 점점 감소
-                _audioCompo.volume = 0;
-            else // 거리에 따라 소리 감소
-            {
-                float volume = 1 * EarBlood - ((_soundDis - _audioMinDistance) / (_audioMaxDistance - _audioMinDistance));
-                _audioCompo.volume = volume - (Mathf.Clamp(_path.Count,0,_path.Count - 1) * _cornerVolume);
-            }
-            
-            // 코너돌 때마다 감소되는 양
+
+            if (_soundDis >= _audioMaxDistance)
+                return 0f;
+            if (_soundDis < _audioMinDistance)
+                return 1f;
+
+            float distanceVolume = 1f - Mathf.InverseLerp(_audioMinDistance, _audioMaxDistance, _soundDis);
+            float pathLoss = (_path.Count - 1) * _cornerVolume;
+            return Mathf.Clamp01(distanceVolume - pathLoss);
         }
 
-        void RealizeDirection()
+        private void ApplyHearing()
         {
-            if (EarBlood * 100 < 70) // 그냥 편하게 백분율
-            {
-                _audioCompo.spatialBlend = EarBlood;
-            }
-            else 
-                _audioCompo.spatialBlend = 1;
+            // 같은 양의 피가 차면 컷오프도 같은 비율로 오른다. 기본값에서 절반은 3,000 Hz다.
+            float cutoff = _emptyEarCutoff * Mathf.Pow(_fullEarCutoff / _emptyEarCutoff, _currentEarBlood);
+            if (!Mathf.Approximately(_lowPass.cutoffFrequency, cutoff))
+                _lowPass.cutoffFrequency = cutoff;
+
+            float hearingVolume = Mathf.Lerp(_emptyEarVolume, 1f, _currentEarBlood);
+            _audioCompo.volume = _pathVolume * hearingVolume;
         }
         
         private void LateUpdate()
         {
-            _listener.position = _player.position; // 플레이어 위치에 따라 Audio Listener도 이동
-            _listener.rotation = _player.rotation; // 플레이어 회전에 따라 Audio Listener도 회전
+            if (_listener != null && _player != null && _listener != _player)
+                _listener.SetPositionAndRotation(_player.position, _player.rotation);
         }
     }
 }
