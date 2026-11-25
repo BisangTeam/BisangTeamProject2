@@ -394,9 +394,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
-  updateTime: 0.5
+  maxGauge: 100
+  defaultBloodGague: 0
   reduceGauge: 1
+  updateTime: 0.5
   wantGaugeList: []
+  gaugeUI: {fileID: 0}
+  loudPos: {fileID: 0}
 --- !u!114 &101299930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3904,9 +3908,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
-  updateTime: 0.5
+  maxGauge: 100
+  defaultBloodGague: 0
   reduceGauge: 1
+  updateTime: 0.5
   wantGaugeList: []
+  gaugeUI: {fileID: 0}
+  raycastRenderer: {fileID: 0}
 --- !u!114 &1013672288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4110,7 +4118,7 @@ MonoBehaviour:
   <_Heart>k__BackingField: {fileID: 1949637202}
   <BloodSprite>k__BackingField: {fileID: -7843899350863918363, guid: 8ad4e6c1f3af1654b90e100958b23ab7, type: 3}
   _bloodCav: {fileID: 602549960}
-  _bloodCamera: {fileID: 0}
+  _bloodCamera: {fileID: 151498767}
 --- !u!1 &1360780756
 GameObject:
   m_ObjectHideFlags: 0
@@ -4800,6 +4808,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1780372557}
   m_CullTransparentMesh: 1
+--- !u!1 &1857785673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1857785674}
+  - component: {fileID: 1857785675}
+  m_Layer: 7
+  m_Name: RenderPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1857785674
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857785673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4000000014}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1857785675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857785673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c7aea45763bf7d408e7cde5aeec775b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WalkFeedback
+  view: {fileID: 4000000028}
+  strength: 0.03
+  duration: 0.2
 --- !u!1 &1864451568
 GameObject:
   m_ObjectHideFlags: 0
@@ -14033,6 +14088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a436131d337e4864b8e204cccfd15012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MouseDragAndMove
+  insertBloodAmount: 50
   heartModule: {fileID: 1949637200}
   canvasRect: {fileID: 4000000038}
 --- !u!1 &1949637198
@@ -14087,8 +14143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3ba8faa24bdc9414f0190f156d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
-  delaySeconds: 1
   defaultGetBloodValue: 12.86
+  delaySeconds: 1
+  maxGauge: 0
+  defaultBloodGague: 0
   heartGauge: {fileID: 1591676630}
 --- !u!114 &1949637201
 MonoBehaviour:
@@ -15683,6 +15741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
   MoveSpeed: 3
   turnSpeed: 120
+  Walk: {fileID: 1857785675}
 --- !u!58 &4000000011
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -15777,6 +15836,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 174663335}
+  - {fileID: 1857785674}
   m_Father: {fileID: 4000000009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4000000015
