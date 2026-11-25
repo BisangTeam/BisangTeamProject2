@@ -5,35 +5,26 @@ public class Heartbeat : MonoBehaviour
 {
     public event System.Action StrongBeat;
     [Header("첫 번째 박동 (작게 쿵)")]
-    [SerializeField] private float firstScale = 1.15f;
-    [SerializeField] private float firstDuration = 0.1f;
+    [SerializeField] private float firstScale = 1.08f;
+    [SerializeField] private float firstDuration = 0.07f;
 
     [Header("두 번째 박동 (크게 쾅)")]
-    [SerializeField] private float secondScale = 1.3f;
-    [SerializeField] private float secondDuration = 0.12f;
+    [SerializeField] private float secondScale = 1.15f;
+    [SerializeField] private float secondDuration = 0.10f;
 
-    [Header("쉬는 시간")]
-    [SerializeField] private float restTime = 0.5f;
+    [Header("쉬는 시간 (초)")]
+    [SerializeField] private float restTime = 0.8f;
 
-    private float _scale;
-    
     private void Start()
     {
-        _scale = transform.localScale.x;
-        PlayHeartbeat();
-    }
-
-    private void PlayHeartbeat()
-    {
+        Vector3 baseScale = transform.localScale;
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Append(transform.DOScale(_scale * firstScale, firstDuration));
-        sequence.Append(transform.DOScale(_scale, firstDuration));
-
-        sequence.Append(transform.DOScale(_scale * secondScale, secondDuration));
+        sequence.Append(transform.DOScale(baseScale * firstScale, firstDuration));
+        sequence.Append(transform.DOScale(baseScale, firstDuration));
+        sequence.Append(transform.DOScale(baseScale * secondScale, secondDuration));
         sequence.AppendCallback(() => StrongBeat?.Invoke());
-        sequence.Append(transform.DOScale(_scale, secondDuration));
-
+        sequence.Append(transform.DOScale(baseScale, secondDuration));
         sequence.AppendInterval(restTime);
 
         sequence.SetLoops(-1);

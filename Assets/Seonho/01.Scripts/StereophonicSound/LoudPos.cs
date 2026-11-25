@@ -216,7 +216,7 @@ namespace Seonho._01.Scripts.StereophonicSound
                 _path.Add(_wallTilemap.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, startCell3.z))); // 타일맵에 있는 경로를 넣기
             }
 
-            _path.Add(_player.position); // 마지막에 플레이어 위치 추가
+            _path.Add(_player.position); // 마지막에 플레이어 위치 추가 
 
             return true; // 트루 반환
         }

@@ -9,6 +9,10 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField] private Vector2 slideOffset = new Vector2(1.05f, 0f);
         [SerializeField, Min(0.01f)] private float openSpeed = 1.5f;
         [SerializeField] private bool startOpen;
+        [SerializeField] private bool canPeek;
+
+        public bool CanPeek => canPeek;
+        public bool IsClosed => !IsMoving && _openAmount <= 0.0001f;
 
         private static readonly List<RaycastDoor2D> ActiveDoors = new();
         private readonly RaycastHit2D[] _castHits = new RaycastHit2D[32];

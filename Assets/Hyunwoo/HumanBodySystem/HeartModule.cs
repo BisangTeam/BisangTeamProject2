@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Hyunwoo.CoreLib.ModuleSystem;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Hyunwoo.HumanBodySystem
         [SerializeField] private float defaultGetBloodValue = 5f;
 
         [Header("혈액 생성 간격(초)")]
-        [SerializeField] private float delaySeconds = 2;
+        [SerializeField] private float delaySeconds = 2f;
 
         [Header("심장 혈액 저장 최대치")]
         [SerializeField, Min(0.01f)] private float maxGauge = 100f;
@@ -22,8 +23,13 @@ namespace Hyunwoo.HumanBodySystem
         [Header("Compo")]
         [SerializeField] private HeartGauge heartGauge;
 
+        [Header("박동 연출")]
+        [SerializeField] private RectTransform heartVisual;
+
+        private Sequence _heartbeatSequence;
+
         #region Properties
-        
+
         private float _bloodGauge;
         public float BloodGaugeRatio => maxGauge > 0f ? BloodGauge / maxGauge : 0f;
         public float BloodGauge
@@ -31,15 +37,11 @@ namespace Hyunwoo.HumanBodySystem
             get => _bloodGauge;
             set
             {
-                // 여기서 왜 return을 했더라
-                // bloodGauge가 차오르는걸 막기위해서?
-                //if (ConnectCount >= 1) return;
-                
                 _bloodGauge = Mathf.Clamp(value, 0, maxGauge);
                 heartGauge.Gauge = BloodGauge;
             }
         }
-        
+
         private int _connectCount;
         public int ConnectCount
         {
@@ -51,17 +53,15 @@ namespace Hyunwoo.HumanBodySystem
                     _getBloodValue = defaultGetBloodValue;
                 else
                     _getBloodValue = defaultGetBloodValue / _connectCount;
-            } 
+            }
         }
-        
-        #endregion  
-        
+
+        #endregion
+
         public event Action<float> OnHeartRate;
-        
+
         private float _getBloodValue;
-        private float _getVisceraBloodValue;
-        private float _reduceBloodValue;
-        
+
         public override void Initialize(ModuleOwner owner)
         {
             base.Initialize(owner);
@@ -71,34 +71,53 @@ namespace Hyunwoo.HumanBodySystem
 
         private void Start()
         {
+            SetupHeartbeat();
             TestAsync().Forget();
         }
-        
-        // UniTask로 왜 썻는지
+
+        private void SetupHeartbeat()
+        {
+            if (heartVisual == null)
+                return;
+
+            Vector3 baseScale = heartVisual.localScale;
+
+            _heartbeatSequence = DOTween.Sequence();
+            _heartbeatSequence.Append(heartVisual.DOScale(baseScale * 1.08f, 0.07f));
+            _heartbeatSequence.Append(heartVisual.DOScale(baseScale, 0.07f));
+            _heartbeatSequence.Append(heartVisual.DOScale(baseScale * 1.15f, 0.10f));
+            _heartbeatSequence.Append(heartVisual.DOScale(baseScale, 0.10f));
+            _heartbeatSequence.SetAutoKill(false);
+            _heartbeatSequence.SetLink(gameObject);
+            _heartbeatSequence.Pause();
+        }
+
         private async UniTask TestAsync()
         {
-            _reduceBloodValue = BloodGauge >= 0.1f ? _getBloodValue * ConnectCount : 0;
-            BloodGauge -= _reduceBloodValue;
-            
-            _getVisceraBloodValue = BloodGauge >= 0.1f ? defaultGetBloodValue : 0;
-            OnHeartRate?.Invoke(_getVisceraBloodValue);
+            _heartbeatSequence?.Restart();
 
+            if (BloodGauge >= 0.1f)
+                BloodGauge -= _getBloodValue * ConnectCount;
+
+            float bloodForOrgans = BloodGauge >= 0.1f ? defaultGetBloodValue : 0f;
+            OnHeartRate?.Invoke(bloodForOrgans);
             BloodGauge += _getBloodValue;
-            
-            await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: destroyCancellationToken);
-            
+
+            await UniTask.Delay(
+                (int)(delaySeconds * 1000),
+                cancellationToken: destroyCancellationToken
+            );
+
             TestAsync().Forget();
         }
 
-        
         public void InsertBlood(float value)
         {
             BloodGauge += value;
         }
-        
+
         private void ChangeHeartRate(float value)
         {
-            
         }
     }
 }

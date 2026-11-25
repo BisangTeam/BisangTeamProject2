@@ -14,6 +14,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public readonly float WallHeight;
         public readonly float EyeHeight;
         public readonly float MaxDistance;
+        public readonly float Horizon;
 
         public RaycastView2D(Transform player, int width, int height, float fieldOfView,
             float wallHeight, float maxDistance, float heightOffset = 0f)
@@ -28,6 +29,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             WallHeight = wallHeight;
             EyeHeight = Mathf.Clamp(wallHeight * 0.5f + heightOffset, wallHeight * 0.01f, wallHeight * 0.99f);
             MaxDistance = maxDistance;
+            Horizon = height * 0.5f;
         }
 
         public Vector2 GetDirection(int column)
