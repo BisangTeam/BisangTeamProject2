@@ -10,6 +10,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public Vector2 MoveDir { get; set; }
         public float TurnDir { get; set; }
+        public bool CanMove { get; set; } = true;
 
         private Rigidbody2D _rb;
         
@@ -20,6 +21,12 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         private void FixedUpdate()
         {
+            if (!CanMove)
+            {
+                _rb.linearVelocity = Vector2.zero;
+                return;
+            }
+            
             _rb.rotation += -TurnDir * turnSpeed * Time.fixedDeltaTime;
 
             Vector2 direction = _rb.GetRelativeVector(MoveDir);
