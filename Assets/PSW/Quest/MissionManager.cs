@@ -6,6 +6,9 @@ public class MissionManager : MonoBehaviour
 {
     public static MissionManager instance;
     public event Action<MissionDataSO> MissionChanged;
+    private bool _resume;
+    private MissionDataSO _savedMission;
+    private int[] _savedCounts;
     
     [Header("시작")]
     [SerializeField] private MissionDataSO startMission;
@@ -38,10 +41,25 @@ public class MissionManager : MonoBehaviour
 
     private void Start()
     {
-        SetMission(startMission);
+        SetMission(_resume ? _savedMission : startMission, _savedCounts);
     }
 
-    private void SetMission(MissionDataSO newmission)
+    public int[] CaptureCounts() => Counts.ToArray();
+
+    public void PrepareResume(string missionId, int[] counts)
+    {
+        var visited = new HashSet<MissionDataSO>();
+        MissionDataSO mission = startMission;
+        if (string.IsNullOrEmpty(missionId)) mission = null; // All missions completed.
+        while (mission != null && mission.SaveId != missionId && visited.Add(mission))
+            mission = mission.nextMission;
+        if (!string.IsNullOrEmpty(missionId) && (mission == null || mission.SaveId != missionId)) return;
+        _savedMission = mission;
+        _savedCounts = counts;
+        _resume = true;
+    }
+
+    private void SetMission(MissionDataSO newmission, int[] savedCounts = null)
     {
         currentMission = newmission;
         Counts.Clear();
@@ -50,7 +68,8 @@ public class MissionManager : MonoBehaviour
         {
             for (int i = 0; i < currentMission.objectives.Count; i++)
             {
-                Counts.Add(0);
+                int count = savedCounts != null && i < savedCounts.Length ? savedCounts[i] : 0;
+                Counts.Add(Mathf.Clamp(count, 0, currentMission.objectives[i].requiredCount));
             }
         }
 

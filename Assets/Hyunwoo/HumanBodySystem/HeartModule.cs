@@ -15,7 +15,7 @@ namespace Hyunwoo.HumanBodySystem
         [SerializeField] private float delaySeconds = 2f;
 
         [Header("심장 혈액 저장 최대치")]
-        [SerializeField] private float maxGauge;
+        [SerializeField, Min(0.01f)] private float maxGauge = 100f;
 
         [Header("게임 시작 시 심장 혈액량")]
         [SerializeField] private float defaultBloodGague;
@@ -31,6 +31,7 @@ namespace Hyunwoo.HumanBodySystem
         #region Properties
 
         private float _bloodGauge;
+        public float BloodGaugeRatio => maxGauge > 0f ? BloodGauge / maxGauge : 0f;
         public float BloodGauge
         {
             get => _bloodGauge;
@@ -95,10 +96,12 @@ namespace Hyunwoo.HumanBodySystem
         {
             _heartbeatSequence?.Restart();
 
-            BloodGauge += _getBloodValue;
-            OnHeartRate?.Invoke(_getBloodValue);
+            if (BloodGauge >= 0.1f)
+                BloodGauge -= _getBloodValue * ConnectCount;
 
-            BloodGauge -= _getBloodValue * ConnectCount;
+            float bloodForOrgans = BloodGauge >= 0.1f ? defaultGetBloodValue : 0f;
+            OnHeartRate?.Invoke(bloodForOrgans);
+            BloodGauge += _getBloodValue;
 
             await UniTask.Delay(
                 (int)(delaySeconds * 1000),

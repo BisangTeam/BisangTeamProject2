@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hyunwoo.Raycasting2D.Scripts
@@ -8,15 +9,29 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private readonly float _startDistance;
         private readonly float _endDistance;
         private readonly float _sideBrightness;
+        private readonly float _ambient;
+        private readonly List<RaycastLight2D.Sample> _lights;
 
         public bool DistanceDarknessEnabled => _strength > 0f;
 
-        public RaycastLighting2D(float strength, float startDistance, float endDistance, float sideBrightness)
+        public RaycastLighting2D(float strength, float startDistance, float endDistance, float sideBrightness,
+            float ambient = 1f, List<RaycastLight2D.Sample> lights = null)
         {
             _strength = strength;
             _startDistance = startDistance;
             _endDistance = endDistance;
             _sideBrightness = sideBrightness;
+            _ambient = ambient;
+            _lights = lights;
+        }
+
+        public float PlaceBrightness(Vector2 point)
+        {
+            float result = _ambient;
+            if (_lights != null)
+                for (int i = 0; i < _lights.Count; i++)
+                    result += _lights[i].At(point);
+            return Mathf.Clamp01(result);
         }
 
         public float DistanceShade(float depth)

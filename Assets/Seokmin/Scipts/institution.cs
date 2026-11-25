@@ -14,6 +14,8 @@ public class institution : MonoBehaviour
     private Vector3 _mouse;
 
     [SerializeField] private AbstractViscera viscera;
+    public AbstractViscera Organ => viscera;
+    public bool Connected => _isCon;
     
     private void Start()
     {
@@ -22,6 +24,7 @@ public class institution : MonoBehaviour
 
     private void Update()
     {
+        if (Mouse.current == null) return;
         //해제
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -62,12 +65,30 @@ public class institution : MonoBehaviour
         Vector3 dropPoint = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
         if (!_nowLine._isCon && (_instpos - dropPoint).magnitude < _instRange)
         {
-            viscera?.ConnectionBlood();
-            _isCon = true;
-            _nowLine._endPos = _instpos;
-            _nowLine._isRest = false;
-            _nowLine._isCon = true;
+            AttachLine(_instpos);
         }
+    }
+
+    public void RestoreConnection()
+    {
+        if (_isCon) return;
+        var manager = insManager.Instance;
+        _nowLine = manager.GetLine();
+        if (_nowLine == null) return;
+        _nowLine.gameObject.SetActive(true);
+        _nowLine.IsDrClick(manager.GetBloodPoint(_cam, manager._Heart.BloodAnchor));
+        _nowLine._isClick = false;
+        AttachLine(manager.GetBloodPoint(_cam, _pos));
+        _isCon2 = true;
+    }
+
+    private void AttachLine(Vector3 end)
+    {
+        _nowLine._endPos = end;
+        _nowLine._isRest = false;
+        _nowLine._isCon = true;
+        _isCon = true;
+        viscera?.ConnectionBlood();
     }
 
     public void IsRelease()

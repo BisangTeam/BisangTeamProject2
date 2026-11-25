@@ -25,7 +25,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
         }
 
         public void Draw(RaycastRenderResources resources, RaycastView2D view, RaycastLighting2D lighting,
-            LayerMask wallMask, Tilemap wallTilemap, Texture2D defaultWallTexture, RaycastDoor2D peekDoor, float slitWidth)
+            LayerMask wallMask, Tilemap wallTilemap, Texture2D defaultWallTexture,
+            RaycastDoor2D peekDoor = null, float slitWidth = 0.08f)
         {
             Physics2D.SyncTransforms();
 
@@ -63,12 +64,10 @@ namespace Hyunwoo.Raycasting2D.Scripts
                     }
                 }
 
+                RaycastHit2D visibleHit = nearestIndex >= 0 ? _hits[nearestIndex] : default;
+                resources.WallHits[x] = visibleHit;
                 if (nearestIndex >= 0)
-                {
-                    DrawColumn(
-                        x, _hits[nearestIndex], resources, view, lighting,
-                        wallTilemap, defaultWallTexture);
-                }
+                    DrawColumn(x, visibleHit, resources, view, lighting, wallTilemap, defaultWallTexture);
             }
         }
 
@@ -80,7 +79,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
             Texture2D source = GetWallTexture(hit, wallTilemap, defaultWallTexture, out float u);
             Color32[] sourcePixels = resources.GetTexturePixels(source);
 
-            float shade = lighting.WallShade(hit.normal, drawStruct.Depth);
+            float shade = lighting.WallShade(hit.normal, drawStruct.Depth) * lighting.PlaceBrightness(hit.point);
 
             DrawColumnPixels(resources, view, drawStruct, source, sourcePixels, x, u, shade);
         }
@@ -121,6 +120,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (IsDetectDoor(hit, defaultWallTexture, out u, out Texture2D texture))
                 return texture;
 
+            if (hit.collider.TryGetComponent(out Tilemap hitMap))
+                tilemap = hitMap;
             Vector3Int cell = tilemap.WorldToCell(hit.point - hit.normal * 0.001f);
 
             Texture2D source = CalculateWallTexture(tilemap, defaultWallTexture, cell);

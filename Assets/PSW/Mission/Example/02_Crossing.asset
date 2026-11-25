@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
   m_Name: 02_Crossing
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  saveId: 8e55ea7db98a4156b7c6065db2d47c90
   missionTitle: "발소리"
   objectives:
   - description: "복도 끝을 살펴보세요."

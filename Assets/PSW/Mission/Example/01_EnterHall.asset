@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47043c2ce84747718818ec9df05bc496, type: 3}
   m_Name: 01_EnterHall
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Mission.StoryMissionSO
+  saveId: 664455b33a0649c990cb043d05801032
   missionTitle: "복도 조사"
   objectives:
   - description: "앞쪽 복도를 따라가세요."
