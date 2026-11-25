@@ -43,7 +43,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         private static bool TryCalculateDepth(RaycastView2D view, int y, out float depth, out bool isFloor)
         {
-            float fromHorizon = y + 0.5f - view.Height * 0.5f;
+            float fromHorizon = y + 0.5f - view.Horizon;
 
             if (Mathf.Abs(fromHorizon) < 0.0001f)
             {

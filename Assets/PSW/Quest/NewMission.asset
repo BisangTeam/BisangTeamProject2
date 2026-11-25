@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3d0d95b94bd94141ab34d64e7a55c3e, type: 3}
   m_Name: NewMission
   m_EditorClassIdentifier: Assembly-CSharp::MissionDataSO
-  missionTitle: kill chicken
+  missionTitle: Short Test
   objectives:
-  - description: kill
+  - description: Test Short Desc
     eventType: 0
     targetId: Device_01
     requiredCount: 1

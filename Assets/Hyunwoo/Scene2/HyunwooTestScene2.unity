@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -430,10 +430,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7746dcd2e2d34e49a59de210ca040edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
-  gauge: {fileID: 1163783276}
-  updateTime: 0.5
+  maxGauge: 100
+  defaultBloodGague: 0
   reduceGauge: 1
+  updateTime: 0.5
   wantGaugeList: []
+  gaugeUI: {fileID: 0}
+  loudPos: {fileID: 0}
 --- !u!114 &121303718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,8 +665,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a436131d337e4864b8e204cccfd15012, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MouseDragAndMove
+  insertBloodAmount: 50
   heartModule: {fileID: 1385264448}
   canvasRect: {fileID: 1903432345}
 --- !u!114 &197767190
@@ -676,7 +680,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -889,7 +893,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 038c4f2ed59a1cc44afdc66b1ef6b109, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JanggiGuage
   bloodRect: {fileID: 280915789}
   emptyPosY: 0
@@ -906,7 +910,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
   m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
@@ -1072,7 +1076,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55a980a85ed446a4faf5694d5d911ca8, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartGauge
   bloodRect: {fileID: 345904793}
   emptyPosY: -100
@@ -1108,7 +1112,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
   m_Color: {r: 0.6603774, g: 0.018689813, b: 0.018689813, a: 0.8352941}
@@ -1185,7 +1189,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 0
 --- !u!114 &398687751
@@ -3416,10 +3420,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f861804ea7df43248285f5deeb246644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
-  gauge: {fileID: 280915790}
-  updateTime: 0.5
+  maxGauge: 100
+  defaultBloodGague: 0
   reduceGauge: 1
+  updateTime: 0.5
   wantGaugeList: []
+  gaugeUI: {fileID: 0}
+  raycastRenderer: {fileID: 0}
 --- !u!114 &946273952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3430,7 +3437,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
   _instRange: 2
   _pos: {fileID: 946273950}
@@ -4026,10 +4033,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b2e3ba8faa24bdc9414f0190f156d23, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
-  delaySeconds: 1
   defaultGetBloodValue: 12.86
+  delaySeconds: 1
+  maxGauge: 0
+  defaultBloodGague: 0
   heartGauge: {fileID: 345904792}
 --- !u!224 &1385264449
 RectTransform:
@@ -4078,7 +4087,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7299cecb732a8474fa6c2c77fb47bf59, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heartbeat
   firstScale: 1.15
   firstDuration: 0.1
@@ -4133,7 +4142,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
@@ -4460,7 +4469,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 0
 --- !u!114 &1500261862
@@ -4679,7 +4688,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -4696,7 +4705,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
@@ -4761,7 +4770,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ab6211b8d834fefa683ab62dab62c9d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.UI.GameOverScreen
   gameplayObjects:
   - {fileID: 4000000008}
@@ -4798,7 +4807,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.045, g: 0.035, b: 0.042, a: 0.97}
@@ -4930,7 +4939,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -7109,7 +7118,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
