@@ -718,6 +718,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197767187}
   m_CullTransparentMesh: 1
+--- !u!114 &201570464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 167a036bbfd206e49a5c2196b4127429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Seonho._01.Scripts.StereophonicSound.CurrentSpacePos
+  selectedSpace: 0
 --- !u!1 &245786637
 GameObject:
   m_ObjectHideFlags: 0
@@ -4928,6 +4941,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 993964539}
   m_CullTransparentMesh: 1
+--- !u!1 &1008747434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1008747436}
+  - component: {fileID: 1008747435}
+  m_Layer: 0
+  m_Name: TypeSpace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1008747435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008747434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a073896e50db2429ead517becb847a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RealizeSpace
+  _loudPosCompo: {fileID: 3677582625602971842}
+  _player: {fileID: 201570464}
+  _enemy: {fileID: 9105621822233086647}
+  time: 0
+--- !u!4 &1008747436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008747434}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1103363945
 GameObject:
   m_ObjectHideFlags: 0
@@ -7790,6 +7851,7 @@ GameObject:
   - component: {fileID: 4000000011}
   - component: {fileID: 4000000010}
   - component: {fileID: 1237137031}
+  - component: {fileID: 201570464}
   - component: {fileID: 836407941}
   m_Layer: 0
   m_Name: Map Player
@@ -8746,6 +8808,7 @@ MonoBehaviour:
   _audioMinDistance: 5
   _audioMaxDistance: 30
   _cornerVolume: 0.01
+  _transitionTime: 0
   _emptyEarCutoff: 500
   _fullEarCutoff: 18000
   _emptyEarVolume: 0.2
@@ -8761,6 +8824,7 @@ GameObject:
   - component: {fileID: 7949757084015667561}
   - component: {fileID: 8665186102445367036}
   - component: {fileID: 426739677153814140}
+  - component: {fileID: 8665186102445367037}
   - component: {fileID: 2668228041085614358}
   - component: {fileID: 3677582625602971842}
   m_Layer: 0
@@ -8777,7 +8841,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7116473300348479896}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98519f3654c8451a9812574ebc7c4b32, type: 3}
   m_Name: 
@@ -8816,6 +8880,7 @@ GameObject:
   - component: {fileID: 2071306738463125034}
   - component: {fileID: 5862433644086169887}
   - component: {fileID: 4594066870180919270}
+  - component: {fileID: 9105621822233086647}
   m_Layer: 0
   m_Name: Watcher
   m_TagString: Untagged
@@ -8897,6 +8962,29 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
+--- !u!164 &8665186102445367037
+AudioReverbFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4376716207597973474}
+  m_Enabled: 1
+  m_DryLevel: 0
+  m_Room: 0
+  m_RoomHF: 0
+  m_DecayTime: 1
+  m_DecayHFRatio: 0.5
+  m_ReflectionsLevel: -10000
+  m_ReverbLevel: 0
+  m_ReverbDelay: 0.04
+  m_Diffusion: 100
+  m_Density: 100
+  m_HFReference: 5000
+  m_RoomLF: 0
+  m_LFReference: 250
+  m_ReflectionsDelay: 0
+  m_ReverbPreset: 27
 --- !u!4 &9105621822233086646
 Transform:
   m_ObjectHideFlags: 0
@@ -8913,6 +9001,19 @@ Transform:
   - {fileID: 7949757084015667561}
   m_Father: {fileID: 1513418147}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9105621822233086647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7116473300348479896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 167a036bbfd206e49a5c2196b4127429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Seonho._01.Scripts.StereophonicSound.CurrentSpace
+  selectedSpace: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -8920,3 +9021,4 @@ SceneRoots:
   - {fileID: 692635636}
   - {fileID: 1513418147}
   - {fileID: 1772490870}
+  - {fileID: 1008747436}
