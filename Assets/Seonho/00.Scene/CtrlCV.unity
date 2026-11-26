@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f78a563669c53547a94434eab4a9df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastWallSurface2D
-  image: {fileID: 2800000, guid: 534b16fdc271a074398070f7c818b347, type: 3}
+  image: {fileID: 2800000, guid: db2c84ef1bc48b4439ca9e6fee2dcef8, type: 3}
 --- !u!61 &27817460
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8082,13 +8082,13 @@ MonoBehaviour:
   defaultWallTexture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
   wallTextures:
   - tile: {fileID: 11400000, guid: 9b3022ac15401a1499d9b9c2421a874d, type: 2}
-    texture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
+    texture: {fileID: 2800000, guid: 0fdaf8152c17359479d12f2912c282f3, type: 3}
   - tile: {fileID: 11400000, guid: 23c8724b0df30124394a146a28a3aa1c, type: 2}
-    texture: {fileID: 2800000, guid: d48c9edb9abed91428d91d2afe94d9b7, type: 3}
+    texture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
   - tile: {fileID: 11400000, guid: 9cdb88ce61c970c4eab57f728cf7dabf, type: 2}
     texture: {fileID: 2800000, guid: 75b23e3ca75644242939bb7b4946a10b, type: 3}
-  floorTexture: {fileID: 2800000, guid: 9a9cfa8c1150782449ed915c6281cd71, type: 3}
-  ceilingTexture: {fileID: 2800000, guid: dba3af5ce8bc63c40973a4c21d71d2db, type: 3}
+  floorTexture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
+  ceilingTexture: {fileID: 2800000, guid: 85d06711f5a30b248b9e1cb7f97a36ed, type: 3}
   surfaceTileSize: 1
   fieldOfView: 80
   wallHeight: 1
