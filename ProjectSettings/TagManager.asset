@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Heart
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -17,9 +18,9 @@ TagManager:
   - Bottom
   - Wall
   - MiniMapFog
-  - 
-  - 
-  - 
+  - Corridor
+  - SmallRoom
+  - LargeRoom
   - 
   - 
   - 

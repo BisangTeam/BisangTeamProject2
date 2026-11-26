@@ -10,7 +10,9 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0.01f)] private float openSpeed = 1.5f;
         [SerializeField] private bool startOpen;
         [SerializeField] private bool canPeek;
-
+        [SerializeField] private bool canToggle = true;
+        
+        private bool permanentlyLocked;
         public bool CanPeek => canPeek;
         public bool IsClosed => !IsMoving && _openAmount <= 0.0001f;
 
@@ -81,13 +83,28 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public void Toggle()
         {
             Initialize();
+
+            if (permanentlyLocked || !canToggle)
+                return;
+
             _targetOpen = !_targetOpen;
         }
 
         public void SetOpen(bool open)
         {
             Initialize();
+
+            if (permanentlyLocked && open)
+                return;
+
             _targetOpen = open;
+        }
+        
+        public void CloseAndLock()
+        {
+            Initialize();
+            permanentlyLocked = true;
+            _targetOpen = false;
         }
 
         public void RestoreOpen(bool open)
