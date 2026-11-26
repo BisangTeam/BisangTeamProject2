@@ -1,4 +1,5 @@
 using Hyunwoo.HumanBodySystem;
+using Hyunwoo.Raycasting2D.Scripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,7 +25,7 @@ public class institution : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current == null) return;
+        if (Mouse.current == null || RaycastPaperView.IsReading) return;
         //해제
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {

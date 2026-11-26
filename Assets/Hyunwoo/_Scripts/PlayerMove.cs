@@ -9,13 +9,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0f)] private float turnSpeed = 120f;
         [SerializeField] private WalkFeedback Walk;
         private Vector2 _lastPosition;
-        private bool _isMoving;
 
         public Vector2 MoveDir { get; set; }
         public float TurnDir { get; set; }
         public bool CanMove { get; set; } = true;
 
         private Rigidbody2D _rb;
+        private bool _wasWalking;
         
         private void Awake()
         {
@@ -25,46 +25,32 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         private void FixedUpdate()
         {
-            if (!CanMove)
-            {
-                _rb.linearVelocity = Vector2.zero;
-                return;
-            }
-            
-            _rb.rotation += -TurnDir * turnSpeed * Time.fixedDeltaTime;
+            bool acceptsInput = CanMove && !RaycastPaperView.IsReading;
+            if (acceptsInput) _rb.rotation += -TurnDir * turnSpeed * Time.fixedDeltaTime;
+            Vector2 input = acceptsInput ? MoveDir : Vector2.zero;
+            _rb.linearVelocity = _rb.GetRelativeVector(input) * MoveSpeed;
 
-            Vector2 direction = _rb.GetRelativeVector(MoveDir);
-
-            bool isMoving = MoveDir != Vector2.zero &&
-                            Vector2.Distance(_rb.position, _lastPosition) > 0.001f;
-
+            bool walking = input != Vector2.zero && Vector2.Distance(_rb.position, _lastPosition) > 0.001f;
             _lastPosition = _rb.position;
 
-            _rb.linearVelocity = direction * MoveSpeed;
-            
-            if (isMoving)
-            {
-                Walk.PlayStep();
-            }
-            else if (_isMoving)
-            {
-                Walk.StopStep();
-            }
-
-            _isMoving = isMoving;
+            if (walking) Walk?.PlayStep();
+            else if (_wasWalking) Walk?.StopStep();
+            _wasWalking = walking;
         }
         
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag("Wall"))
             {
-                Walk.PlayBump();
+                Walk?.PlayBump();
             }
         }
-        
+
         private void OnDisable()
         {
             _rb.linearVelocity = Vector2.zero;
+            if (_wasWalking && Walk != null && Walk.isActiveAndEnabled) Walk.StopStep();
+            _wasWalking = false;
         }
     }
 }

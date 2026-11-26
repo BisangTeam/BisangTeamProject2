@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Hyunwoo/Scene2/RealHyunzun.unity
     guid: b485703c12079e540966ceae222018d1
+  - enabled: 1
+    path: Assets/Hyunwoo/Scene2/RealHyunzun_Mission.unity
+    guid: d0971295346c49d190ee51a344a72d67
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -68,7 +68,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public bool TryPlace()
         {
-            if (!hand.isActiveAndEnabled || !hand.CanMark) return false;
+            if (RaycastPaperView.IsReading || !hand.isActiveAndEnabled || !hand.CanMark) return false;
             Physics2D.SyncTransforms();
             var filter = new ContactFilter2D { useTriggers = false };
             filter.SetLayerMask(wallMask);
