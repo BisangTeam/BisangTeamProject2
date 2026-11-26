@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Hyunwoo.Save
 {
-    // Restore after the organs and the blood vessel pool have initialized.
     [DefaultExecutionOrder(300)]
     [RequireComponent(typeof(Rigidbody2D), typeof(PlayerInventory))]
     public sealed class CheckpointSave : MonoBehaviour
@@ -88,7 +87,6 @@ namespace Hyunwoo.Save
         private void LateUpdate()
         {
             if (_pending == null) return;
-            // Mission triggers and item interactions for this frame have finished.
             SaveAt(_pending);
             _pending = null;
         }

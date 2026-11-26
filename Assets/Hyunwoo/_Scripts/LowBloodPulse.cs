@@ -11,7 +11,6 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Range(0.01f, 1f)] private float threshold = 0.3f;
         [SerializeField, Min(0f)] private float maximumHeight = 0.026f;
         [SerializeField, Min(0.05f)] private float pulseDuration = 0.26f;
-        [Header("Preview (F8)")]
         [SerializeField] private bool preview;
         [SerializeField, Range(0f, 1f)] private float previewBlood = 0.6f;
 

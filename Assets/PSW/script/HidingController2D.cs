@@ -45,6 +45,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public bool TryHandleInteraction()
         {
+            if (RaycastPaperView.IsReading) return false;
             if (IsHidden)
             {
                 ExitHiding();
@@ -112,7 +113,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         
         private void FixedUpdate()
         {
-            if (!IsHidden ||
+            if (RaycastPaperView.IsReading || !IsHidden ||
                 activeSpot.Type != HidingSpotType.Cabinet ||
                 playerMove == null ||
                 playerBody == null)

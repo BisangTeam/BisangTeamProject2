@@ -13,6 +13,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public Texture2D Texture { get; private set; }
         public Color32[] Pixels { get; private set; }
         public float[] Depths { get; private set; }
+        public RaycastSprite2D[] Sprites { get; private set; }
         public RaycastHit2D[] WallHits { get; private set; }
         public int Height { get; private set; }
 
@@ -30,6 +31,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
                 Pixels = new Color32[width * height];
                 Depths = new float[Pixels.Length];
+                Sprites = new RaycastSprite2D[Pixels.Length];
                 WallHits = new RaycastHit2D[width];
 
                 Texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
@@ -47,6 +49,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         {
             Array.Fill(Pixels, new Color32(0, 0, 0, 255));
             Array.Fill(Depths, float.MaxValue);
+            Array.Clear(Sprites, 0, Sprites.Length);
         }
 
         public Color32[] GetTexturePixels(Texture2D source)

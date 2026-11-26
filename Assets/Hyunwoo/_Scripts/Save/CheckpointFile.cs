@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -34,6 +35,25 @@ namespace Hyunwoo.Save
                 Debug.LogWarning($"Could not read checkpoint: {e.Message}");
             }
             return null;
+        }
+
+        public static bool ResetMissionProgress(string path, string scenePath, ISet<string> missionDeviceIds)
+        {
+            CheckpointData data = Read(path);
+            if (data == null) return !File.Exists(path) && !File.Exists(path + ".bak");
+
+            LevelProgress level = data.FindLevel(scenePath);
+            if (level == null) return true;
+
+            int clearedDevices = level.devices.RemoveAll(device => missionDeviceIds.Contains(device.id));
+            if (!level.hasMission && string.IsNullOrEmpty(level.missionId) &&
+                (level.objectiveCounts == null || level.objectiveCounts.Length == 0) && clearedDevices == 0)
+                return true;
+
+            level.hasMission = false;
+            level.missionId = null;
+            level.objectiveCounts = Array.Empty<int>();
+            return Write(path, data);
         }
 
         public static bool Write(string path, CheckpointData data)

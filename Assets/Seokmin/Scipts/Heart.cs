@@ -1,4 +1,5 @@
 using System;
+using Hyunwoo.Raycasting2D.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,6 +22,7 @@ public class Heart : MonoBehaviour
 
     private void Update()
     {
+        if (RaycastPaperView.IsReading) return;
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             _isCl = false;

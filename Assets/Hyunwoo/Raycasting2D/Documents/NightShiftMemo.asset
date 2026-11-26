@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c9b4dc0b206154caf2c70020a9a3e7, type: 3}
+  m_Name: NightShiftMemo
+  m_EditorClassIdentifier: Assembly-CSharp::Seonho._09.SO.Scripts.DocumentWritingDataSO
+  <Theme>k__BackingField: "\uC57C\uAC04 \uC778\uACC4 \uBA54\uBAA8"
+  <Writing>k__BackingField: "\uBCF5\uB3C4 \uC804\uB4F1\uC774 \uB450 \uBC88 \uAE5C\uBE61\uC600\uB2E4.
+    \uBC30\uC804\uBC18\uC744 \uC62C\uB9AC\uACE0 \uB098\uC11C\uC57C \uBE44\uC0C1\uAD6C
+    \uD45C\uC2DC\uB4F1\uC774 \uB3CC\uC544\uC654\uB2E4.\n\n\uB2E4\uC74C \uADFC\uBB34\uC790\uB294
+    \uBB38\uC744 \uC5F4\uAE30 \uC804\uC5D0 \uBD88\uBE5B\uBD80\uD130 \uD655\uC778\uD560
+    \uAC83."
+  <Paper>k__BackingField: {fileID: -799421908166319183, guid: f0373b440a501a34a8f78bb237895c05, type: 3}
+  <Image>k__BackingField: []
