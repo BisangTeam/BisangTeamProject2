@@ -1,16 +1,51 @@
 fileFormatVersion: 2
-guid: 673292e78d4bfc74aa3a979b0f3dbe13
+guid: df7aa2680cb61ea4ab5372362f067ef2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5202510576338829213
-    second: 161f258b-8457-4871-8253-cffd0080b96e_0
+      213: -3556878245170579453
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_0"
   - first:
-      213: 324909352252216662
-    second: 161f258b-8457-4871-8253-cffd0080b96e_1
+      213: 8726797568889557133
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_1"
   - first:
-      213: 799718127552819719
-    second: 161f258b-8457-4871-8253-cffd0080b96e_2
+      213: -5455035803167586540
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_2"
+  - first:
+      213: -1869939956690250313
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_3"
+  - first:
+      213: 7942972172166245090
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_4"
+  - first:
+      213: -1594279297508031679
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_5"
+  - first:
+      213: -4158661843137702545
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_6"
+  - first:
+      213: -9068809687908611389
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_7"
+  - first:
+      213: 3163034536810891785
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_8"
+  - first:
+      213: -568719378667359076
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_9"
+  - first:
+      213: -5057237830836226979
+    second: "ChatGPT \uC774\uBBF8\uC9C0 2026\uB144 11\uC6D4 26\uC77C \uC624\uC804
+      10_55_07_10"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,12 +87,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 800
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -106,67 +141,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 161f258b-8457-4871-8253-cffd0080b96e_0
+      name: "\uC8FC\uC0AC\uAE30_0"
       rect:
         serializedVersion: 2
-        x: 24
+        x: 144
         y: 0
-        width: 826
-        height: 1760
+        width: 300
+        height: 1536
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d9f73ea1ec7033840800000000000000
-      internalID: 5202510576338829213
+      spriteID: 8ad5894d392c0e24fabc916957e79702
+      internalID: -1709840699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 161f258b-8457-4871-8253-cffd0080b96e_1
+      name: "\uC8FC\uC0AC\uAE30_1"
       rect:
         serializedVersion: 2
-        x: 861
-        y: 1194
-        width: 26
-        height: 39
+        x: 586
+        y: 0
+        width: 300
+        height: 1536
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 655123d955f428400800000000000000
-      internalID: 324909352252216662
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 161f258b-8457-4871-8253-cffd0080b96e_2
-      rect:
-        serializedVersion: 2
-        x: 861
-        y: 1152
-        width: 11
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 702f931666b291b00800000000000000
-      internalID: 799718127552819719
+      spriteID: ea3758f3df22e1d45a373e828ee11e50
+      internalID: -1247491990
       vertices: []
       indices: 
       edges: []
@@ -175,7 +188,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: b852c7e98d21030488c58c74af138f51
     internalID: 0
     vertices: []
     indices: 
@@ -183,11 +196,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":512.0,"y":1536.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      161f258b-8457-4871-8253-cffd0080b96e_0: 5202510576338829213
-      161f258b-8457-4871-8253-cffd0080b96e_1: 324909352252216662
-      161f258b-8457-4871-8253-cffd0080b96e_2: 799718127552819719
+      "\uC8FC\uC0AC\uAE30_0": -1709840699
+      "\uC8FC\uC0AC\uAE30_1": -1247491990
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
