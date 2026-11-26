@@ -11,9 +11,14 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField] private GameOverScreen gameOverScreen;
         [SerializeField] private LayerMask wallMask;
         [SerializeField, Min(0.01f)] private float catchDistance = 0.42f;
+        [SerializeField] private HidingController2D hidingController;
+        [SerializeField, Min(0.1f)] private float sightDistance = 6f;
 
         private NavMeshAgent _agent;
         private float _nextPathUpdate;
+        private bool hiddenPlayer;
+        private bool sawPlayerEnter;
+
 
         private NavMeshQueryFilter PathFilter => new NavMeshQueryFilter
         {
@@ -27,6 +32,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             // 이 맵은 XY 평면이고, 화면 속 괴물은 항상 정면을 보여 준다.
             _agent.updateRotation = false;
             _agent.updateUpAxis = false;
+            if (hidingController == null)
+                hidingController = player.GetComponent<HidingController2D>();
         }
 
         public void StopChase()
@@ -84,6 +91,32 @@ namespace Hyunwoo.Raycasting2D.Scripts
             // 플레이어가 벽에 바짝 붙어도 가장 가까운 통로 지점까지 따라간다.
             if (NavMesh.SamplePosition(player.position, out NavMeshHit target, 0.5f, PathFilter))
                 _agent.SetDestination(target.position);
+            
+            if (hiddenPlayer && !sawPlayerEnter)
+            {
+                _agent.isStopped = true;
+                return;
+            }
+
+            _agent.isStopped = false;
+        }
+        
+        public bool CanSeePosition(Vector2 target)
+        {
+            if (Vector2.Distance(transform.position, target) > sightDistance)
+                return false;
+
+            return !Physics2D.Linecast(
+                transform.position,
+                target,
+                wallMask
+            );
+        }
+
+        public void SetHiddenPlayer(bool isHidden, bool wasSeen)
+        {
+            hiddenPlayer = isHidden;
+            sawPlayerEnter = wasSeen;
         }
     }
 }

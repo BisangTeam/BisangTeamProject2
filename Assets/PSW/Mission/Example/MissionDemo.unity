@@ -127,6 +127,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 4210000110}
   - component: {fileID: 27817456}
   - component: {fileID: 27817460}
   - component: {fileID: 27817459}
@@ -572,6 +573,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4210000101}
+  - {fileID: 4210000071}
+  - {fileID: 4210000061}
+  - {fileID: 4210000051}
+  - {fileID: 4210000041}
+  - {fileID: 4210000031}
+  - {fileID: 4210000021}
   - {fileID: 281122424}
   - {fileID: 27817456}
   - {fileID: 434009465}
@@ -2913,6 +2921,7 @@ RectTransform:
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4210000011}
   - {fileID: 1444009468}
   - {fileID: 1949637199}
   - {fileID: 1013672286}
@@ -3649,7 +3658,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EyeModule
   updateTime: 0.5
   reduceGauge: 1
-  wantGaugeList: []
+  maxGauge: 100
+  defaultBloodGague: 50
+  raycastRenderer: {fileID: 4000000017}
+  wantGaugeList:
+  - needBloodGauge: 20
+    abillityValue: 2.6
+  - needBloodGauge: 50
+    abillityValue: 1.6
+  - needBloodGauge: 100
+    abillityValue: 1
 --- !u!114 &1013672288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4587,6 +4605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MouseDragAndMove
   heartModule: {fileID: 1949637200}
+  inventory: {fileID: 4210000003}
   canvasRect: {fileID: 4000000038}
 --- !u!1 &1949637198
 GameObject:
@@ -4640,6 +4659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3ba8faa24bdc9414f0190f156d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
+  maxGauge: 100
+  defaultBloodGague: 60
   delaySeconds: 1
   defaultGetBloodValue: 12.86
   heartGauge: {fileID: 1591676630}
@@ -6194,6 +6215,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 4210000004}
+  - component: {fileID: 4210000003}
+  - component: {fileID: 4210000002}
   - component: {fileID: 4000000009}
   - component: {fileID: 4000000012}
   - component: {fileID: 4000000011}
@@ -6398,6 +6422,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 4210000001}
   - component: {fileID: 4000000018}
   - component: {fileID: 4000000017}
   m_Layer: 0
@@ -6443,6 +6468,8 @@ MonoBehaviour:
   shadowStartDistance: 2
   shadowEndDistance: 8
   sideWallBrightness: 0.8
+  ambientBrightness: 0.34
+  lowBloodPulse: {fileID: 4210000001}
 --- !u!4 &4000000018
 Transform:
   m_ObjectHideFlags: 0
@@ -7164,6 +7191,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 4100000060}
   - component: {fileID: 4090000061}
   - component: {fileID: 4090000062}
   - component: {fileID: 4090000063}
@@ -7252,6 +7280,7 @@ MonoBehaviour:
   missions: {fileID: 4090000002}
   mission: {fileID: 11400000, guid: 9f3dbce85a31446abdf4296b420e9df5, type: 2}
   objectiveIndex: 0
+  savedDevice: {fileID: 4100000060}
   player: {fileID: 4000000012}
   onAccepted:
     m_PersistentCalls:
@@ -7318,6 +7347,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 4100000070}
   - component: {fileID: 4090000071}
   - component: {fileID: 4090000072}
   - component: {fileID: 4090000073}
@@ -7406,6 +7436,7 @@ MonoBehaviour:
   missions: {fileID: 4090000002}
   mission: {fileID: 11400000, guid: 9f3dbce85a31446abdf4296b420e9df5, type: 2}
   objectiveIndex: 0
+  savedDevice: {fileID: 4100000070}
   player: {fileID: 4000000012}
   onAccepted:
     m_PersistentCalls:
@@ -7904,6 +7935,990 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4210000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d079ee61f1954c7a20bdfa8fa3d3b25, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.LowBloodPulse
+  heart: {fileID: 1949637200}
+  heartbeat: {fileID: 1949637201}
+  threshold: 0.3
+  maximumHeight: 0.026
+  pulseDuration: 0.26
+  preview: 0
+  previewBlood: 0.6
+--- !u!114 &4210000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bf9ba8577d5535fa54c25e34b68f59a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.WallMarker2D
+  hand: {fileID: 4210000013}
+  walls: {fileID: 4000000007}
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 8
+  reach: 1.6
+  markPrefab: {fileID: 11400000, guid: 3fa00fa14a4b5f2b8f6bf44573f6b934, type: 3}
+--- !u!114 &4210000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 527d95075c6555daa22ba684679d2b5d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.PlayerInventory
+  slots:
+  - id: blood-pack
+    quantity: 1
+    icon: {fileID: 1940751144}
+--- !u!114 &4210000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed34ca078965557b253ebde8f9fcb77, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointSave
+  heart: {fileID: 1949637200}
+  missions: {fileID: 4090000002}
+  wallMarks: {fileID: 4210000002}
+--- !u!1 &4210000010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000011}
+  - component: {fileID: 4210000012}
+  - component: {fileID: 4210000013}
+  - component: {fileID: 4210000014}
+  - component: {fileID: 4210000015}
+  m_Layer: 5
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4210000011
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000010}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 710396271}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 176, y: -115}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4210000012
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000010}
+  m_CullTransparentMesh: 1
+--- !u!114 &4210000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 037b68ca6b025518a14277cb323289cd, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!114 &4210000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7741005cdbf352d591ac1a2c21c57fab, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HandModule
+  maxGauge: 100
+  defaultBloodGague: 0
+  reduceGauge: 0.5
+  updateTime: 0.5
+  wantGaugeList:
+  - needBloodGauge: 20
+    abillityValue: 0
+  - needBloodGauge: 100
+    abillityValue: 1
+  gaugeUI: {fileID: 0}
+  handIcon: {fileID: 4210000014}
+--- !u!114 &4210000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::institution
+  _instRange: 1.7
+  _pos: {fileID: 4210000011}
+  _isCon: 0
+  _isCon2: 0
+  viscera: {fileID: 4210000013}
+--- !u!1 &4210000020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000021}
+  - component: {fileID: 4210000022}
+  - component: {fileID: 4210000023}
+  m_Layer: 0
+  m_Name: Corridor Light - Steady
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000020}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.6, y: 1.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4210000022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb50afe282e45958a5c8778666aa54c8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastLight2D
+  brightness: 1.04
+  radius: 2.45
+  flicker: 0
+  flickerSpeed: 4
+--- !u!114 &4210000023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f4852bfa164a7d934a558f8ce540a7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastSprite2D
+  image: {fileID: 2800000, guid: 00e94ca7539fb4e4b8db12864c687348, type: 3}
+  height: 0.14
+  elevation: 0.83
+--- !u!1 &4210000030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000031}
+  - component: {fileID: 4210000032}
+  - component: {fileID: 4210000033}
+  m_Layer: 0
+  m_Name: Corridor Light - Flicker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.3, y: 1.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4210000032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb50afe282e45958a5c8778666aa54c8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastLight2D
+  brightness: 1.04
+  radius: 2.45
+  flicker: 1
+  flickerSpeed: 4
+--- !u!114 &4210000033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f4852bfa164a7d934a558f8ce540a7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastSprite2D
+  image: {fileID: 2800000, guid: 00e94ca7539fb4e4b8db12864c687348, type: 3}
+  height: 0.14
+  elevation: 0.83
+--- !u!1 &4210000040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000041}
+  - component: {fileID: 4210000042}
+  m_Layer: 0
+  m_Name: Hanging Corridor Sign
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000040}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.35, y: 1.012, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4210000042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13d86deeb2e01464ca283e3c99563f14, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastWallDecoration2D
+  image: {fileID: 2800000, guid: b4c75321280352d8baeac6bd19afbce6, type: 3}
+  width: 0.54
+  height: 0.38
+  elevation: 0.44
+  twoSided: 0
+  swayAmplitude: 0.055
+  swayCyclesPerSecond: 0.65
+--- !u!1 &4210000050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000051}
+  - component: {fileID: 4210000052}
+  - component: {fileID: 4210000053}
+  m_Layer: 0
+  m_Name: Checkpoint A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.70710678, w: 0.70710678}
+  m_LocalPosition: {x: 3.6, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4210000055}
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!61 &4210000052
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000050}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 0.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.9, y: 0.58}
+  m_EdgeRadius: 0
+--- !u!114 &4210000053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac6c7201a8c5a969a414b2afc7ccb07, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointPoint
+  pointId: A
+--- !u!1 &4210000054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000055}
+  - component: {fileID: 4210000056}
+  m_Layer: 0
+  m_Name: Save Sign A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000055
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.70710678, w: 0.70710678}
+  m_LocalPosition: {x: 0.488, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4210000051}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &4210000056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13d86deeb2e01464ca283e3c99563f14, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastWallDecoration2D
+  image: {fileID: 2800000, guid: 5b220cb3ea5959e2ac54a60ef632345e, type: 3}
+  width: 0.22
+  height: 0.22
+  elevation: 0.34
+  twoSided: 0
+  swayAmplitude: 0
+  swayCyclesPerSecond: 0.65
+--- !u!1 &4210000060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000061}
+  - component: {fileID: 4210000062}
+  - component: {fileID: 4210000063}
+  m_Layer: 0
+  m_Name: Checkpoint B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.70710678, w: 0.70710678}
+  m_LocalPosition: {x: 10.2, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4210000065}
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!61 &4210000062
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000060}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 0.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.9, y: 0.58}
+  m_EdgeRadius: 0
+--- !u!114 &4210000063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac6c7201a8c5a969a414b2afc7ccb07, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointPoint
+  pointId: B
+--- !u!1 &4210000064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000065}
+  - component: {fileID: 4210000066}
+  m_Layer: 0
+  m_Name: Save Sign B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000065
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000064}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.70710678, w: 0.70710678}
+  m_LocalPosition: {x: 0.488, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4210000061}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &4210000066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13d86deeb2e01464ca283e3c99563f14, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastWallDecoration2D
+  image: {fileID: 2800000, guid: 5b220cb3ea5959e2ac54a60ef632345e, type: 3}
+  width: 0.22
+  height: 0.22
+  elevation: 0.34
+  twoSided: 0
+  swayAmplitude: 0
+  swayCyclesPerSecond: 0.65
+--- !u!1 &4210000070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000071}
+  - component: {fileID: 4210000072}
+  - component: {fileID: 4210000073}
+  - component: {fileID: 4210000074}
+  m_Layer: 0
+  m_Name: Service Hatch - F
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.5, y: 2.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4210000081}
+  - {fileID: 4210000091}
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &4210000072
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000070}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 0.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.9, y: 0.86}
+  m_EdgeRadius: 0
+--- !u!114 &4210000073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8f5b1ad4f856c7a5ad86e7c6b20f6d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointDevice
+  deviceId: service-hatch
+  used: 0
+  availableView: {fileID: 4210000080}
+  usedView: {fileID: 4210000090}
+  door: {fileID: 0}
+--- !u!114 &4210000074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36562f22ebf510a8ba15edbeaacea07, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointShortcut2D
+  player: {fileID: 4000000012}
+  exit: {fileID: 4210000101}
+--- !u!1 &4210000080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000081}
+  - component: {fileID: 4210000082}
+  m_Layer: 0
+  m_Name: Open Hatch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000080}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.32, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4210000071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4210000082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f4852bfa164a7d934a558f8ce540a7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastSprite2D
+  image: {fileID: 2800000, guid: b4c75321280352d8baeac6bd19afbce6, type: 3}
+  height: 0.4
+  elevation: 0.12
+--- !u!1 &4210000090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000091}
+  - component: {fileID: 4210000092}
+  - component: {fileID: 4210000093}
+  m_Layer: 3
+  m_Name: Closed Hatch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4210000091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000090}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.33, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4210000071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &4210000092
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000090}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 0.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.83, y: 0.2}
+  m_EdgeRadius: 0
+--- !u!114 &4210000093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f78a563669c53547a94434eab4a9df6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.RaycastWallSurface2D
+  image: {fileID: 2800000, guid: 75b23e3ca75644242939bb7b4946a10b, type: 3}
+--- !u!1 &4210000100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4210000101}
+  m_Layer: 0
+  m_Name: Service Hatch Exit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4210000101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210000100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.70710678, w: 0.70710678}
+  m_LocalPosition: {x: 8.35, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 173703152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!114 &4210000110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27817455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8f5b1ad4f856c7a5ad86e7c6b20f6d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointDevice
+  deviceId: sliding-door
+  used: 0
+  availableView: {fileID: 0}
+  usedView: {fileID: 0}
+  door: {fileID: 27817458}
+--- !u!114 &4100000060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4090000060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8f5b1ad4f856c7a5ad86e7c6b20f6d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointDevice
+  deviceId: breaker-a
+  used: 0
+  availableView: {fileID: 0}
+  usedView: {fileID: 0}
+  door: {fileID: 0}
+--- !u!114 &4100000070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4090000070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8f5b1ad4f856c7a5ad86e7c6b20f6d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Save.CheckpointDevice
+  deviceId: breaker-b
+  used: 0
+  availableView: {fileID: 0}
+  usedView: {fileID: 0}
+  door: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

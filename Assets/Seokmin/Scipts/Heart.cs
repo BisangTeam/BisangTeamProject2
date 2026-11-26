@@ -12,6 +12,7 @@ public class Heart : MonoBehaviour
     public LineTest _lineTest;
     [SerializeField]private RectTransform _pos;
     public bool _isCl;
+    public RectTransform BloodAnchor => _pos;
 
     private void Awake()
     {
@@ -20,7 +21,7 @@ public class Heart : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             _isCl = false;
             var manager = insManager.Instance;

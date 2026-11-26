@@ -48,6 +48,7 @@ namespace Hyunwoo.HumanBodySystem
         
         private void Start()
         {
+            if (gaugeUI != null) OnBloodGaugeChanged += RefreshGauge;
             BloodGauge = defaultBloodGague;
             UpdateReduceGauge().Forget();
         }
@@ -62,13 +63,13 @@ namespace Hyunwoo.HumanBodySystem
         private void ReduceGauge()
         {
             BloodGauge -= reduceGauge;
-            gaugeUI.Gauge = BloodGauge;
         }
+
+        private void RefreshGauge() => gaugeUI.Gauge = BloodGauge;
 
         private void OnHandleFillGauge(float value)
         {
             BloodGauge += value;
-            gaugeUI.Gauge = BloodGauge;
             Debug.Log($"{gameObject.name}: Gauge: {BloodGauge}");
         }
         
@@ -76,6 +77,7 @@ namespace Hyunwoo.HumanBodySystem
         
         public void Work()
         {
+            if (wantGaugeList == null || wantGaugeList.Count == 0) return;
             for (int i = 0; i < wantGaugeList.Count; i++)
             {
                 if (BloodGauge <= wantGaugeList[i].needBloodGauge)
@@ -85,8 +87,9 @@ namespace Hyunwoo.HumanBodySystem
                 }
             }
             
-            // 리스트에 있는 값보다 높은 값이 들어왔을때 예외 처리 => 최현우가 작성
-            WorkFunction(wantGaugeList.Count, wantGaugeList[wantGaugeList.Count].abillityValue);  
+            // 마지막 혈액 기준을 넘으면 가장 높은 단계의 능력을 사용한다.
+            int last = wantGaugeList.Count - 1;
+            WorkFunction(last, wantGaugeList[last].abillityValue);
         }
         
         protected abstract void WorkFunction(int index, float abillityValue);

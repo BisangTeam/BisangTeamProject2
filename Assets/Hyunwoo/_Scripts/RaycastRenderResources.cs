@@ -13,6 +13,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public Texture2D Texture { get; private set; }
         public Color32[] Pixels { get; private set; }
         public float[] Depths { get; private set; }
+        public RaycastHit2D[] WallHits { get; private set; }
         public int Height { get; private set; }
 
         public bool Resize(RawImage rawImage, int width)
@@ -22,13 +23,14 @@ namespace Hyunwoo.Raycasting2D.Scripts
             
             int height = Mathf.Max(1, Mathf.RoundToInt(width * rect.height / rect.width));
 
-            if (Height != height || Texture == null)
+            if (Height != height || Texture == null || Texture.width != width)
             {
                 Dispose(rawImage);
                 Height = height;
 
                 Pixels = new Color32[width * height];
                 Depths = new float[Pixels.Length];
+                WallHits = new RaycastHit2D[width];
 
                 Texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
                 {
