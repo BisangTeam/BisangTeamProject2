@@ -1455,6 +1455,7 @@ MonoBehaviour:
   image: {fileID: 2800000, guid: 00e94ca7539fb4e4b8db12864c687348, type: 3}
   height: 0.32
   elevation: 0.68
+  document: {fileID: 0}
 --- !u!1 &447413739
 GameObject:
   m_ObjectHideFlags: 0
@@ -8206,6 +8207,7 @@ MonoBehaviour:
   image: {fileID: 2800000, guid: c74401f9cc6fe794d8bef7f751f401dc, type: 3}
   height: 0.65
   elevation: 0
+  document: {fileID: 0}
 --- !u!1 &4000000024
 GameObject:
   m_ObjectHideFlags: 0
@@ -8253,6 +8255,7 @@ MonoBehaviour:
   image: {fileID: 2800000, guid: c91589872a180014d87bb8b016d8e375, type: 3}
   height: 0.9
   elevation: 0
+  document: {fileID: 0}
 --- !u!1 &4000000027
 GameObject:
   m_ObjectHideFlags: 0
@@ -8866,6 +8869,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   catchDistance: 0.42
+  gameOverOnCatch: 0
   hidingController: {fileID: 0}
   sightDistance: 6
 --- !u!114 &5862433644086169887
@@ -8883,6 +8887,7 @@ MonoBehaviour:
   image: {fileID: 2800000, guid: e93f19c5abfd4d88b68d221be253b59d, type: 3}
   height: 0.94
   elevation: 0
+  document: {fileID: 0}
 --- !u!1 &7116473300348479896
 GameObject:
   m_ObjectHideFlags: 0
