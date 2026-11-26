@@ -1,3 +1,6 @@
+// 체크포인트 저장과 이어하기를 다시 켜려면 다음 줄의 주석을 해제한다.
+// #define ENABLE_CHECKPOINT_SAVES
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,10 +10,17 @@ namespace Hyunwoo.Save
 {
     public static class CheckpointFile
     {
+#if ENABLE_CHECKPOINT_SAVES
+        public static bool Enabled => true;
+#else
+        public static bool Enabled => false;
+#endif
+
         public static string Location => Path.Combine(Application.persistentDataPath, "checkpoint-v1.json");
 
         public static CheckpointData Read(string path)
         {
+            if (!Enabled) return null;
             return ReadOne(path) ?? ReadOne(path + ".bak");
         }
 
@@ -39,6 +49,7 @@ namespace Hyunwoo.Save
 
         public static bool ResetMissionProgress(string path, string scenePath, ISet<string> missionDeviceIds)
         {
+            if (!Enabled) return true;
             CheckpointData data = Read(path);
             if (data == null) return !File.Exists(path) && !File.Exists(path + ".bak");
 
@@ -58,6 +69,7 @@ namespace Hyunwoo.Save
 
         public static bool Write(string path, CheckpointData data)
         {
+            if (!Enabled) return false;
             string temporary = path + ".tmp";
             try
             {

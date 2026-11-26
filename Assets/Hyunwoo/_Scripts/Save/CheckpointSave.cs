@@ -76,6 +76,7 @@ namespace Hyunwoo.Save
 
         public void Reach(CheckpointPoint point)
         {
+            if (!CheckpointFile.Enabled) return;
             if (point != _restoredPoint && !string.IsNullOrEmpty(point.Id)) _pending = point;
         }
 
