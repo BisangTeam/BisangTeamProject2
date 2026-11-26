@@ -304,6 +304,8 @@ MonoBehaviour:
   slideOffset: {x: 1.05, y: 0}
   openSpeed: 1.5
   startOpen: 0
+  canPeek: 0
+  canToggle: 1
 --- !u!114 &27817459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,6 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MouseDragAndMove
   insertBloodAmount: 50
   heartModule: {fileID: 1385264448}
+  inventory: {fileID: 0}
   canvasRect: {fileID: 1903432345}
 --- !u!114 &197767190
 MonoBehaviour:
@@ -1070,6 +1073,8 @@ MonoBehaviour:
   height: 0.5
   elevation: 0.3
   twoSided: 0
+  swayAmplitude: 0
+  swayCyclesPerSecond: 0.6
 --- !u!1 &300953084
 GameObject:
   m_ObjectHideFlags: 0
@@ -5267,6 +5272,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   interactionDistance: 1.6
+  raycastRenderer: {fileID: 0}
+  playerMove: {fileID: 0}
+  holdToPeekTime: 0.2
+  peekFieldOfView: 30
 --- !u!1 &1385264447
 GameObject:
   m_ObjectHideFlags: 0
@@ -5303,6 +5312,7 @@ MonoBehaviour:
   maxGauge: 100
   defaultBloodGague: 0
   heartGauge: {fileID: 345904792}
+  heartVisual: {fileID: 0}
 --- !u!224 &1385264449
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7890,6 +7900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.RaycastPlayer2D
   MoveSpeed: 3
   turnSpeed: 120
+  Walk: {fileID: 0}
 --- !u!58 &4000000011
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8082,13 +8093,13 @@ MonoBehaviour:
   defaultWallTexture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
   wallTextures:
   - tile: {fileID: 11400000, guid: 9b3022ac15401a1499d9b9c2421a874d, type: 2}
-    texture: {fileID: 2800000, guid: 0fdaf8152c17359479d12f2912c282f3, type: 3}
+    texture: {fileID: 2800000, guid: cdf9d138d6802674f86c70102ac4602f, type: 3}
   - tile: {fileID: 11400000, guid: 23c8724b0df30124394a146a28a3aa1c, type: 2}
     texture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
   - tile: {fileID: 11400000, guid: 9cdb88ce61c970c4eab57f728cf7dabf, type: 2}
     texture: {fileID: 2800000, guid: 75b23e3ca75644242939bb7b4946a10b, type: 3}
-  floorTexture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
-  ceilingTexture: {fileID: 2800000, guid: 85d06711f5a30b248b9e1cb7f97a36ed, type: 3}
+  floorTexture: {fileID: 2800000, guid: 683b78ddcd51dd0469590500d7f7743e, type: 3}
+  ceilingTexture: {fileID: 2800000, guid: bcbc2fcf101209243b084025caffd924, type: 3}
   surfaceTileSize: 1
   fieldOfView: 80
   wallHeight: 1
@@ -8097,6 +8108,9 @@ MonoBehaviour:
   shadowStartDistance: 2
   shadowEndDistance: 8
   sideWallBrightness: 0.8
+  peekSlitWidth: 0.08
+  ambientBrightness: 1
+  lowBloodPulse: {fileID: 0}
 --- !u!4 &4000000018
 Transform:
   m_ObjectHideFlags: 0
@@ -8852,6 +8866,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   catchDistance: 0.42
+  hidingController: {fileID: 0}
+  sightDistance: 6
 --- !u!114 &5862433644086169887
 MonoBehaviour:
   m_ObjectHideFlags: 0
