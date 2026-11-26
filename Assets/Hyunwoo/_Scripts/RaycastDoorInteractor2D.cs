@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 namespace Hyunwoo.Raycasting2D.Scripts
 {
-    // 기존 Player 입력 코드를 바꾸지 않고 같은 플레이어에 붙여 사용한다.
     public class RaycastDoorInteractor2D : MonoBehaviour
     {
         [SerializeField] private LayerMask wallMask;
@@ -19,19 +18,17 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private float interactionPressedAt;
 
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[16];
-        
-        private void Awake()
-        {
-            if (playerMove == null)
-                playerMove = GetComponent<PlayerMove>();
-        }
 
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
+            if (keyboard == null || RaycastPaperView.IsReading)
             {
-                EndPeek();
+                if (!isPeeking || keyboard == null || !keyboard.fKey.isPressed)
+                {
+                    EndPeek();
+                    pendingPeekDoor = null;
+                }
                 return;
             }
 
@@ -84,6 +81,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public bool TryInteract()
         {
+            if (RaycastPaperView.IsReading) return false;
             Physics2D.SyncTransforms();
             var filter = new ContactFilter2D();
             filter.SetLayerMask(wallMask);
@@ -96,7 +94,6 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 return true;
             }
 
-            // 열린 문은 옆 벽에 가려져 있으므로, 문이 있던 입구를 대상으로 검사한다.
             RaycastDoor2D selected = null;
             float closest = interactionDistance;
             foreach (RaycastDoor2D candidate in RaycastDoor2D.Active)
@@ -110,7 +107,6 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 Vector2 direction = offset / distance;
                 if (Vector2.Dot(transform.up, direction) < 0.85f) continue;
 
-                // 입구까지의 시선이 막혀 있으면 벽 너머에서 문을 닫지 못한다.
                 Collider2D blocker = ClosestBlocker(direction, Mathf.Max(0f, distance - 0.01f), filter);
                 if (blocker != null && blocker.GetComponentInParent<RaycastDoor2D>() != candidate) continue;
                 selected = candidate;

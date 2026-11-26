@@ -46,6 +46,14 @@ public class MissionManager : MonoBehaviour
 
     public int[] CaptureCounts() => Counts.ToArray();
 
+    public void RestartMissions()
+    {
+        _resume = false;
+        _savedMission = null;
+        _savedCounts = null;
+        SetMission(startMission);
+    }
+
     public void PrepareResume(string missionId, int[] counts)
     {
         var visited = new HashSet<MissionDataSO>();

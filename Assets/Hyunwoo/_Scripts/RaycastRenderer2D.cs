@@ -20,24 +20,22 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField] private RawImage rawImage;
         [SerializeField] private LayerMask wallMask;
 
-        [Header("Wall Textures")]
+        [Header("WallTextures")]
         [SerializeField] private Tilemap wallTilemap;
         [SerializeField] private Texture2D defaultWallTexture;
         [SerializeField] private WallTexture[] wallTextures;
 
-        [Header("Floor And Ceiling Textures")]
+        [Header("Floor")]
         [SerializeField] private Texture2D floorTexture;
         [SerializeField] private Texture2D ceilingTexture;
         [SerializeField, Min(0.01f)] private float surfaceTileSize = 1f;
 
         [Header("Settings")]
         [SerializeField, Range(10f, 150f)] private float fieldOfView = 80f;
-        private float activeFieldOfView;
-        private float verticalViewOffset;
         [SerializeField, Min(0.01f)] private float wallHeight = 1f;
         [SerializeField, Min(0.1f)] private float maxDistance = 30f;
 
-        [Header("Distance Darkness")]
+        [Header("DistanceDarkness")]
         [field:SerializeField, Min(0f)] public float ShadowStrength { get; set; } = 1f;
         [SerializeField, Min(0f)] private float shadowStartDistance = 2f;
         [SerializeField, Min(0.01f)] private float shadowEndDistance = 8f;
@@ -46,11 +44,14 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Range(0.01f, 0.3f)]
         private float peekSlitWidth = 0.08f;
 
-        private RaycastDoor2D peekingDoor;
+        private float _activeFieldOfView;
+        private float _verticalViewOffset;
+        
+        private RaycastDoor2D _peekingDoor;
 
         public void SetPeekDoor(RaycastDoor2D door)
         {
-            peekingDoor = door;
+            _peekingDoor = door;
         }
 
         [Header("Corridor Lighting")]
@@ -69,8 +70,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             _walls.SetTileTextures(wallTextures);
             _resources.Resize(rawImage, ScreenWidth);
 
-            activeFieldOfView = fieldOfView;
-            verticalViewOffset = 0f;
+            _activeFieldOfView = fieldOfView;
+            _verticalViewOffset = 0f;
         }
 
         private void LateUpdate()
@@ -83,13 +84,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
             if (!_resources.Resize(rawImage, ScreenWidth)) return;
 
             var view = new RaycastView2D(player, ScreenWidth, _resources.Height,
-                activeFieldOfView, wallHeight, maxDistance, lowBloodPulse != null ? lowBloodPulse.HeightOffset : 0f);
+                _activeFieldOfView, wallHeight, maxDistance, lowBloodPulse != null ? lowBloodPulse.HeightOffset : 0f);
             RaycastLight2D.Collect(gameObject.scene, view, Time.time, _lights);
             var lighting = new RaycastLighting2D(ShadowStrength, shadowStartDistance,
                 shadowEndDistance, sideWallBrightness, ambientBrightness, _lights);
 
             RaycastFloorRenderer2D.Draw(_resources, view, lighting, floorTexture, ceilingTexture, surfaceTileSize);
-            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture, peekingDoor, peekSlitWidth);
+            _walls.Draw(_resources, view, lighting, wallMask, wallTilemap, defaultWallTexture, _peekingDoor, peekSlitWidth);
             _objects.Draw(_resources, view, lighting);
             _resources.Present();
         }
@@ -99,16 +100,32 @@ namespace Hyunwoo.Raycasting2D.Scripts
             _resources.Dispose(rawImage);
         }
 
+        public RaycastSprite2D SpriteAtScreenPoint(Vector2 screenPoint, Camera eventCamera)
+        {
+            Texture2D texture = _resources.Texture;
+            if (!isActiveAndEnabled || texture == null || rawImage.texture != texture) return null;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, screenPoint,
+                    eventCamera, out Vector2 localPoint)) return null;
+
+            Rect rect = rawImage.GetPixelAdjustedRect();
+            if (!rect.Contains(localPoint)) return null;
+            Vector2 point = Rect.PointToNormalized(rect, localPoint);
+            Vector2 uv = Rect.NormalizedToPoint(rawImage.uvRect, point);
+            int x = Mathf.Clamp(Mathf.FloorToInt(uv.x * texture.width), 0, texture.width - 1);
+            int y = Mathf.Clamp(Mathf.FloorToInt(uv.y * texture.height), 0, texture.height - 1);
+            return _resources.Sprites[y * texture.width + x];
+        }
+
         public void SetHideView(float fieldOfView, float verticalOffset)
         {
-            activeFieldOfView = Mathf.Clamp(fieldOfView, 10f, 150f);
-            verticalViewOffset = Mathf.Clamp(verticalOffset, -0.3f, 0.3f);
+            _activeFieldOfView = Mathf.Clamp(fieldOfView, 10f, 150f);
+            _verticalViewOffset = Mathf.Clamp(verticalOffset, -0.3f, 0.3f);
         }
 
         public void ResetHideView()
         {
-            activeFieldOfView = fieldOfView;
-            verticalViewOffset = 0f;
+            _activeFieldOfView = fieldOfView;
+            _verticalViewOffset = 0f;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Seonho._09.SO.Scripts;
 using UnityEngine;
 
 namespace Hyunwoo.Raycasting2D.Scripts
@@ -9,12 +10,15 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField, Min(0.01f)] private float height = 1f;
         [SerializeField, Min(0f)] private float elevation = 0f;
 
+        [SerializeField] private DocumentWritingDataSO document;
+
         private static readonly List<RaycastSprite2D> ActiveSprites = new();
 
         public static IReadOnlyList<RaycastSprite2D> Active => ActiveSprites;
         public Texture2D Image => image;
         public float Height => height;
         public float Elevation => elevation;
+        public DocumentWritingDataSO Document => document;
 
         private void OnEnable()
         {

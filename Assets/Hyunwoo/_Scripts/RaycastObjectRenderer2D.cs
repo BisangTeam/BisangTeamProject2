@@ -111,7 +111,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
                     if (item.depth >= resources.Depths[index]) continue;
                     
                     int textureY = Mathf.Clamp((int)((y + 0.5f - bottom) / height * image.height), 0, image.height - 1);
-                    DrawPixel(resources, index, colors[textureY * image.width + textureX], shade, item.depth);
+                    DrawPixel(resources, index, colors[textureY * image.width + textureX], shade, item.depth, item.sprite);
                 }
             }
         }
@@ -179,7 +179,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
             }
         }
 
-        private static void DrawPixel(RaycastRenderResources resources, int index, Color32 color, float brightness, float depth)
+        private static void DrawPixel(RaycastRenderResources resources, int index, Color32 color, float brightness,
+            float depth, RaycastSprite2D sprite = null)
         {
             if (color.a == 0) return;
             byte alpha = color.a;
@@ -193,6 +194,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 color.b = (byte)((color.b * alpha + behind.b * (255 - alpha)) / 255);
             }
             resources.Pixels[index] = color;
+            // 마지막에 보이게 그린 물체만 클릭할 수 있다. 벽 장식은 뒤쪽 물체의 선택을 가린다.
+            resources.Sprites[index] = brightness > 0f ? sprite : null;
             if (alpha == 255) resources.Depths[index] = depth;
         }
     }

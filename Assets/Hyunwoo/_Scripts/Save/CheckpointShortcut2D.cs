@@ -1,3 +1,4 @@
+using Hyunwoo.Raycasting2D.Scripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,7 +25,7 @@ namespace Hyunwoo.Save
 
         public bool TryPass()
         {
-            if (_state.Used || !_entrance.OverlapPoint(player.position)) return false;
+            if (RaycastPaperView.IsReading || _state.Used || !_entrance.OverlapPoint(player.position)) return false;
             player.position = exit.position;
             player.rotation = exit.eulerAngles.z;
             player.linearVelocity = Vector2.zero;

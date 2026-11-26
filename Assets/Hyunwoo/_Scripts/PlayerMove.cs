@@ -14,6 +14,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         public bool CanMove { get; set; } = true;
 
         private Rigidbody2D _rb;
+        private bool _wasWalking;
         
         private void Awake()
         {
@@ -22,31 +23,22 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         private void FixedUpdate()
         {
-            if (!CanMove)
-            {
-                _rb.linearVelocity = Vector2.zero;
-                return;
-            }
-            
-            _rb.rotation += -TurnDir * turnSpeed * Time.fixedDeltaTime;
+            bool acceptsInput = CanMove && !RaycastPaperView.IsReading;
+            if (acceptsInput) _rb.rotation += -TurnDir * turnSpeed * Time.fixedDeltaTime;
+            Vector2 input = acceptsInput ? MoveDir : Vector2.zero;
+            _rb.linearVelocity = _rb.GetRelativeVector(input) * MoveSpeed;
 
-            Vector2 direction = _rb.GetRelativeVector(MoveDir);
-
-            _rb.linearVelocity = direction * MoveSpeed;
-
-            if (MoveDir != Vector2.zero)
-            {
-                Walk.PlayStep();
-            }
-            else
-            {
-                Walk.StopStep();
-            }
+            bool walking = input != Vector2.zero;
+            if (walking) Walk?.PlayStep();
+            else if (_wasWalking) Walk?.StopStep();
+            _wasWalking = walking;
         }
         
         private void OnDisable()
         {
             _rb.linearVelocity = Vector2.zero;
+            if (_wasWalking && Walk != null && Walk.isActiveAndEnabled) Walk.StopStep();
+            _wasWalking = false;
         }
     }
 }
