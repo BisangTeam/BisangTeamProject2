@@ -8094,12 +8094,12 @@ MonoBehaviour:
   defaultWallTexture: {fileID: 2800000, guid: edb3e06ad4610714895500d5062dfecb, type: 3}
   wallTextures:
   - tile: {fileID: 11400000, guid: 9b3022ac15401a1499d9b9c2421a874d, type: 2}
-    texture: {fileID: 2800000, guid: cdf9d138d6802674f86c70102ac4602f, type: 3}
+    texture: {fileID: 2800000, guid: 0f94c36a197af1048894dba7a8b933f0, type: 3}
   - tile: {fileID: 11400000, guid: 23c8724b0df30124394a146a28a3aa1c, type: 2}
     texture: {fileID: 2800000, guid: 978ef41b7a4fef648acbf36076f5479f, type: 3}
   - tile: {fileID: 11400000, guid: 9cdb88ce61c970c4eab57f728cf7dabf, type: 2}
     texture: {fileID: 2800000, guid: 75b23e3ca75644242939bb7b4946a10b, type: 3}
-  floorTexture: {fileID: 2800000, guid: 683b78ddcd51dd0469590500d7f7743e, type: 3}
+  floorTexture: {fileID: 2800000, guid: 019fffcd933ee714599bf9dabf6b7d5c, type: 3}
   ceilingTexture: {fileID: 2800000, guid: bcbc2fcf101209243b084025caffd924, type: 3}
   surfaceTileSize: 1
   fieldOfView: 80
