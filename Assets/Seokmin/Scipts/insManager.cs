@@ -76,16 +76,25 @@ public class insManager : MonoBehaviour
 
     public LineTest GetLine()
     {
-        for (int i = 0; i < LineTest.Length; ++i)
+        int available = -1;
+        for (int i = 0; i < LineTest.Length; i++)
         {
-            if (!LineTest[i]._isCon) //사용 가능한 혈관 체크
+            var line = LineTest[i];
+            if (line == null || line._isCon || line._isClick) continue;
+            if (!line.gameObject.activeSelf)
             {
-                LineTest[i].nowCount = i;
-                _nowLine =  LineTest[i];
-                return _nowLine;
+                available = i;
+                break;
             }
+            // 모든 혈관이 사용 중일 때만 회수 중인 선을 다시 꺼낸다.
+            if (available < 0 && line._isRest) available = i;
         }
-        return null;
+
+        if (available < 0) return null;
+        _nowLine = LineTest[available];
+        if (_nowLine.gameObject.activeSelf) _nowLine.gameObject.SetActive(false);
+        _nowLine.nowCount = available;
+        return _nowLine;
     }
     
     

@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using Hyunwoo.HumanBodySystem;
 
 public class Heartbeat : MonoBehaviour
 {
@@ -15,19 +16,43 @@ public class Heartbeat : MonoBehaviour
     [Header("쉬는 시간 (초)")]
     [SerializeField] private float restTime = 0.8f;
 
-    private void Start()
+    private HeartModule _circulation;
+    private Vector3 _baseScale;
+    private Sequence _sequence;
+
+    private void Awake()
     {
-        Vector3 baseScale = transform.localScale;
-        Sequence sequence = DOTween.Sequence();
+        _circulation = GetComponent<HeartModule>();
+        _baseScale = transform.localScale;
+    }
 
-        sequence.Append(transform.DOScale(baseScale * firstScale, firstDuration));
-        sequence.Append(transform.DOScale(baseScale, firstDuration));
-        sequence.Append(transform.DOScale(baseScale * secondScale, secondDuration));
-        sequence.AppendCallback(() => StrongBeat?.Invoke());
-        sequence.Append(transform.DOScale(baseScale, secondDuration));
-        sequence.AppendInterval(restTime);
+    private void OnEnable()
+    {
+        _sequence = DOTween.Sequence()
+            .Append(transform.DOScale(_baseScale * firstScale, firstDuration))
+            .Append(transform.DOScale(_baseScale, firstDuration))
+            .Append(transform.DOScale(_baseScale * secondScale, secondDuration))
+            .AppendCallback(() => StrongBeat?.Invoke())
+            .Append(transform.DOScale(_baseScale, secondDuration));
 
-        sequence.SetLoops(-1);
-        sequence.SetLink(gameObject);
+        if (_circulation == null)
+            _sequence.AppendInterval(restTime).SetLoops(-1);
+        else
+        {
+            _sequence.SetAutoKill(false).Pause();
+            _circulation.Beat += PlayBeat;
+        }
+    }
+
+    private void PlayBeat()
+    {
+        if (!_sequence.IsPlaying()) _sequence.Restart();
+    }
+
+    private void OnDisable()
+    {
+        if (_circulation != null) _circulation.Beat -= PlayBeat;
+        _sequence?.Kill();
+        transform.localScale = _baseScale;
     }
 }

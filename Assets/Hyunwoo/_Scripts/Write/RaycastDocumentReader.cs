@@ -1,3 +1,4 @@
+using Seonho._09.SO.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -14,6 +15,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField] private RectTransform panelParent;
 
         private RaycastPaperView _panel;
+        public bool IsDocumentOpen => _panel != null && _panel.isActiveAndEnabled;
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -23,6 +25,13 @@ namespace Hyunwoo.Raycasting2D.Scripts
             RaycastSprite2D sprite = raycastRenderer.SpriteAtScreenPoint(eventData.position, eventData.pressEventCamera);
             if (sprite == null || !sprite.isActiveAndEnabled || sprite.Document == null) return;
 
+            OpenDocument(sprite.Document, eventData.pressEventCamera, eventData.position);
+            eventData.Use();
+        }
+
+        public void OpenDocument(DocumentWritingDataSO document, Camera camera, Vector2? pickupPoint = null)
+        {
+            if (document == null || RaycastPaperView.IsReading) return;
             if (_panel == null)
             {
                 // 이전 씬에서 컴포넌트 참조가 유실된 경우에도 공용 종이를 열 수 있다.
@@ -37,8 +46,9 @@ namespace Hyunwoo.Raycasting2D.Scripts
                     SceneManager.MoveGameObjectToScene(_panel.gameObject, gameObject.scene);
             }
             RectTransform readingArea = panelParent != null ? panelParent : (RectTransform)transform;
-            _panel.Show(sprite.Document, readingArea, eventData.pressEventCamera, eventData.position);
-            eventData.Use();
+            _panel.Show(document, readingArea, camera, pickupPoint);
+            if (RaycastPaperView.IsReading && TryGetComponent(out ReadDocumentArchive archive))
+                archive.Remember(document);
         }
 
         private void Update()

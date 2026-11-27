@@ -9,7 +9,6 @@ namespace Hyunwoo.HumanBodySystem
 
         protected override void WorkFunction(int index, float abillityValue)
         {
-            Debug.Log("잘되는중");
             playerMove.MoveSpeed = abillityValue;            
         }
     }

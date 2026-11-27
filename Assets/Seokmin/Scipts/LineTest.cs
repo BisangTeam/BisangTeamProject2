@@ -7,6 +7,7 @@ public class LineTest : MonoBehaviour
 {
     private LineRenderer _lR;
     public bool _isClick = false;
+    public Mouse DragMouse { get; private set; }
     private Camera _cam;
     public Vector3 _mousePos;
     public List<VerletIntegrationTest> _points = new List<VerletIntegrationTest>();
@@ -33,6 +34,9 @@ public class LineTest : MonoBehaviour
     public bool _isCon = false;
     [SerializeField, Range(0.01f, 1f)] private float _instSpeed;
     private float _timer = 0f;
+    private Vector3[] _releaseShape;
+    private float _releaseTime;
+    private bool _rebound;
 
     private void Awake()
     {
@@ -42,23 +46,14 @@ public class LineTest : MonoBehaviour
     private void Start()
     {
         _cam = Camera.main;
-        _isRest = false;
     }
 
     private void Update()
     {
-        Mouse mouse = Mouse.current;
-        if (mouse != null && mouse.leftButton.wasReleasedThisFrame)
-        {
-            if (_points.Count > 1)
-            {
-                _points[_points.Count - 1]._prePos = _points[_points.Count - 2]._pos;
-            }
-        }
-        if (_isClick && mouse != null)
+        if (_isClick && DragMouse != null && DragMouse.added)
         {
             _timer = 0f;
-            _mousePos = insManager.Instance.GetBloodPoint(_cam, mouse.position.ReadValue());
+            _mousePos = insManager.Instance.GetBloodPoint(_cam, DragMouse.position.ReadValue());
             _restLength = (_mousePos - _points[0]._pos).magnitude / (_points.Count - 1); //오차 거리식
             _bendRestLength = _restLength * 2;
             _points[_points.Count - 1]._pos = _mousePos;
@@ -74,23 +69,22 @@ public class LineTest : MonoBehaviour
             {
                 _points[i].Simulate();
             }
-
-            _isRest = true;
+            _points[_pointCount - 1]._pos = _mousePos;
         }
         else if (_isRest && !_isCon)
         {
             _timer = 0f;
-            _restLength = Mathf.MoveTowards(_restLength, 0.01f, _returnSpeed * Time.deltaTime);
-            _bendRestLength = _restLength * 2;
-            Reset();
-            if (_restLength <= 0.01f)
+            _releaseTime += Time.deltaTime;
+            const float duration = 0.32f;
+            float t = Mathf.Clamp01(_releaseTime / duration);
+            float length = 1f - Mathf.SmoothStep(0f, 1f, t);
+            if (_rebound) length += Mathf.Sin(t * Mathf.PI * 4f) * Mathf.Exp(-12f * t) * 0.09f;
+            for (int i = 1; i < _points.Count; i++)
+                _points[i]._pos = Vector3.LerpUnclamped(_startPos, _releaseShape[i], length);
+            if (t >= 1f)
             {
                 _isRest = false;
-                for (int i = 0; i < _points.Count; i++)
-                {
-                    _lR.SetPosition(i, _startPos);
-                    gameObject.SetActive(false);
-                }
+                gameObject.SetActive(false);
             }
         }
         else if (_isCon)
@@ -102,10 +96,13 @@ public class LineTest : MonoBehaviour
             }
             _restLength = Mathf.MoveTowards(_restLength, (_endPos - _points[0]._pos).magnitude / (_points.Count - 1), _returnSpeed * Time.deltaTime);
             _bendRestLength = _restLength * 2;
+            for (int i = 1; i < _pointCount - 1; i++)
+                _points[i].ResetAcc();
             SpringCon();
             DistanceCon();
             BendCon();
-            for (int i = 1; i < _pointCount; ++i)
+            _points[_pointCount - 1]._pos = _endPos;
+            for (int i = 1; i < _pointCount - 1; ++i)
             {
                 _points[i].Simulate();
             }
@@ -121,8 +118,15 @@ public class LineTest : MonoBehaviour
         }
     }
 
-    public void IsDrClick(Vector3 heartPos)
+    public void IsDrClick(Vector3 heartPos, Mouse mouse = null)
     {
+        DragMouse = mouse;
+        _isClick = mouse != null;
+        _isRest = false;
+        _isCon = false;
+        _timer = 0f;
+        _restLength = 0f;
+        _lR.positionCount = _pointCount;
         _startPos = heartPos;
         _points.Clear();
         for (int i = 0; i < _pointCount; ++i)
@@ -130,7 +134,7 @@ public class LineTest : MonoBehaviour
             _points.Add(new VerletIntegrationTest(heartPos, _damping, _springStrength));
         }
 
-        _lR.SetPosition(0, _startPos);
+        Render();
     }
     
     public GameObject GetLineRenderer()
@@ -146,21 +150,26 @@ public class LineTest : MonoBehaviour
         }
     }
         
-    private void Reset()
+    public void ReleasePointer()
     {
-        for (int i = 1; i < _pointCount - 1; ++i)
-        {
-            _points[i].ResetAcc(); //누적된 탄성의 정도를 초기화
-        }
-        SpringCon();
-        DistanceCon();
-        BendCon();
-        for (int i = 1; i < _pointCount; ++i)
-        {
-            _points[i].Simulate(); //Verlet를 사용한 자연스러운 움직임
-        }
+        DragMouse = null;
+        _isClick = false;
     }
-    
+
+    public void Retract(bool rebound)
+    {
+        ReleasePointer();
+        _isCon = false;
+        _isRest = true;
+        _rebound = rebound;
+        _releaseTime = 0f;
+        if (_releaseShape == null || _releaseShape.Length != _points.Count)
+            _releaseShape = new Vector3[_points.Count];
+        for (int i = 0; i < _points.Count; i++)
+            _releaseShape[i] = _points[i]._pos;
+        _lR.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 1f);
+    }
+
     private void SpringCon() //탄성 구현
     {
         for (int i = 1; i < _pointCount - 1; ++i)
