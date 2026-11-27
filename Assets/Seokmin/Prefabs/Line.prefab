@@ -49,8 +49,7 @@ MonoBehaviour:
   _line: {fileID: 806759434721863356}
   _lineTest: {fileID: 0}
   _bloodDuration: 1
-  _bloodInterval: 2
-  _bloodWidth: 2
+  _bloodWidth: 0.55
   _bloodRange: 1.5
 --- !u!114 &6845069542274708405
 MonoBehaviour:
@@ -66,7 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LineTest
   _isClick: 0
   _mousePos: {x: 0, y: 0, z: 0}
-  _damping: 0.99
+  _damping: 0.55
   _springStrength: 15
   _pointCount: 15
   _stiffness: 0.5

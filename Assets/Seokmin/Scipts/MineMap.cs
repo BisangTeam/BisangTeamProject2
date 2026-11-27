@@ -3,6 +3,7 @@ using UnityEngine;
 public class MineMap : MineMapEvent
 {
     private Camera _camera;
+    public float ViewSize { get; private set; } = 2f;
     
     private void Awake()
     {
@@ -17,6 +18,7 @@ public class MineMap : MineMapEvent
 
     public override void MakeMineMap(float x)
     {
-        _camera.orthographicSize = x;
+        ViewSize = Mathf.Max(0f, x);
+        if (_camera.enabled) _camera.orthographicSize = Mathf.Max(0.01f, ViewSize);
     }
 }

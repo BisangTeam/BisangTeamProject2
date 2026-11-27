@@ -18,7 +18,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         [SerializeField] private HeldPaperMotion motion;
 
         private static RaycastPaperView _openView;
-        public static bool IsReading => _openView != null;
+        public static bool IsReading => _openView != null || ReadDocumentArchive.IsOpen;
 
         private readonly List<Sprite> _pages = new();
         private bool _hasTranscription;

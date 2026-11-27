@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using IBloodReservoir = Hyunwoo.HumanBodySystem.IBloodReservoir;
 
 namespace Hyunwoo.HumanBodySystem
 {
-    public abstract class AbstractHumanBody : MonoBehaviour
+    public abstract class AbstractHumanBody : MonoBehaviour, IBloodReservoir
     {
         [Header("기관별 혈액 최대치")]
-        [SerializeField] private float maxGauge = 100;
+        [SerializeField, Min(0.01f)] private float maxGauge = 100;
 
         private float _bloodGauge;
         
@@ -25,7 +26,8 @@ namespace Hyunwoo.HumanBodySystem
             }
         }
 
-        public float BloodGaugeRatio => BloodGauge / maxGauge;
+        public float Capacity => maxGauge;
+        public float BloodGaugeRatio => maxGauge > 0f ? BloodGauge / maxGauge : 0f;
 
         public abstract void ConnectionBlood();
 

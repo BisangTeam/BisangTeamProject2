@@ -7,70 +7,57 @@ public class BloodPulse : MonoBehaviour
     [SerializeField] private LineTest _lineTest;
 
     [Header("혈액 이동")]
-    [SerializeField] private float _bloodDuration = 2f; //이동 시간
-    [SerializeField] private float _bloodInterval = 1f; //다시 시작 시간 이건 그 심장에서 피를 만들어 내는 시간으로 하든가 하삼 알아서
+    [SerializeField, Min(0.05f)] private float _bloodDuration = 1f;
 
     [Header("혈관 부풀기")]
     [SerializeField] private float _bloodWidth = 0.7f;
     [SerializeField] private float _bloodRange = 1.5f;
 
-    private float _bloodIndex;
-    private float _timer;
-    private bool _isMoving = true;
-    
+    private float _elapsed;
+    private bool _isMoving;
+    private readonly AnimationCurve _restWidth = AnimationCurve.Linear(0f, 1f, 1f, 1f);
+    private readonly AnimationCurve _widthCurve = new AnimationCurve();
+    private Keyframe[] _widthKeys;
+
     private void Awake()
     {
         _line = GetComponent<LineRenderer>();
         _lineTest = GetComponent<LineTest>();
     }
 
+    public void Play()
+    {
+        _elapsed = 0f;
+        _isMoving = true;
+    }
+
     private void LateUpdate()
     {
-        if (_line == null || _line.positionCount < 2 || _lineTest._isCon == false)
+        if (!_isMoving) return;
+        if (!_lineTest._isCon || _line.positionCount < 2 || _elapsed >= _bloodDuration)
+        {
+            _line.widthCurve = _restWidth;
+            _isMoving = false;
             return;
-
-        UpdateBlood();
-        UpdateWidth();
+        }
+        UpdateWidth((_line.positionCount - 1) * (_elapsed / _bloodDuration));
+        _elapsed += Time.deltaTime;
     }
 
-    private void UpdateBlood()
+    private void OnDisable()
     {
-        if (_isMoving)
-        {
-            _bloodIndex = Mathf.MoveTowards(
-                _bloodIndex,
-                _line.positionCount - 1,
-                (_line.positionCount - 1) * Time.deltaTime / _bloodDuration
-            );
-
-            if (_bloodIndex >= _line.positionCount - 1)
-            {
-                _isMoving = false;
-                _timer = 0f;
-            }
-        }
-        else
-        {
-            _timer += Time.deltaTime;
-
-            if (_timer >= _bloodInterval)
-            {
-                _timer = 0f;
-                _bloodIndex = 0f;
-                _isMoving = true;
-            }
-        }
+        _isMoving = false;
+        if (_line != null) _line.widthCurve = _restWidth;
     }
 
-    private void UpdateWidth()
+    private void UpdateWidth(float pulseIndex)
     {
-        AnimationCurve curve = new AnimationCurve();
-
         int count = _line.positionCount;
+        if (_widthKeys == null || _widthKeys.Length != count) _widthKeys = new Keyframe[count];
 
         for (int i = 0; i < count; i++)
         {
-            float distance = Mathf.Abs(i - _bloodIndex);
+            float distance = Mathf.Abs(i - pulseIndex);
 
             float influence = 1f - Mathf.Clamp01(distance / _bloodRange);
             influence = Mathf.SmoothStep(0f, 1f, influence);
@@ -79,9 +66,10 @@ public class BloodPulse : MonoBehaviour
 
             float t = (float)i / (count - 1);
 
-            curve.AddKey(t, width);
+            _widthKeys[i] = new Keyframe(t, width);
         }
 
-        _line.widthCurve = curve;
+        _widthCurve.keys = _widthKeys;
+        _line.widthCurve = _widthCurve;
     }
 }

@@ -453,6 +453,7 @@ GameObject:
   - component: {fileID: 121303716}
   - component: {fileID: 121303717}
   - component: {fileID: 121303718}
+  - component: {fileID: 4811000000}
   m_Layer: 5
   m_Name: Ear
   m_TagString: Untagged
@@ -494,7 +495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.EarModule
   maxGauge: 100
-  defaultBloodGague: 30
+  defaultBloodGague: 0
   reduceGauge: 1
   updateTime: 0.1
   wantGaugeList:
@@ -522,10 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
-  _instRange: 0.6
-  _pos: {fileID: 121303716}
+  _pos: {fileID: 606760378}
   _isCon: 0
-  _isCon2: 0
   viscera: {fileID: 121303717}
 --- !u!1 &151498765
 GameObject:
@@ -756,9 +755,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 197767188}
-  - component: {fileID: 197767191}
-  - component: {fileID: 197767190}
   - component: {fileID: 197767189}
+  - component: {fileID: 4811000006}
   m_Layer: 5
   m_Name: BloodPack
   m_TagString: Untagged
@@ -777,12 +775,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4811200001}
+  - {fileID: 4811200005}
   m_Father: {fileID: 1903432345}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 183.8, y: -408.4}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -151, y: 132}
   m_SizeDelta: {x: 128, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &197767189
@@ -801,13 +801,14 @@ MonoBehaviour:
   heartModule: {fileID: 1385264448}
   inventory: {fileID: 4210000003}
   canvasRect: {fileID: 1903432345}
+  hoverScale: 1.1
 --- !u!114 &197767190
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197767187}
+  m_GameObject: {fileID: 4811200004}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -837,7 +838,7 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197767187}
+  m_GameObject: {fileID: 4811200004}
   m_CullTransparentMesh: 1
 --- !u!1 &245786637
 GameObject:
@@ -1302,10 +1303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartGauge
   bloodRect: {fileID: 345904793}
-  emptyPosY: -138
-  fullPosY: 0
-  fillDuration: 0.4
-  fillEase: 6
 --- !u!224 &345904793
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1619,7 +1616,7 @@ GameObject:
   - component: {fileID: 376297696}
   - component: {fileID: 376297695}
   m_Layer: 5
-  m_Name: BloodPack (1)
+  m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1641,7 +1638,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 226, y: -426}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 37.5, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &376297695
@@ -1658,7 +1655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5268,6 +5265,7 @@ GameObject:
   - component: {fileID: 712734238}
   - component: {fileID: 712734240}
   - component: {fileID: 712734239}
+  - component: {fileID: 4811000001}
   m_Layer: 5
   m_Name: Brain
   m_TagString: Untagged
@@ -5308,10 +5306,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
-  _instRange: 0.75
   _pos: {fileID: 1121288149}
   _isCon: 0
-  _isCon2: 0
   viscera: {fileID: 712734240}
 --- !u!114 &712734240
 MonoBehaviour:
@@ -5594,7 +5590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.93962264, g: 0.93962264, b: 0.93962264, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5630,6 +5626,7 @@ GameObject:
   - component: {fileID: 946273950}
   - component: {fileID: 946273951}
   - component: {fileID: 946273952}
+  - component: {fileID: 4811000002}
   m_Layer: 5
   m_Name: Eye
   m_TagString: Untagged
@@ -5711,10 +5708,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
-  _instRange: 0.54
-  _pos: {fileID: 946273950}
+  _pos: {fileID: 13654658}
   _isCon: 0
-  _isCon2: 0
   viscera: {fileID: 946273951}
 --- !u!1 &962103368
 GameObject:
@@ -5882,7 +5877,7 @@ GameObject:
   - component: {fileID: 992601955}
   - component: {fileID: 992601954}
   m_Layer: 5
-  m_Name: BloodPack (2)
+  m_Name: Plunger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5904,7 +5899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 226, y: -367.6}
+  m_AnchoredPosition: {x: 0, y: -22}
   m_SizeDelta: {x: 37.5, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &992601954
@@ -5921,7 +5916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6254,6 +6249,7 @@ GameObject:
   - component: {fileID: 1143397532}
   - component: {fileID: 1143397534}
   - component: {fileID: 1143397533}
+  - component: {fileID: 4811000003}
   m_Layer: 5
   m_Name: Hand
   m_TagString: Untagged
@@ -6294,10 +6290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
-  _instRange: 1.12
-  _pos: {fileID: 1143397532}
+  _pos: {fileID: 1188245345}
   _isCon: 0
-  _isCon2: 0
   viscera: {fileID: 1143397534}
 --- !u!114 &1143397534
 MonoBehaviour:
@@ -6423,6 +6417,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1179575189}
+  - component: {fileID: 4811000007}
+  - component: {fileID: 4811000008}
   m_Layer: 5
   m_Name: Syringe
   m_TagString: Untagged
@@ -6446,10 +6442,10 @@ RectTransform:
   - {fileID: 992601953}
   m_Father: {fileID: 1903432345}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 44.2, y: -2.8}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -66, y: 132}
+  m_SizeDelta: {x: 38, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1188245344
 GameObject:
@@ -6789,6 +6785,7 @@ GameObject:
   - component: {fileID: 1385264451}
   - component: {fileID: 1385264448}
   - component: {fileID: 1385264450}
+  - component: {fileID: 4811000005}
   m_Layer: 5
   m_Name: Heart
   m_TagString: Untagged
@@ -6808,12 +6805,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3ba8faa24bdc9414f0190f156d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.HumanBodySystem.HeartModule
-  defaultGetBloodValue: 2
-  delaySeconds: 0.1
-  maxGauge: 100
-  defaultBloodGague: 0
-  heartGauge: {fileID: 345904792}
-  heartVisual: {fileID: 0}
+  defaultGetBloodValue: 50
+  delaySeconds: 1
 --- !u!224 &1385264449
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6847,10 +6840,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 184c74fc2f0591d40943f00af2ab3b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heart
-  _heartRange: 0.9
-  _lineTest: {fileID: 0}
   _pos: {fileID: 1385264449}
-  _isCl: 0
+  organs:
+  - {fileID: 712734239}
+  - {fileID: 946273952}
+  - {fileID: 121303718}
+  - {fileID: 1143397533}
+  - {fileID: 1941687942}
 --- !u!114 &1385264451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7412,7 +7408,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587534030}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1587534035
 Camera:
   m_ObjectHideFlags: 0
@@ -7420,7 +7416,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587534030}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -7477,8 +7473,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMapFog
   _fogTilemap: {fileID: 547983802}
-  _player: {fileID: 1587534031}
-  _range: 2
+  _player: {fileID: 4000000009}
+  _range: 1
+  floor: {fileID: 659238381}
+  walls: {fileID: 4000000007}
   _wallMask:
     serializedVersion: 2
     m_Bits: 8
@@ -8244,6 +8242,7 @@ GameObject:
   - component: {fileID: 1941687941}
   - component: {fileID: 1941687943}
   - component: {fileID: 1941687942}
+  - component: {fileID: 4811000004}
   m_Layer: 5
   m_Name: Leg
   m_TagString: Untagged
@@ -8284,10 +8283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42699d40678a6024c8970de1479d84c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::institution
-  _instRange: 1.18
-  _pos: {fileID: 1941687941}
+  _pos: {fileID: 910766212}
   _isCon: 0
-  _isCon2: 0
   viscera: {fileID: 1941687943}
 --- !u!114 &1941687943
 MonoBehaviour:
@@ -8532,11 +8529,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 841916765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 191, y: 400}
+  m_AnchorMin: {x: 0.65, y: 1}
+  m_AnchorMax: {x: 0.65, y: 1}
+  m_AnchoredPosition: {x: -12, y: -12}
   m_SizeDelta: {x: 200, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &2081912241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8546,24 +8543,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2081912239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Script: {fileID: 11500000, guid: cc0e318d394f4a35afdcfdbe675ebe84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_EditorClassIdentifier: Assembly-CSharp::TileMiniMap
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8400000, guid: 3dcb1f64ded9bc148a2e40835734f7af, type: 2}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+  fog: {fileID: 1587534036}
+  walls: {fileID: 4000000007}
+  zoom: {fileID: 1587534037}
 --- !u!222 &2081912242
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10291,6 +10284,7 @@ GameObject:
   - component: {fileID: 4000000029}
   - component: {fileID: 4000000028}
   - component: {fileID: 4326100010}
+  - component: {fileID: 4811000009}
   m_Layer: 5
   m_Name: Map View
   m_TagString: Untagged
@@ -10500,6 +10494,7 @@ RectTransform:
   - {fileID: 1398863624}
   - {fileID: 1915316429}
   - {fileID: 26417281}
+  - {fileID: 4811000021}
   m_Father: {fileID: 4000000043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.65, y: 0}
@@ -10636,7 +10631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d079ee61f1954c7a20bdfa8fa3d3b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.LowBloodPulse
-  heart: {fileID: 1385264448}
+  bloodSource: {fileID: 0}
   heartbeat: {fileID: 1385264451}
   threshold: 0.3
   maximumHeight: 0.026
@@ -11848,6 +11843,347 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.65, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4811000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121303715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 606760379}
+  organ: 1
+--- !u!114 &4811000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712734237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 1121288150}
+  organ: 1
+--- !u!114 &4811000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946273949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 13654659}
+  organ: 1
+--- !u!114 &4811000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1143397531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 1188245346}
+  organ: 1
+--- !u!114 &4811000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941687940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 910766213}
+  organ: 1
+--- !u!114 &4811000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385264447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 4811000018}
+  organ: 1
+--- !u!114 &4811000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197767187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 197767190}
+  organ: 0
+--- !u!114 &4811000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179575188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5249e3dec9b4e1084dadf8b3bc0b1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.MedicalHover
+  images:
+  - {fileID: 376297695}
+  - {fileID: 992601954}
+  organ: 0
+--- !u!114 &4811000008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179575188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b7e66e5e544896b1da1600cd603dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.BloodSyringe
+  heart: {fileID: 1385264450}
+  plunger: {fileID: 992601953}
+  barrel: {fileID: 376297694}
+  capacity: 25
+--- !u!114 &4811000009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000000027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2886140ae37343c1bf397cf1c26723e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.Raycasting2D.Scripts.ReadDocumentArchive
+  font: {fileID: 11400000, guid: 22e44f86bcaab624baeb785ef3375a70, type: 2}
+--- !u!114 &4811000018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1004, guid: 2c6280fdb5d24511838a858bde3e00ae, type: 3}
+  m_PrefabInstance: {fileID: 486323065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500261859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!1 &4811000020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4811000021}
+  - component: {fileID: 4811000022}
+  - component: {fileID: 4811000023}
+  m_Layer: 5
+  m_Name: Heartbeat Trace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4811000021
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811000020}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4000000038}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 124}
+  m_SizeDelta: {x: -8, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4811000022
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811000020}
+  m_CullTransparentMesh: 1
+--- !u!114 &4811000023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868eea2ff4684a67b05d2420aea83a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.UI.HeartbeatTrace
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19, g: 1, b: 0.51, a: 0.95}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  heart: {fileID: 1385264451}
+  sweepSeconds: 3.4
+  trailSeconds: 1.45
+--- !u!1 &4811200000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4811200001}
+  - component: {fileID: 4811200002}
+  - component: {fileID: 4811200003}
+  m_Layer: 5
+  m_Name: Contents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4811200001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811200000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 197767188}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.115, y: 0.142}
+  m_AnchorMax: {x: 0.885, y: 0.715}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4811200002
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811200000}
+  m_CullTransparentMesh: 1
+--- !u!114 &4811200003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811200000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.51, g: 0.055, b: 0.105, a: 0.95}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4811200004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4811200005}
+  - component: {fileID: 197767191}
+  - component: {fileID: 197767190}
+  m_Layer: 5
+  m_Name: Bag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4811200005
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811200004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 197767188}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
