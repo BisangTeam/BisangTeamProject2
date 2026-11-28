@@ -68,7 +68,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
 
         public bool TryPlace()
         {
-            if (RaycastPaperView.IsReading || !hand.isActiveAndEnabled || !hand.CanMark) return false;
+            if (RaycastPaperView.IsReading || hand == null || !hand.isActiveAndEnabled || !hand.CanMark || markPrefab == null)
+                return false;
             Physics2D.SyncTransforms();
             var filter = new ContactFilter2D { useTriggers = false };
             filter.SetLayerMask(wallMask);
@@ -95,6 +96,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
                 localPoint = map.transform.InverseTransformPoint(hit.point),
                 localNormal = map.transform.InverseTransformDirection(hit.normal)
             });
+            hand.SpendBloodForMark();
             return true;
         }
 

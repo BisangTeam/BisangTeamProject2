@@ -20,6 +20,7 @@ namespace Hyunwoo.Player
         {
             raycastPlayer2D.MoveDir = playerInput.MoveDir;
             raycastPlayer2D.TurnDir = playerInput.TurnDir.x;
+            raycastPlayer2D.SprintHeld = playerInput.SprintHeld;
             
             foreach (var moduleDictValue in _moduleDict.Values)
             {

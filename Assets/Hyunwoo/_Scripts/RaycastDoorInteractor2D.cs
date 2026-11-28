@@ -22,7 +22,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null || RaycastPaperView.IsReading)
+            if (keyboard == null || RaycastPaperView.IsReading || Time.timeScale <= 0f)
             {
                 if (!isPeeking || keyboard == null || !keyboard.fKey.isPressed)
                 {
@@ -54,7 +54,18 @@ namespace Hyunwoo.Raycasting2D.Scripts
             }
 
             if (pendingPeekDoor == null)
+            {
+                if (playerMove != null && !playerMove.CanMove) return;
+                if (keyboard.eKey.wasPressedThisFrame)
+                    TryInteract();
+                else if (keyboard.wKey.isPressed)
+                {
+                    RaycastDoor2D door = FindDoorInFront();
+                    if (door != null && door.isActiveAndEnabled && door.IsClosed)
+                        door.Toggle();
+                }
                 return;
+            }
 
             if (keyboard.fKey.isPressed)
             {

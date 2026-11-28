@@ -37,6 +37,7 @@ namespace Hyunwoo.HumanBodySystem
         private double _nextFlowPulse;
         public bool ConnectedToHeart => _heartModule != null && _heartModule.IsConnected(this);
         public event Action BloodSupplied;
+        protected virtual float DrainRateMultiplier => 1f;
 
         public void InsertBlood(float value)
         {
@@ -60,7 +61,7 @@ namespace Hyunwoo.HumanBodySystem
         {
             if (reduceGauge <= 0f) return;
             float interval = Mathf.Max(0.05f, updateTime);
-            _elapsed += Time.deltaTime;
+            _elapsed += Time.deltaTime * DrainRateMultiplier;
             int ticks = Mathf.FloorToInt(_elapsed / interval);
             if (ticks == 0) return;
             _elapsed -= ticks * interval;
