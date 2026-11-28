@@ -6,8 +6,15 @@ namespace Hyunwoo.UI
     public sealed class HeartbeatTrace : MaskableGraphic
     {
         [SerializeField] private Heartbeat heart;
+        [Header("평소 바이탈")]
         [SerializeField, Range(0.1f, 0.9f)] private float trailLength = 0.43f;
         [SerializeField, Min(0f), InspectorName("상하 파형 높이 배율")] private float peakHeightMultiplier = 1f;
+
+        [Header("괴물 접근 시 바이탈")]
+        [SerializeField, Min(0.01f), InspectorName("반응 시작 거리")] private float startDistance = 6f;
+        [SerializeField, Min(0f), InspectorName("최대 반응 거리")] private float fullEffectDistance = 1f;
+        [SerializeField, Range(0.05f, 1f), InspectorName("근접 잔상 배율")] private float closeTrailMultiplier = 0.4f;
+        [SerializeField, Min(1f), InspectorName("근접 높이 배율")] private float closeHeightMultiplier = 1.5f;
 
         // X is measured from the strong beat in fractions of the trace width.
         private static readonly Vector2[] Wave =
@@ -21,7 +28,16 @@ namespace Hyunwoo.UI
         };
         private float _head;
         private float _peakX = 0.5f;
+        private float _proximity;
         private bool _hasHeartbeat;
+
+#if UNITY_EDITOR
+        protected override void OnValidate()
+        {
+            fullEffectDistance = Mathf.Clamp(fullEffectDistance, 0f, startDistance - 0.01f);
+            base.OnValidate();
+        }
+#endif
 
         private void LateUpdate()
         {
@@ -37,24 +53,28 @@ namespace Hyunwoo.UI
 
             float head = hasHeartbeat ? Mathf.Repeat(heart.PhaseSinceStrongBeat + peakX, 1f)
                 : Mathf.Repeat(Time.time / 3.4f, 1f);
-            if (head == _head && peakX == _peakX && hasHeartbeat == _hasHeartbeat) return;
+            float proximity = hasHeartbeat ? Mathf.InverseLerp(startDistance, fullEffectDistance, heart.MonsterDistance) : 0f;
+            if (head == _head && peakX == _peakX && hasHeartbeat == _hasHeartbeat && proximity == _proximity) return;
             _head = head;
             _peakX = peakX;
             _hasHeartbeat = hasHeartbeat;
+            _proximity = proximity;
             SetVerticesDirty();
         }
 
         protected override void OnPopulateMesh(VertexHelper mesh)
         {
             mesh.Clear();
-            DrawTrail(mesh, _head);
-            if (_head < trailLength) DrawTrail(mesh, _head + 1f);
+            float length = trailLength * Mathf.Lerp(1f, closeTrailMultiplier, _proximity);
+            float height = _hasHeartbeat ? peakHeightMultiplier * Mathf.Lerp(1f, closeHeightMultiplier, _proximity) : 0f;
+            DrawTrail(mesh, _head, length, height);
+            if (_head < length) DrawTrail(mesh, _head + 1f, length, height);
         }
 
-        private void DrawTrail(VertexHelper mesh, float head)
+        private void DrawTrail(VertexHelper mesh, float head, float length, float height)
         {
             Rect rect = rectTransform.rect;
-            float tail = head - trailLength;
+            float tail = head - length;
             float visibleStart = Mathf.Max(0f, tail);
             float visibleEnd = Mathf.Min(1f, head);
             Vector2 offset = Vector2.right * _peakX;
@@ -66,8 +86,8 @@ namespace Hyunwoo.UI
                 float right = Mathf.Min(end.x, visibleEnd);
                 if (right <= left) continue;
 
-                Vector2 a = Point(rect, start, end, left);
-                Vector2 b = Point(rect, start, end, right);
+                Vector2 a = Point(rect, start, end, left, height);
+                Vector2 b = Point(rect, start, end, right, height);
                 Vector2 normal = Vector2.Perpendicular(b - a).normalized;
                 float alphaA = Mathf.InverseLerp(tail, head, left);
                 float alphaB = Mathf.InverseLerp(tail, head, right);
@@ -76,11 +96,9 @@ namespace Hyunwoo.UI
             }
         }
 
-        private Vector2 Point(Rect rect, Vector2 start, Vector2 end, float x)
+        private static Vector2 Point(Rect rect, Vector2 start, Vector2 end, float x, float heightMultiplier)
         {
-            float height = _hasHeartbeat
-                ? Mathf.Lerp(start.y, end.y, Mathf.InverseLerp(start.x, end.x, x)) * peakHeightMultiplier
-                : 0f;
+            float height = Mathf.Lerp(start.y, end.y, Mathf.InverseLerp(start.x, end.x, x)) * heightMultiplier;
             return new Vector2(rect.xMin + rect.width * x, rect.center.y + height * rect.height * 0.46f);
         }
 

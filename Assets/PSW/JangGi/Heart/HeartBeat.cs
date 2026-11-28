@@ -23,6 +23,7 @@ public class Heartbeat : MonoBehaviour
     public event Action StrongBeat;
     public float StrongPulse { get; private set; }
     public float PhaseSinceStrongBeat { get; private set; }
+    public float MonsterDistance => monster != null ? monster.DistanceToPlayer : float.PositiveInfinity;
 
     private Vector3 _baseScale;
     private float _bpm;
