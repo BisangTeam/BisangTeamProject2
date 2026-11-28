@@ -64,6 +64,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "d22d0b66ff904b83b532fe115baefbc0"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "40494ce0fd7f430f98f830e044e88665"
+                },
+                "m_SlotId": 2
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "1d694b5e09d842f5a4eface5f4370af1"
                 },
                 "m_SlotId": 2
@@ -572,19 +586,19 @@
 }
 
 {
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.SineNode",
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.CustomFunctionNode",
     "m_ObjectId": "40494ce0fd7f430f98f830e044e88665",
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "Sine",
+    "m_Name": "Blood Surface (Custom Function)",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 2026.0,
-            "y": 224.66668701171876,
+            "x": 2026,
+            "y": 224.66668701171875,
             "width": 209.333251953125,
             "height": 280.0000305175781
         }
@@ -594,17 +608,24 @@
             "m_Id": "a252ad6d3c464994892c0e67af44850f"
         },
         {
+            "m_Id": "f9d3169265bd40e1883860767cbdf35e"
+        },
+        {
             "m_Id": "4728d321ef7245bda55594c83edec9ed"
         }
     ],
     "synonyms": [],
-    "m_Precision": 0,
+    "m_Precision": 1,
     "m_PreviewExpanded": true,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
-    }
+    },
+    "m_SourceType": 1,
+    "m_FunctionName": "BloodSurface",
+    "m_FunctionSource": "",
+    "m_FunctionBody": "float swell = sin(0.74 * Phase + 0.52 * sin(1.17 * Seconds));\nfloat backwash = sin(1.31 * Phase - 7.1 * Seconds);\nfloat ripple = sin(2.23 * Phase - 2.1 * Seconds + 0.65 * backwash);\nHeight = 0.58 * swell + 0.28 * backwash + 0.14 * ripple;"
 }
 
 {
@@ -634,26 +655,17 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "4728d321ef7245bda55594c83edec9ed",
     "m_Id": 1,
-    "m_DisplayName": "Out",
+    "m_DisplayName": "Height",
     "m_SlotType": 1,
     "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
+    "m_ShaderOutputName": "Height",
     "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
+    "m_Value": 0,
+    "m_DefaultValue": 0,
+    "m_Labels": [],
     "m_LiteralMode": false
 }
 
@@ -1430,26 +1442,17 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "a252ad6d3c464994892c0e67af44850f",
     "m_Id": 0,
-    "m_DisplayName": "In",
+    "m_DisplayName": "Phase",
     "m_SlotType": 0,
     "m_Hidden": false,
-    "m_ShaderOutputName": "In",
+    "m_ShaderOutputName": "Phase",
     "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
+    "m_Value": 0,
+    "m_DefaultValue": 0,
+    "m_Labels": [],
     "m_LiteralMode": false
 }
 
@@ -1927,3 +1930,18 @@
     "m_LiteralMode": false
 }
 
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "f9d3169265bd40e1883860767cbdf35e",
+    "m_Id": 2,
+    "m_DisplayName": "Seconds",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Seconds",
+    "m_StageCapability": 3,
+    "m_Value": 0,
+    "m_DefaultValue": 0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}

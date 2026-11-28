@@ -24,6 +24,7 @@ namespace Hyunwoo.BloodPack
         private RectTransform _rect;
         private RectTransform _fill;
         private Vector2 _home;
+        private Quaternion _homeRotation;
         private IBloodReservoir _source;
         private float _blood;
         private bool _dragging;
@@ -49,6 +50,7 @@ namespace Hyunwoo.BloodPack
         {
             _rect = (RectTransform)transform;
             _home = _rect.anchoredPosition;
+            _homeRotation = _rect.localRotation;
             var image = new GameObject("Blood level", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
             _fill = image.rectTransform;
             _fill.SetParent(barrel, false);
@@ -64,6 +66,9 @@ namespace Hyunwoo.BloodPack
         {
             _dragging = !_busy && data.button == PointerEventData.InputButton.Left &&
                 Time.timeScale > 0f && !RaycastPaperView.IsReading;
+            if (!_dragging) return;
+            _rect.localRotation = _homeRotation * Quaternion.Euler(0f, 0f, -45f);
+            OnDrag(data);
         }
 
         public void OnDrag(PointerEventData data)
@@ -93,11 +98,12 @@ namespace Hyunwoo.BloodPack
                 (draw ? target.BloodGauge > 0f : target.BloodGauge < target.Capacity))
             {
                 Vector2 start = _rect.anchoredPosition;
-                yield return Slide(start + Vector2.down * 12f, 0.13f);
+                Vector2 needleDirection = _rect.localRotation * Vector3.down;
+                yield return Slide(start + needleDirection * 12f, 0.13f);
                 yield return Transfer(target, draw);
                 yield return Slide(start, 0.15f);
             }
-            yield return Slide(_home, 0.20f);
+            yield return Slide(_home, 0.20f, returnHome: true);
             _busy = false;
         }
 
@@ -122,13 +128,16 @@ namespace Hyunwoo.BloodPack
             }
         }
 
-        private IEnumerator Slide(Vector2 destination, float duration)
+        private IEnumerator Slide(Vector2 destination, float duration, bool returnHome = false)
         {
             Vector2 start = _rect.anchoredPosition;
+            Quaternion startRotation = _rect.localRotation;
             for (float t = 0f; t < 1f;)
             {
                 t = Mathf.Min(1f, t + Time.unscaledDeltaTime / duration);
-                _rect.anchoredPosition = Vector2.Lerp(start, destination, Mathf.SmoothStep(0f, 1f, t));
+                float progress = Mathf.SmoothStep(0f, 1f, t);
+                _rect.anchoredPosition = Vector2.Lerp(start, destination, progress);
+                if (returnHome) _rect.localRotation = Quaternion.Slerp(startRotation, _homeRotation, progress);
                 yield return null;
             }
         }
@@ -137,7 +146,11 @@ namespace Hyunwoo.BloodPack
         {
             StopAllCoroutines();
             _busy = _dragging = false;
-            if (_rect != null) _rect.anchoredPosition = _home;
+            if (_rect != null)
+            {
+                _rect.anchoredPosition = _home;
+                _rect.localRotation = _homeRotation;
+            }
             if (_blood <= EmptyTolerance) _source = null;
         }
     }

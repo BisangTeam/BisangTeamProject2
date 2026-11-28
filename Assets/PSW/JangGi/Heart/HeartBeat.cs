@@ -1,58 +1,72 @@
+using System;
+using Hyunwoo.Raycasting2D.Scripts;
 using UnityEngine;
-using DG.Tweening;
-using Hyunwoo.HumanBodySystem;
 
 public class Heartbeat : MonoBehaviour
 {
-    public event System.Action StrongBeat;
-    [Header("첫 번째 박동 (작게 쿵)")]
+    [Header("박동 속도 (분당 횟수)")]
+    [SerializeField, Min(1f)] private float restingBpm = 60f;
+    [SerializeField, Min(1f)] private float encounterBpm = 120f;
+    [SerializeField] private MonsterChase2D monster;
+
+    [Header("작은 박동")]
     [SerializeField] private float firstScale = 1.08f;
-    [SerializeField] private float firstDuration = 0.07f;
+    [SerializeField, Min(0.01f)] private float firstDuration = 0.07f;
 
-    [Header("두 번째 박동 (크게 쾅)")]
+    [Header("큰 박동")]
     [SerializeField] private float secondScale = 1.15f;
-    [SerializeField] private float secondDuration = 0.10f;
+    [SerializeField, Min(0.01f)] private float secondDuration = 0.10f;
 
-    [Header("쉬는 시간 (초)")]
-    [SerializeField] private float restTime = 0.8f;
+    [Header("두 박동 뒤 쉬는 시간")]
+    [SerializeField, Min(0f)] private float restTime = 0.8f;
 
-    private HeartModule _circulation;
+    public event Action StrongBeat;
+    public float StrongPulse { get; private set; }
+    public float PhaseSinceStrongBeat { get; private set; }
+
     private Vector3 _baseScale;
-    private Sequence _sequence;
+    private float _bpm;
+    private float _phase;
 
-    private void Awake()
-    {
-        _circulation = GetComponent<HeartModule>();
-        _baseScale = transform.localScale;
-    }
+    private void Awake() => _baseScale = transform.localScale;
 
     private void OnEnable()
     {
-        _sequence = DOTween.Sequence()
-            .Append(transform.DOScale(_baseScale * firstScale, firstDuration))
-            .Append(transform.DOScale(_baseScale, firstDuration))
-            .Append(transform.DOScale(_baseScale * secondScale, secondDuration))
-            .AppendCallback(() => StrongBeat?.Invoke())
-            .Append(transform.DOScale(_baseScale, secondDuration));
-
-        if (_circulation == null)
-            _sequence.AppendInterval(restTime).SetLoops(-1);
-        else
-        {
-            _sequence.SetAutoKill(false).Pause();
-            _circulation.Beat += PlayBeat;
-        }
+        _bpm = restingBpm;
+        _phase = 0f;
+        UpdatePose(0f);
     }
 
-    private void PlayBeat()
+    private void Update()
     {
-        if (!_sequence.IsPlaying()) _sequence.Restart();
+        float targetBpm = monster != null && monster.PlayerInSight ? encounterBpm : restingBpm;
+        _bpm = Mathf.MoveTowards(_bpm, targetBpm, 80f * Time.deltaTime);
+        UpdatePose(_bpm * Time.deltaTime / 60f);
     }
+
+    private void UpdatePose(float phaseAdvance)
+    {
+        float patternDuration = 2f * (firstDuration + secondDuration) + restTime;
+        float strongPeak = 2f * firstDuration + secondDuration;
+        float peakPhase = strongPeak / patternDuration;
+        float nextPhase = _phase + phaseAdvance;
+        bool crossedPeak = Mathf.Floor(nextPhase - peakPhase) > Mathf.Floor(_phase - peakPhase);
+        _phase = Mathf.Repeat(nextPhase, 1f);
+        PhaseSinceStrongBeat = Mathf.Repeat(_phase - peakPhase, 1f);
+
+        float time = _phase * patternDuration;
+        float smallPulse = Pulse(time, firstDuration, firstDuration);
+        StrongPulse = Pulse(time, strongPeak, secondDuration);
+        transform.localScale = _baseScale * (1f + (firstScale - 1f) * smallPulse + (secondScale - 1f) * StrongPulse);
+        if (crossedPeak) StrongBeat?.Invoke();
+    }
+
+    private static float Pulse(float time, float peak, float duration) =>
+        Mathf.SmoothStep(1f, 0f, Mathf.Abs(time - peak) / duration);
 
     private void OnDisable()
     {
-        if (_circulation != null) _circulation.Beat -= PlayBeat;
-        _sequence?.Kill();
+        StrongPulse = 0f;
         transform.localScale = _baseScale;
     }
 }
