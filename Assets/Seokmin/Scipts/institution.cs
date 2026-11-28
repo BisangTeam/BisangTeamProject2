@@ -54,12 +54,14 @@ public class institution : MonoBehaviour
                 return;
             }
             _pulse = line.GetComponent<BloodPulse>();
-            if (_pulse != null) viscera.BloodSupplied += _pulse.Play;
+            if (_pulse != null) viscera.BloodSupplied += PlayBloodPulse;
         }
         _nowLine = line;
         line.AttachTo(insManager.Instance.GetBloodPoint(camera, _pos));
         _isCon = true;
     }
+
+    private void PlayBloodPulse() => _pulse.Play(viscera);
 
     public void RestoreConnection() => BeginConnection(Camera.main, animate: false);
 
@@ -95,7 +97,7 @@ public class institution : MonoBehaviour
         if (!HasVessel) return;
         if (_isCon && viscera != null)
         {
-            if (_pulse != null) viscera.BloodSupplied -= _pulse.Play;
+            if (_pulse != null) viscera.BloodSupplied -= PlayBloodPulse;
             viscera.DisConnectionBlood();
         }
         if (_nowLine != null && _nowLine.isActiveAndEnabled) _nowLine.Retract();
