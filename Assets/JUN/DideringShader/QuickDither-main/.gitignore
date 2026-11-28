@@ -43,3 +43,11 @@ sysinfo.txt
 !*bayer4.png.meta
 !*bayer8.png.meta
 !*bayer16.png.meta
+
+# Keep the asset IDs used by the game's QuickDither cameras and materials.
+!/Pipelines/URP/Dithered.shadergraph.meta
+!/Pipelines/URP/ExampleScene/ExampleUniversalRenderer.asset.meta
+!/Pipelines/URP/ExampleScene/LowResRenderTexture.renderTexture.meta
+!/Example Palettes/8-bit RGB (3-3-2)_secondary.asset.meta
+!/Example Palettes/C-64_primary.asset.meta
+!/Example Palettes/C-64_secondary.asset.meta

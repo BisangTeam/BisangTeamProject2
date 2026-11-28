@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 120143191}
   - component: {fileID: 120143193}
   - component: {fileID: 120143192}
-  m_Layer: 5
+  m_Layer: 14
   m_Name: RawImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -475,10 +475,10 @@ RectTransform:
   - {fileID: 992525755}
   m_Father: {fileID: 140301794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 480, y: 270}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &120143192
 MonoBehaviour:
@@ -610,7 +610,7 @@ GameObject:
   - component: {fileID: 140301794}
   - component: {fileID: 140301796}
   - component: {fileID: 140301795}
-  m_Layer: 5
+  m_Layer: 14
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1009,6 +1009,7 @@ GameObject:
   - component: {fileID: 245786639}
   - component: {fileID: 245786638}
   - component: {fileID: 245786641}
+  - component: {fileID: 245786642}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1016,6 +1017,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &245786642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245786637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fba42964434ed88f25f1f1cda6b25e, type: 3}
+  m_Name: ""
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.LowResCameraOutput
+  outputCamera: {fileID: 1830260257}
 --- !u!81 &245786638
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1065,7 +1079,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 32
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: dbe0adbcad447394d90eb79389516890, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: c0065d0e25a0eeb40af45a5a6e60b12d, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -6034,7 +6048,7 @@ GameObject:
   - component: {fileID: 992525755}
   - component: {fileID: 992525757}
   - component: {fileID: 992525756}
-  m_Layer: 5
+  m_Layer: 14
   m_Name: CRT Grid Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8180,7 +8194,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1830260256
 Transform:
   m_ObjectHideFlags: 0
@@ -8236,7 +8250,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 16384
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
