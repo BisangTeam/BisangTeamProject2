@@ -34,6 +34,7 @@ namespace Hyunwoo.HumanBodySystem
         protected HeartModule _heartModule;
 
         private float _elapsed;
+        private double _nextFlowPulse;
         public bool ConnectedToHeart => _heartModule != null && _heartModule.IsConnected(this);
         public event Action BloodSupplied;
 
@@ -71,10 +72,16 @@ namespace Hyunwoo.HumanBodySystem
             if (gaugeUI != null) gaugeUI.Gauge = 100f * BloodGaugeRatio;
         }
 
-        internal void ReceiveFromHeart(float share)
+        internal void ReceiveFromHeart(float share, float pulseInterval)
         {
             if (share <= 0f || BloodGauge >= Capacity) return;
             BloodGauge += share;
+            // Continuous flow moves the gauge every frame. The vessel pulses once per interval.
+            if (pulseInterval > 0f)
+            {
+                if (Time.timeAsDouble < _nextFlowPulse) return;
+                _nextFlowPulse = Time.timeAsDouble + pulseInterval;
+            }
             BloodSupplied?.Invoke();
         }
 
@@ -117,6 +124,7 @@ namespace Hyunwoo.HumanBodySystem
         public override void DisConnectionBlood()
         {
             if (_heartModule != null) _heartModule.Disconnect(this);
+            _nextFlowPulse = 0d;
         }
         protected virtual void OnDestroy()
         {

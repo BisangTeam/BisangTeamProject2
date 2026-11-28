@@ -23,22 +23,26 @@ namespace Hyunwoo.HumanBodySystem
         private void LateUpdate()
         {
             float interval = Mathf.Max(0.05f, delaySeconds);
+            float supply = defaultGetBloodValue * (Time.deltaTime / interval);
+            DistributeBlood(supply, interval);
+
             _elapsed += Time.deltaTime;
             while (_elapsed >= interval)
             {
                 _elapsed -= interval;
-                DistributeBlood(defaultGetBloodValue);
                 Beat?.Invoke();
             }
         }
 
-        public void DistributeBlood(float total)
+        public void DistributeBlood(float total) => DistributeBlood(total, 0f);
+
+        private void DistributeBlood(float total, float pulseInterval)
         {
-            if (_organs.Count == 0) return;
+            if (total <= 0f || _organs.Count == 0) return;
 
             float share = total / _organs.Count;
             foreach (var organ in _organs)
-                organ.ReceiveFromHeart(share);
+                organ.ReceiveFromHeart(share, pulseInterval);
         }
     }
 }
