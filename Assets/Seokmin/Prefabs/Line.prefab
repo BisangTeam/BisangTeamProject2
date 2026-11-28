@@ -79,7 +79,7 @@ MonoBehaviour:
   _isCon: 0
   _instSpeed: 0.01
   _extensionDuration: 0.45
-  _settleDuration: 0.7
+  _settleDuration: 1.5
   _retractDuration: 0.45
   _motionBend: 0.12
 --- !u!120 &806759434721863356
