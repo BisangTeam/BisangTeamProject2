@@ -34,7 +34,8 @@ namespace Hyunwoo.HumanBodySystem
         protected HeartModule _heartModule;
 
         private float _elapsed;
-        private double _nextFlowPulse;
+        internal double HeartBeatsElapsed => _heartModule != null ? _heartModule.ElapsedBeats : 0d;
+        internal double LastPulseBeat { get; private set; } = double.NegativeInfinity;
         public bool ConnectedToHeart => _heartModule != null && _heartModule.IsConnected(this);
         public event Action BloodSupplied;
         protected virtual float DrainRateMultiplier => 1f;
@@ -73,16 +74,13 @@ namespace Hyunwoo.HumanBodySystem
             if (gaugeUI != null) gaugeUI.Gauge = 100f * BloodGaugeRatio;
         }
 
-        internal void ReceiveFromHeart(float share, float pulseInterval)
+        internal void ReceiveFromHeart(float share, double? pulseStart)
         {
             if (share <= 0f || BloodGauge >= Capacity) return;
             BloodGauge += share;
-            // Continuous flow moves the gauge every frame. The vessel pulses once per interval.
-            if (pulseInterval > 0f)
-            {
-                if (Time.timeAsDouble < _nextFlowPulse) return;
-                _nextFlowPulse = Time.timeAsDouble + pulseInterval;
-            }
+            // 연결 직후 첫 혈류를 바로 보여주고, 이후에는 심장의 큰 박동에 맞춘다.
+            if (!pulseStart.HasValue && !double.IsNegativeInfinity(LastPulseBeat)) return;
+            LastPulseBeat = pulseStart ?? HeartBeatsElapsed;
             BloodSupplied?.Invoke();
         }
 
@@ -125,7 +123,7 @@ namespace Hyunwoo.HumanBodySystem
         public override void DisConnectionBlood()
         {
             if (_heartModule != null) _heartModule.Disconnect(this);
-            _nextFlowPulse = 0d;
+            LastPulseBeat = double.NegativeInfinity;
         }
         protected virtual void OnDestroy()
         {

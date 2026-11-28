@@ -1,3 +1,4 @@
+using Hyunwoo.HumanBodySystem;
 using UnityEngine;
 
 public class BloodPulse : MonoBehaviour
@@ -7,14 +8,16 @@ public class BloodPulse : MonoBehaviour
     [SerializeField] private LineTest _lineTest;
 
     [Header("혈액 이동")]
-    [SerializeField, Min(0.05f)] private float _bloodDuration = 1f;
+    [SerializeField, Min(0.05f), Tooltip("혈관 끝까지 이동하는 데 걸리는 박자 수")] private float _bloodDuration = 1f;
 
     [Header("혈관 부풀기")]
     [SerializeField] private float _bloodWidth = 0.7f;
     [SerializeField] private float _bloodRange = 1.5f;
 
-    private float _elapsed;
+    private AbstractViscera _organ;
+    private double _startedAt;
     private bool _isMoving;
+    private double PulseTime => _organ != null ? _organ.HeartBeatsElapsed : Time.timeAsDouble;
     private readonly AnimationCurve _restWidth = AnimationCurve.Linear(0f, 1f, 1f, 1f);
     private readonly AnimationCurve _widthCurve = new AnimationCurve();
     private Keyframe[] _widthKeys;
@@ -25,27 +28,31 @@ public class BloodPulse : MonoBehaviour
         _lineTest = GetComponent<LineTest>();
     }
 
-    public void Play()
+    public void Play() => Play(null);
+
+    internal void Play(AbstractViscera organ)
     {
-        _elapsed = 0f;
+        _organ = organ;
+        _startedAt = organ != null ? organ.LastPulseBeat : Time.timeAsDouble;
         _isMoving = true;
     }
 
     private void LateUpdate()
     {
         if (!_isMoving) return;
-        if (!_lineTest._isCon || _line.positionCount < 2 || _elapsed >= _bloodDuration)
+        float elapsed = (float)(PulseTime - _startedAt);
+        if (!_lineTest._isCon || _line.positionCount < 2 || elapsed >= _bloodDuration)
         {
             _line.widthCurve = _restWidth;
             _isMoving = false;
             return;
         }
-        UpdateWidth((_line.positionCount - 1) * (_elapsed / _bloodDuration));
-        _elapsed += Time.deltaTime;
+        UpdateWidth((_line.positionCount - 1) * (elapsed / _bloodDuration));
     }
 
     private void OnDisable()
     {
+        _organ = null;
         _isMoving = false;
         if (_line != null) _line.widthCurve = _restWidth;
     }

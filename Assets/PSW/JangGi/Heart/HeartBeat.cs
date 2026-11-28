@@ -23,6 +23,8 @@ public class Heartbeat : MonoBehaviour
     public event Action StrongBeat;
     public float StrongPulse { get; private set; }
     public float PhaseSinceStrongBeat { get; private set; }
+    public float BeatAdvance { get; private set; }
+    public int StrongBeatsThisFrame { get; private set; }
     public float MonsterDistance => monster != null ? monster.DistanceToPlayer : float.PositiveInfinity;
 
     private Vector3 _baseScale;
@@ -51,7 +53,8 @@ public class Heartbeat : MonoBehaviour
         float strongPeak = 2f * firstDuration + secondDuration;
         float peakPhase = strongPeak / patternDuration;
         float nextPhase = _phase + phaseAdvance;
-        bool crossedPeak = Mathf.Floor(nextPhase - peakPhase) > Mathf.Floor(_phase - peakPhase);
+        BeatAdvance = phaseAdvance;
+        StrongBeatsThisFrame = Mathf.FloorToInt(nextPhase - peakPhase) - Mathf.FloorToInt(_phase - peakPhase);
         _phase = Mathf.Repeat(nextPhase, 1f);
         PhaseSinceStrongBeat = Mathf.Repeat(_phase - peakPhase, 1f);
 
@@ -59,7 +62,7 @@ public class Heartbeat : MonoBehaviour
         float smallPulse = Pulse(time, firstDuration, firstDuration);
         StrongPulse = Pulse(time, strongPeak, secondDuration);
         transform.localScale = _baseScale * (1f + (firstScale - 1f) * smallPulse + (secondScale - 1f) * StrongPulse);
-        if (crossedPeak) StrongBeat?.Invoke();
+        if (StrongBeatsThisFrame > 0) StrongBeat?.Invoke();
     }
 
     private static float Pulse(float time, float peak, float duration) =>
