@@ -22,6 +22,15 @@ public class JanggiGuage : MonoBehaviour
     [SerializeField] private float fillDuration = 0.4f;
     [SerializeField] private Ease fillEase = Ease.OutQuad;
 
+    private Quaternion _levelRotation;
+    private float _tilt;
+    private float _tiltVelocity;
+
+    private void Awake()
+    {
+        _levelRotation = bloodRect.localRotation;
+    }
+
     private void Start()
     {
         UpdateGauge();
@@ -36,6 +45,17 @@ public class JanggiGuage : MonoBehaviour
         bloodRect.DOAnchorPosY(targetY, fillDuration)
             .SetEase(fillEase)
             .SetLink(bloodRect.gameObject);
+    }
+
+    private void LateUpdate()
+    {
+        if (Time.deltaTime <= 0f) return;
+
+        float shown = Mathf.InverseLerp(emptyPosY, fullPosY, bloodRect.anchoredPosition.y);
+        float incoming = Gauge / 100f - shown;
+        float targetTilt = Mathf.Clamp(incoming * 24f, -4f, 4f);
+        _tilt = Mathf.SmoothDamp(_tilt, targetTilt, ref _tiltVelocity, 0.12f);
+        bloodRect.localRotation = _levelRotation * Quaternion.Euler(0f, 0f, _tilt);
     }
 
     private void OnDestroy()
