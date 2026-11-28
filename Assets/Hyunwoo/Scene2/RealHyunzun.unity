@@ -959,6 +959,7 @@ MonoBehaviour:
   inventory: {fileID: 4210000003}
   canvasRect: {fileID: 1903432345}
   hoverScale: 1.1
+  liquid: {fileID: 4811200003}
 --- !u!114 &197767190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5521,6 +5522,7 @@ MonoBehaviour:
     abillityValue: 3
   gaugeUI: {fileID: 1757432375}
   miniMap: {fileID: 1587534037}
+  miniMapDisplay: {fileID: 2081912239}
 --- !u!1 &713542954
 GameObject:
   m_ObjectHideFlags: 0
@@ -12492,7 +12494,7 @@ RectTransform:
   m_Father: {fileID: 197767188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.115, y: 0.142}
-  m_AnchorMax: {x: 0.885, y: 0.715}
+  m_AnchorMax: {x: 0.885, y: 0.86}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12513,27 +12515,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 4811200000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: ac7515dfd1074303bcd8d9cb1c7b31e8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: Assembly-CSharp::Hyunwoo.BloodPack.BloodPackLiquid
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51, g: 0.055, b: 0.105, a: 0.95}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.95}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  fillLevel: 0.79
+  sloshHeight: 0.19
+  damping: 9
 --- !u!1 &4811200004
 GameObject:
   m_ObjectHideFlags: 0
