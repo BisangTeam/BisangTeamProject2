@@ -1,117 +1,108 @@
+using Hyunwoo.BloodPack;
 using Hyunwoo.HumanBodySystem;
-using Hyunwoo.Raycasting2D.Scripts;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class institution : MonoBehaviour
 {
-    private Vector3 _instpos;
-    private Camera _cam;
-    private LineTest _nowLine;
-    [SerializeField] private float _instRange;
-    [SerializeField]private RectTransform _pos;
-    [SerializeField]private bool _isCon = false; //Line에서 조건은 채웠는지
-    [SerializeField]private bool _isCon2 = false; //지금 연결된 혈관이 있는지
-    private Vector3 _mouse;
-
+    [SerializeField] private RectTransform _pos;
+    [SerializeField] private bool _isCon;
     [SerializeField] private AbstractViscera viscera;
+    private LineTest _nowLine;
+    private Camera _connectCamera;
+    private BloodPulse _pulse;
+    private RectTransform _hitArea;
+
     public AbstractViscera Organ => viscera;
     public bool Connected => _isCon;
-    
-    private void Start()
+    public bool HasVessel => _nowLine != null || _isCon;
+
+    public MedicalHover Hover { get; private set; }
+
+    private void Awake()
     {
-        _cam = Camera.main;
+        Hover = GetComponent<MedicalHover>();
+        _hitArea = _pos;
+        if (_hitArea == null || _hitArea.rect.width <= 0f || _hitArea.rect.height <= 0f)
+        {
+            _hitArea = transform.Find("Frame") as RectTransform ?? (RectTransform)transform;
+            if (_pos == null) _pos = _hitArea;
+        }
+    }
+
+    public bool TryHit(Vector2 pointer, Camera camera, out float distance)
+    {
+        distance = float.PositiveInfinity;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(_hitArea, pointer, camera, out var local)) return false;
+        Rect rect = _hitArea.rect;
+        if (!rect.Contains(local)) return false;
+        Vector2 centred = Rect.PointToNormalized(rect, local) - Vector2.one * 0.5f;
+        distance = centred.sqrMagnitude;
+        return true;
+    }
+
+    public void Attach(LineTest line, Camera camera)
+    {
+        if (_isCon || line == null || line._isCon) return;
+        if (_nowLine != null && _nowLine != line) return;
+        if (viscera != null)
+        {
+            viscera.ConnectionBlood();
+            if (!viscera.ConnectedToHeart)
+            {
+                _nowLine = null;
+                line.Retract();
+                return;
+            }
+            _pulse = line.GetComponent<BloodPulse>();
+            if (_pulse != null) viscera.BloodSupplied += _pulse.Play;
+        }
+        _nowLine = line;
+        line.AttachTo(insManager.Instance.GetBloodPoint(camera, _pos));
+        _isCon = true;
+    }
+
+    public void RestoreConnection() => BeginConnection(Camera.main, animate: false);
+
+    public void ConnectToHeart(Camera camera) => BeginConnection(camera, animate: true);
+
+    private void BeginConnection(Camera camera, bool animate)
+    {
+        if (HasVessel) return;
+        var manager = insManager.Instance;
+        var line = manager.GetLine();
+        if (line == null) return;
+        line.gameObject.SetActive(true);
+        line.IsDrClick(manager.GetBloodPoint(camera, manager._Heart.BloodAnchor));
+        _nowLine = line;
+        _connectCamera = camera;
+        if (!animate)
+        {
+            line.PlaceStraight(manager.GetBloodPoint(camera, _pos));
+            Attach(line, camera);
+        }
     }
 
     private void Update()
     {
-        if (Mouse.current == null || RaycastPaperView.IsReading) return;
-        //해제
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            _mouse = insManager.Instance.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
-            if (_nowLine != null)
-            {
-                if (_isCon2)
-                {
-                    IsRelease();
-                    if (!_isCon)
-                    {
-                        _isCon2 = false;
-                    }
-                }
-            }
-        }
-        
-        //연결
-        if (Mouse.current.leftButton.wasReleasedThisFrame && insManager.Instance._Heart._isCl)
-        {
-           if (!_isCon)
-           {
-                _nowLine = insManager.Instance._Heart._lineTest;
-                IsConnection();
-                if (_isCon)
-                {
-                    _isCon2 = true;
-                }
-           }
-           _nowLine._isClick = false;
-        }
-        
-    }
-    public void IsConnection()
-    {
-        var manager = insManager.Instance;
-        _instpos = manager.GetBloodPoint(_cam, _pos);
-        Vector3 dropPoint = manager.GetBloodPoint(_cam, Mouse.current.position.ReadValue());
-        if (!_nowLine._isCon && (_instpos - dropPoint).magnitude < _instRange)
-        {
-            AttachLine(_instpos);
-        }
-    }
-
-    public void RestoreConnection()
-    {
-        if (_isCon) return;
-        var manager = insManager.Instance;
-        _nowLine = manager.GetLine();
-        if (_nowLine == null) return;
-        _nowLine.gameObject.SetActive(true);
-        _nowLine.IsDrClick(manager.GetBloodPoint(_cam, manager._Heart.BloodAnchor));
-        _nowLine._isClick = false;
-        AttachLine(manager.GetBloodPoint(_cam, _pos));
-        _isCon2 = true;
-    }
-
-    private void AttachLine(Vector3 end)
-    {
-        _nowLine._endPos = end;
-        _nowLine._isRest = false;
-        _nowLine._isCon = true;
-        _isCon = true;
-        viscera?.ConnectionBlood();
+        if (_nowLine == null || _isCon || Time.deltaTime <= 0f) return;
+        Vector3 target = insManager.Instance.GetBloodPoint(_connectCamera, _pos);
+        if (_nowLine.ExtendTowards(target))
+            Attach(_nowLine, _connectCamera);
     }
 
     public void IsRelease()
     {
-        _instpos = insManager.Instance.GetBloodPoint(_cam, _pos);
-        if ((_instpos - _mouse).magnitude < _instRange)
+        if (!HasVessel) return;
+        if (_isCon && viscera != null)
         {
-            if (_nowLine._points.Count > 1)
-            {
-                _nowLine._points[_nowLine._points.Count - 1]._prePos = _nowLine._points[_nowLine._points.Count - 2]._pos;
-            }
-            viscera?.DisConnectionBlood();
-            _nowLine._endPos = _instpos;
-            _nowLine._isRest = true;
-            _nowLine._isCon = false;
-            _isCon = false;
+            if (_pulse != null) viscera.BloodSupplied -= _pulse.Play;
+            viscera.DisConnectionBlood();
         }
+        if (_nowLine != null && _nowLine.isActiveAndEnabled) _nowLine.Retract();
+        _isCon = false;
+        _nowLine = null;
+        _pulse = null;
     }
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_instpos, _instRange);
-    }
+
+    private void OnDisable() => IsRelease();
 }

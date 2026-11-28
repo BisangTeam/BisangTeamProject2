@@ -10,7 +10,6 @@ namespace Hyunwoo.Save
         public int version = 1;
         public string scenePath;
         public string pointId;
-        public float heartBlood;
         public List<OrganBlood> organs = new();
         public List<ItemQuantity> items = new();
         public List<LevelProgress> levels = new();

@@ -49,8 +49,7 @@ MonoBehaviour:
   _line: {fileID: 806759434721863356}
   _lineTest: {fileID: 0}
   _bloodDuration: 1
-  _bloodInterval: 2
-  _bloodWidth: 2
+  _bloodWidth: 0.55
   _bloodRange: 1.5
 --- !u!114 &6845069542274708405
 MonoBehaviour:
@@ -79,6 +78,10 @@ MonoBehaviour:
   _endPos: {x: 0, y: 0, z: 0}
   _isCon: 0
   _instSpeed: 0.01
+  _extensionDuration: 0.45
+  _settleDuration: 0.7
+  _retractDuration: 0.45
+  _motionBend: 0.12
 --- !u!120 &806759434721863356
 LineRenderer:
   serializedVersion: 3

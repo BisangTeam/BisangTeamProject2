@@ -1,17 +1,22 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Hyunwoo.HumanBodySystem
 {
     public sealed class HandModule : AbstractViscera
     {
-        public bool CanMark { get; private set; }
+        [SerializeField, Min(0f), InspectorName("손자국 1회 혈액 소모량")] private float bloodPerMark = 5f;
+        private bool _markAbilityEnabled;
+
+        public bool CanMark => _markAbilityEnabled && BloodGauge >= bloodPerMark;
+
+        public void SpendBloodForMark()
+        {
+            BloodGauge -= bloodPerMark;
+        }
 
         protected override void WorkFunction(int index, float abilityValue)
         {
-            bool available = abilityValue > 0f;
-            if (available == CanMark) return;
-            CanMark = available;
+            _markAbilityEnabled = abilityValue > 0f;
         }
     }
 }

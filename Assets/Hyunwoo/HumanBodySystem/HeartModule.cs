@@ -1,6 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
+using System.Collections.Generic;
+using System.Linq;
 using Hyunwoo.CoreLib.ModuleSystem;
 using UnityEngine;
 
@@ -8,116 +8,41 @@ namespace Hyunwoo.HumanBodySystem
 {
     public class HeartModule : MonoModule
     {
-        [Header("1회 혈액 생성량")]
-        [SerializeField] private float defaultGetBloodValue = 5f;
+        [InspectorName("박동당 총 공급량"), SerializeField, Min(0f)] private float defaultGetBloodValue = 5f;
+        [InspectorName("박동 간격 (초)"), SerializeField, Min(0.05f)] private float delaySeconds = 2f;
 
-        [Header("혈액 생성 간격(초)")]
-        [SerializeField] private float delaySeconds = 2f;
+        private readonly HashSet<AbstractViscera> _organs = new();
+        private float _elapsed;
+        public event Action Beat;
+        public bool CanReceiveBloodPack => _organs.Any(organ => organ.BloodGauge < organ.Capacity);
 
-        [Header("심장 혈액 저장 최대치")]
-        [SerializeField, Min(0.01f)] private float maxGauge = 100f;
+        internal bool IsConnected(AbstractViscera organ) => _organs.Contains(organ);
+        internal void Connect(AbstractViscera organ) => _organs.Add(organ);
+        internal void Disconnect(AbstractViscera organ) => _organs.Remove(organ);
 
-        [Header("게임 시작 시 심장 혈액량")]
-        [SerializeField] private float defaultBloodGague;
-
-        [Header("Compo")]
-        [SerializeField] private HeartGauge heartGauge;
-
-        [Header("박동 연출")]
-        [SerializeField] private RectTransform heartVisual;
-
-        private Sequence _heartbeatSequence;
-
-        #region Properties
-
-        private float _bloodGauge;
-        public float BloodGaugeRatio => maxGauge > 0f ? BloodGauge / maxGauge : 0f;
-        public float BloodGauge
+        private void LateUpdate()
         {
-            get => _bloodGauge;
-            set
+            float interval = Mathf.Max(0.05f, delaySeconds);
+            float supply = defaultGetBloodValue * (Time.deltaTime / interval);
+            DistributeBlood(supply, interval);
+
+            _elapsed += Time.deltaTime;
+            while (_elapsed >= interval)
             {
-                _bloodGauge = Mathf.Clamp(value, 0, maxGauge);
-                heartGauge.Gauge = BloodGauge;
+                _elapsed -= interval;
+                Beat?.Invoke();
             }
         }
 
-        private int _connectCount;
-        public int ConnectCount
+        public void DistributeBlood(float total) => DistributeBlood(total, 0f);
+
+        private void DistributeBlood(float total, float pulseInterval)
         {
-            get => _connectCount;
-            set
-            {
-                _connectCount = value;
-                if (_connectCount <= 0)
-                    _getBloodValue = defaultGetBloodValue;
-                else
-                    _getBloodValue = defaultGetBloodValue / _connectCount;
-            }
-        }
+            if (total <= 0f || _organs.Count == 0) return;
 
-        #endregion
-
-        public event Action<float> OnHeartRate;
-
-        private float _getBloodValue;
-
-        public override void Initialize(ModuleOwner owner)
-        {
-            base.Initialize(owner);
-            _getBloodValue = defaultGetBloodValue;
-            BloodGauge = defaultBloodGague;
-        }
-
-        private void Start()
-        {
-            SetupHeartbeat();
-            TestAsync().Forget();
-        }
-
-        private void SetupHeartbeat()
-        {
-            if (heartVisual == null)
-                return;
-
-            Vector3 baseScale = heartVisual.localScale;
-
-            _heartbeatSequence = DOTween.Sequence();
-            _heartbeatSequence.Append(heartVisual.DOScale(baseScale * 1.08f, 0.07f));
-            _heartbeatSequence.Append(heartVisual.DOScale(baseScale, 0.07f));
-            _heartbeatSequence.Append(heartVisual.DOScale(baseScale * 1.15f, 0.10f));
-            _heartbeatSequence.Append(heartVisual.DOScale(baseScale, 0.10f));
-            _heartbeatSequence.SetAutoKill(false);
-            _heartbeatSequence.SetLink(gameObject);
-            _heartbeatSequence.Pause();
-        }
-
-        private async UniTask TestAsync()
-        {
-            _heartbeatSequence?.Restart();
-
-            if (BloodGauge >= 0.1f)
-                BloodGauge -= _getBloodValue * ConnectCount;
-
-            float bloodForOrgans = BloodGauge >= 0.1f ? defaultGetBloodValue : 0f;
-            OnHeartRate?.Invoke(bloodForOrgans);
-            BloodGauge += _getBloodValue;
-
-            await UniTask.Delay(
-                (int)(delaySeconds * 1000),
-                cancellationToken: destroyCancellationToken
-            );
-
-            TestAsync().Forget();
-        }
-
-        public void InsertBlood(float value)
-        {
-            BloodGauge += value;
-        }
-
-        private void ChangeHeartRate(float value)
-        {
+            float share = total / _organs.Count;
+            foreach (var organ in _organs)
+                organ.ReceiveFromHeart(share, pulseInterval);
         }
     }
 }

@@ -1,3 +1,5 @@
+// #define ENABLE_LOW_BLOOD_PULSE
+// 저혈액 화면 흔들림은 임시 중지. 다시 쓸 때 위 주석을 풀고 기준 장기를 지정한다.
 using Hyunwoo.HumanBodySystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,7 +8,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
 {
     public sealed class LowBloodPulse : MonoBehaviour
     {
-        [SerializeField] private HeartModule heart;
+        [InspectorName("기준 장기"), SerializeField] private AbstractViscera bloodSource;
         [SerializeField] private Heartbeat heartbeat;
         [SerializeField, Range(0.01f, 1f)] private float threshold = 0.3f;
         [SerializeField, Min(0f)] private float maximumHeight = 0.026f;
@@ -20,11 +22,18 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private static readonly Rect SliderTrack = new Rect(26, 42, 230, 24);
         public float HeightOffset { get; private set; }
 
-        private void OnEnable() => heartbeat.StrongBeat += OnBeat;
+        private void OnEnable()
+        {
+#if ENABLE_LOW_BLOOD_PULSE
+            if (heartbeat != null) heartbeat.StrongBeat += OnBeat;
+#else
+            enabled = false;
+#endif
+        }
 
         private void OnDisable()
         {
-            heartbeat.StrongBeat -= OnBeat;
+            if (heartbeat != null) heartbeat.StrongBeat -= OnBeat;
             _lastBeat = float.NegativeInfinity;
             _strength = 0f;
             _draggingSlider = false;
@@ -37,7 +46,8 @@ namespace Hyunwoo.Raycasting2D.Scripts
         {
             if (Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame) preview = !preview;
             ReadPreviewSlider();
-            float blood = preview ? previewBlood : heart.BloodGaugeRatio;
+            float blood = bloodSource != null ? bloodSource.BloodGaugeRatio : 1f;
+            if (preview) blood = previewBlood;
             float target = Mathf.Clamp01(1f - blood / threshold);
             _strength = Mathf.MoveTowards(_strength, target, Time.deltaTime * 4f);
 
@@ -63,7 +73,7 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private void OnGUI()
         {
             if (!preview) return;
-            GUI.Box(new Rect(12, 12, 260, 62), $"Heart preview  {previewBlood:P0}     [F8]");
+            GUI.Box(new Rect(12, 12, 260, 62), $"Organ blood  {previewBlood:P0}     [F8]");
             GUI.HorizontalSlider(new Rect(SliderTrack.x, 48, SliderTrack.width, 18), previewBlood, 0f, 1f);
         }
     }

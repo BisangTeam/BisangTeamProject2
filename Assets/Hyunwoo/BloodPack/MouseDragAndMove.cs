@@ -1,4 +1,6 @@
+using DG.Tweening;
 using Hyunwoo.HumanBodySystem;
+using Hyunwoo.Raycasting2D.Scripts;
 using Hyunwoo.Save;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,87 +9,85 @@ namespace Hyunwoo.BloodPack
 {
     public class MouseDragAndMove : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        // Drag : 위치만 계속해서 반환 + 현재 위치가 기관이면 확대
-        // End : 현재 위치가 기관이면 사라지고 AbstractHumanBody.ConnectionBlood 실행시켜주기
-
-        [Header("혈액팩 1개당 주입량")]
-        [SerializeField] private float insertBloodAmount = 50;
-
+        [SerializeField, Min(0f)] private float insertBloodAmount = 50f;
         [SerializeField] private HeartModule heartModule;
         [SerializeField] private PlayerInventory inventory;
-        private const string ItemId = "blood-pack";
-        private Vector2 _homePosition;
-        
         [SerializeField] private RectTransform canvasRect;
-        private RectTransform _heartRect;
-        private RectTransform _myRect;
+        [SerializeField, Range(1f, 1.4f)] private float hoverScale = 1.1f;
+        [SerializeField] private BloodPackLiquid liquid;
 
-        private Vector2 _myRectSize;
-        
-        private bool _isTouched;
-        
-        private Vector3[] _myRectCorners = new Vector3[4];
-        private Vector3[] _heartRectCorners = new Vector3[4];
-        
+        private RectTransform _rect;
+        private Vector2 _home;
+        private Vector3 _normalScale;
+        private bool _dragging;
+        private bool _overHeart;
+        private Tween _scaleTween;
+        private Tween _returnTween;
+
         private void Awake()
         {
-            _heartRect = heartModule.GetComponent<RectTransform>();
-            _myRect = GetComponent<RectTransform>();
-            _homePosition = _myRect.anchoredPosition;
-            
-            _myRectSize = _myRect.sizeDelta;    
+            _rect = (RectTransform)transform;
+            _home = _rect.anchoredPosition;
+            _normalScale = _rect.localScale;
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        private void OnEnable()
         {
-            
+            if (liquid != null) liquid.ResetMotion(_rect.anchoredPosition);
         }
 
-        public void OnDrag(PointerEventData eventData)
+        private void LateUpdate()
         {
-            MovePos(eventData);
-
-            if (CalculateRectCorners())
-                _myRect.sizeDelta = _myRectSize * 1.4f;
-            else
-                _myRect.sizeDelta = _myRectSize;
+            if (liquid != null) liquid.FollowBag(_rect.anchoredPosition, Time.unscaledDeltaTime);
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        private bool CanUse(PointerEventData data) =>
+            !RaycastPaperView.IsReading && Time.timeScale > 0f && insertBloodAmount > 0f && heartModule.CanReceiveBloodPack &&
+            RectTransformUtility.RectangleContainsScreenPoint((RectTransform)heartModule.transform, data.position, data.pressEventCamera);
+
+        public void OnBeginDrag(PointerEventData data)
         {
-            if (!CalculateRectCorners()) return;
-            
-            if (inventory != null && !inventory.TryConsume(ItemId)) return;
-            heartModule.InsertBlood(insertBloodAmount);
-            _myRect.anchoredPosition = _homePosition;
-            _myRect.sizeDelta = _myRectSize;
-            if (inventory == null) gameObject.SetActive(false);
+            _dragging = data.button == PointerEventData.InputButton.Left && Time.timeScale > 0f && !RaycastPaperView.IsReading;
+            if (_dragging) _returnTween?.Kill();
         }
 
-        private void MovePos(PointerEventData eventData)
+        public void OnDrag(PointerEventData data)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    canvasRect, eventData.position, eventData.pressEventCamera, out Vector2 pos))
-                _myRect.anchoredPosition = pos;
+            if (!_dragging) return;
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRect, data.position, data.pressEventCamera, out var point))
+                _rect.position = point;
+            bool overHeart = CanUse(data);
+            if (_overHeart == overHeart) return;
+            _overHeart = overHeart;
+            _scaleTween?.Kill();
+            _scaleTween = _rect.DOScale(_normalScale * (_overHeart ? hoverScale : 1f), 0.10f).SetEase(Ease.OutQuad);
         }
-        
-        private bool CalculateRectCorners()
+
+        public void OnEndDrag(PointerEventData data)
         {
-            _myRect.GetWorldCorners(_myRectCorners);
-            _heartRect.GetWorldCorners(_heartRectCorners);
-            
-            Vector3 myRectMin = _myRectCorners[0];
-            Vector3 myRectMax = _myRectCorners[2];
+            if (!_dragging) return;
+            _dragging = _overHeart = false;
+            _scaleTween?.Kill();
+            _rect.localScale = _normalScale;
+            if (CanUse(data) && (inventory == null || inventory.TryConsume("blood-pack")))
+            {
+                heartModule.DistributeBlood(insertBloodAmount);
+                _rect.anchoredPosition = _home;
+                if (liquid != null) liquid.ResetMotion(_home);
+                if (inventory == null) gameObject.SetActive(false);
+                return;
+            }
+            _returnTween = _rect.DOAnchorPos(_home, 0.18f).SetEase(Ease.OutCubic).SetUpdate(true);
+        }
 
-            Vector3 heartRectMin = _heartRectCorners[0];
-            Vector3 heartRectMax = _heartRectCorners[2];
-
-            if (myRectMin.x > heartRectMax.x) return false;
-            if (myRectMin.y > heartRectMax.y) return false;
-            if (heartRectMin.x > myRectMax.x) return false;
-            if (heartRectMin.y > myRectMax.y) return false;
-            
-            return true;
+        private void OnDisable()
+        {
+            _returnTween?.Kill();
+            _scaleTween?.Kill();
+            _dragging = _overHeart = false;
+            if (_rect == null) return;
+            _rect.anchoredPosition = _home;
+            _rect.localScale = _normalScale;
         }
     }
 }

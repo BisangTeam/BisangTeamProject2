@@ -20,6 +20,12 @@ namespace Hyunwoo.Raycasting2D.Scripts
         private bool _hiddenPlayer;
         private bool _sawPlayerEnter;
 
+        public bool PlayerInSight => gameObject.activeInHierarchy && player != null &&
+            (!_hiddenPlayer || _sawPlayerEnter) && CanSeePosition(player.position);
+
+        public float DistanceToPlayer => gameObject.activeInHierarchy && player != null
+            ? Vector2.Distance(transform.position, player.position)
+            : float.PositiveInfinity;
 
         private NavMeshQueryFilter PathFilter => new NavMeshQueryFilter
         {

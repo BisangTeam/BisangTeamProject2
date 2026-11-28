@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Hyunwoo.CoreLib;
 using Hyunwoo.CoreLib.ModuleSystem;
 using UnityEngine;
@@ -20,10 +19,10 @@ namespace Hyunwoo.HumanBodySystem
         [SerializeField] private float defaultBloodGague;
 
         [Header("1회 혈액 소모량")]
-        [SerializeField] protected float reduceGauge = 1f;
+        [SerializeField, Min(0f)] protected float reduceGauge = 1f;
 
         [Header("혈액 소모 간격(초)")]
-        [SerializeField] protected float updateTime = 0.1f;
+        [SerializeField, Min(0.05f)] protected float updateTime = 0.1f;
         
         [Header("기관별 능력 단계 수 && 각 단계에 필요한 최소 혈액량")]
         [SerializeField] protected List<GaugeStruct> wantGaugeList; 
@@ -34,6 +33,12 @@ namespace Hyunwoo.HumanBodySystem
         protected ModuleOwner _owner;
         protected HeartModule _heartModule;
 
+        private float _elapsed;
+        private double _nextFlowPulse;
+        public bool ConnectedToHeart => _heartModule != null && _heartModule.IsConnected(this);
+        public event Action BloodSupplied;
+        protected virtual float DrainRateMultiplier => 1f;
+
         public void InsertBlood(float value)
         {
             BloodGauge += value;
@@ -41,38 +46,46 @@ namespace Hyunwoo.HumanBodySystem
 
         public void PullOut(float value, out float blood)
         {
-            blood = Mathf.Clamp(BloodGauge - value, 0, BloodGauge);
-            
-            BloodGauge = blood;
+            blood = Mathf.Clamp(value, 0f, BloodGauge);
+            BloodGauge -= blood;
         }
         
         private void Start()
         {
             if (gaugeUI != null) OnBloodGaugeChanged += RefreshGauge;
             BloodGauge = defaultBloodGague;
-            UpdateReduceGauge().Forget();
+            RefreshGauge();
         }
         
-        private async UniTask UpdateReduceGauge()
+        private void Update()
         {
-            ReduceGauge();
-            await UniTask.Delay((int)(updateTime * 1000), cancellationToken: destroyCancellationToken);
-            UpdateReduceGauge().Forget();
+            if (reduceGauge <= 0f) return;
+            float interval = Mathf.Max(0.05f, updateTime);
+            _elapsed += Time.deltaTime * DrainRateMultiplier;
+            int ticks = Mathf.FloorToInt(_elapsed / interval);
+            if (ticks == 0) return;
+            _elapsed -= ticks * interval;
+            BloodGauge -= ticks * reduceGauge;
         }
 
-        private void ReduceGauge()
+        private void RefreshGauge()
         {
-            BloodGauge -= reduceGauge;
+            if (gaugeUI != null) gaugeUI.Gauge = 100f * BloodGaugeRatio;
         }
 
-        private void RefreshGauge() => gaugeUI.Gauge = BloodGauge;
-
-        private void OnHandleFillGauge(float value)
+        internal void ReceiveFromHeart(float share, float pulseInterval)
         {
-            BloodGauge += value;
-            Debug.Log($"{gameObject.name}: Gauge: {BloodGauge}");
+            if (share <= 0f || BloodGauge >= Capacity) return;
+            BloodGauge += share;
+            // Continuous flow moves the gauge every frame. The vessel pulses once per interval.
+            if (pulseInterval > 0f)
+            {
+                if (Time.timeAsDouble < _nextFlowPulse) return;
+                _nextFlowPulse = Time.timeAsDouble + pulseInterval;
+            }
+            BloodSupplied?.Invoke();
         }
-        
+
         #region Implementation
         
         public void Work()
@@ -106,14 +119,18 @@ namespace Hyunwoo.HumanBodySystem
 
         public override void ConnectionBlood()
         {
-            _heartModule.OnHeartRate += OnHandleFillGauge;
-            _heartModule.ConnectCount++;
+            if (_heartModule != null) _heartModule.Connect(this);
         }
 
         public override void DisConnectionBlood()
         {
-            _heartModule.OnHeartRate -= OnHandleFillGauge;            
-            _heartModule.ConnectCount--;
+            if (_heartModule != null) _heartModule.Disconnect(this);
+            _nextFlowPulse = 0d;
+        }
+        protected virtual void OnDestroy()
+        {
+            DisConnectionBlood();
+            OnBloodGaugeChanged -= RefreshGauge;
         }
         #endregion
     }

@@ -52,7 +52,6 @@ namespace Hyunwoo.Save
                 if (wallMarks != null) wallMarks.Restore(level.marks);
             }
 
-            heart.BloodGauge = _data.heartBlood;
             foreach (AbstractViscera organ in _organs)
             {
                 int index = _data.organs.FindIndex(state => state.id == organ.GetType().Name);
@@ -98,7 +97,6 @@ namespace Hyunwoo.Save
             _data ??= new CheckpointData();
             _data.scenePath = path;
             _data.pointId = point.Id;
-            _data.heartBlood = heart.BloodGauge;
             foreach (AbstractViscera organ in _organs)
             {
                 string id = organ.GetType().Name;
