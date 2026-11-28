@@ -112,7 +112,7 @@ public class Heart : MonoBehaviour
         if (_dragged != null)
         {
             if (organ != null && !organ.HasVessel) organ.Attach(_dragged, _camera);
-            else _dragged.Retract(false);
+            else _dragged.Retract();
             _dragged = null;
         }
         else if (overHeart && organ == null)
@@ -147,7 +147,7 @@ public class Heart : MonoBehaviour
     {
         _lastHeartClick = double.NegativeInfinity;
         _heartPressMouse = null;
-        if (_dragged != null) _dragged.Retract(false);
+        if (_dragged != null) _dragged.Retract();
         _dragged = null;
     }
 }

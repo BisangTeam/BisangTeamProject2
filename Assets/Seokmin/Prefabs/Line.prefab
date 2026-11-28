@@ -65,7 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LineTest
   _isClick: 0
   _mousePos: {x: 0, y: 0, z: 0}
-  _damping: 0.55
+  _damping: 0.99
   _springStrength: 15
   _pointCount: 15
   _stiffness: 0.5
@@ -78,6 +78,10 @@ MonoBehaviour:
   _endPos: {x: 0, y: 0, z: 0}
   _isCon: 0
   _instSpeed: 0.01
+  _extensionDuration: 0.45
+  _settleDuration: 0.7
+  _retractDuration: 0.45
+  _motionBend: 0.12
 --- !u!120 &806759434721863356
 LineRenderer:
   serializedVersion: 3

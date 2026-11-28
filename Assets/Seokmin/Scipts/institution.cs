@@ -50,7 +50,7 @@ public class institution : MonoBehaviour
             if (!viscera.ConnectedToHeart)
             {
                 _nowLine = null;
-                line.Retract(false);
+                line.Retract();
                 return;
             }
             _pulse = line.GetComponent<BloodPulse>();
@@ -98,7 +98,7 @@ public class institution : MonoBehaviour
             if (_pulse != null) viscera.BloodSupplied -= _pulse.Play;
             viscera.DisConnectionBlood();
         }
-        if (_nowLine != null && _nowLine.isActiveAndEnabled) _nowLine.Retract(true);
+        if (_nowLine != null && _nowLine.isActiveAndEnabled) _nowLine.Retract();
         _isCon = false;
         _nowLine = null;
         _pulse = null;
