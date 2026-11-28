@@ -14,6 +14,7 @@ namespace Hyunwoo.BloodPack
         [SerializeField] private PlayerInventory inventory;
         [SerializeField] private RectTransform canvasRect;
         [SerializeField, Range(1f, 1.4f)] private float hoverScale = 1.1f;
+        [SerializeField] private BloodPackLiquid liquid;
 
         private RectTransform _rect;
         private Vector2 _home;
@@ -28,6 +29,16 @@ namespace Hyunwoo.BloodPack
             _rect = (RectTransform)transform;
             _home = _rect.anchoredPosition;
             _normalScale = _rect.localScale;
+        }
+
+        private void OnEnable()
+        {
+            if (liquid != null) liquid.ResetMotion(_rect.anchoredPosition);
+        }
+
+        private void LateUpdate()
+        {
+            if (liquid != null) liquid.FollowBag(_rect.anchoredPosition, Time.unscaledDeltaTime);
         }
 
         private bool CanUse(PointerEventData data) =>
@@ -62,6 +73,7 @@ namespace Hyunwoo.BloodPack
             {
                 heartModule.DistributeBlood(insertBloodAmount);
                 _rect.anchoredPosition = _home;
+                if (liquid != null) liquid.ResetMotion(_home);
                 if (inventory == null) gameObject.SetActive(false);
                 return;
             }

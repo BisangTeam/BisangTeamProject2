@@ -11,6 +11,10 @@ public class Heart : MonoBehaviour
     [SerializeField] private institution[] organs;
     private Camera _camera;
     private LineTest _dragged;
+    private Mouse _heartPressMouse;
+    private Vector2 _heartPressPoint;
+    private double _lastHeartClick = double.NegativeInfinity;
+    private const double DoubleClickSeconds = 0.3;
     private MedicalHover _heartHover;
     private MedicalHover _hovered;
     private readonly List<RaycastResult> _hits = new();
@@ -50,7 +54,7 @@ public class Heart : MonoBehaviour
 
     private void Update()
     {
-        var mouse = _dragged != null ? _dragged.DragMouse : Mouse.current;
+        var mouse = _heartPressMouse ?? Mouse.current;
         if (mouse == null || !mouse.added || RaycastPaperView.IsReading || Time.timeScale <= 0f)
         {
             SetHover(null);
@@ -62,23 +66,67 @@ public class Heart : MonoBehaviour
         var organ = OrganAt(point);
         bool overHeart = RectTransformUtility.RectangleContainsScreenPoint(_pos, point, _camera);
         SetHover(organ != null ? organ.Hover : overHeart ? _heartHover : null);
-        if (_dragged == null && mouse.leftButton.wasPressedThisFrame && !OverItem(point))
+        if (_heartPressMouse == null && mouse.leftButton.wasPressedThisFrame)
         {
-            if (organ != null) organ.IsRelease();
-            else if (overHeart)
+            if (OverItem(point))
             {
-                _dragged = insManager.Instance.GetLine();
-                if (_dragged != null)
-                {
-                    _dragged.gameObject.SetActive(true);
-                    _dragged.IsDrClick(insManager.Instance.GetBloodPoint(_camera, _pos), mouse);
-                }
+                _lastHeartClick = double.NegativeInfinity;
+                return;
+            }
+            if (organ == null && overHeart)
+            {
+                _heartPressMouse = mouse;
+                _heartPressPoint = point;
+            }
+            else
+            {
+                _lastHeartClick = double.NegativeInfinity;
+                if (organ == null) return;
+                if (organ.HasVessel) organ.IsRelease();
+                else organ.ConnectToHeart(_camera);
             }
         }
-        if (_dragged == null || mouse.leftButton.isPressed) return;
-        if (organ != null && !organ.Connected) organ.Attach(_dragged, _camera);
-        else _dragged.Retract(false);
-        _dragged = null;
+        if (_heartPressMouse != null)
+            UpdateHeartPress(point, organ, overHeart);
+    }
+
+    private void UpdateHeartPress(Vector2 point, institution organ, bool overHeart)
+    {
+        float dragThreshold = Mathf.Max(1f, InputSystem.settings.tapRadius);
+        if (_dragged == null && (point - _heartPressPoint).sqrMagnitude >= dragThreshold * dragThreshold)
+        {
+            _lastHeartClick = double.NegativeInfinity;
+            var manager = insManager.Instance;
+            _dragged = manager.GetLine();
+            if (_dragged == null)
+            {
+                _heartPressMouse = null;
+                return;
+            }
+            _dragged.gameObject.SetActive(true);
+            _dragged.IsDrClick(manager.GetBloodPoint(_camera, _pos), _heartPressMouse);
+        }
+
+        if (_heartPressMouse.leftButton.isPressed) return;
+        _heartPressMouse = null;
+        if (_dragged != null)
+        {
+            if (organ != null && !organ.HasVessel) organ.Attach(_dragged, _camera);
+            else _dragged.Retract(false);
+            _dragged = null;
+        }
+        else if (overHeart && organ == null)
+        {
+            double now = Time.unscaledTimeAsDouble;
+            if (now - _lastHeartClick <= DoubleClickSeconds)
+            {
+                foreach (var socket in organs)
+                    if (socket != null) socket.IsRelease();
+                _lastHeartClick = double.NegativeInfinity;
+            }
+            else _lastHeartClick = now;
+        }
+        else _lastHeartClick = double.NegativeInfinity;
     }
 
     private void SetHover(MedicalHover next)
@@ -97,6 +145,8 @@ public class Heart : MonoBehaviour
 
     private void CancelDrag()
     {
+        _lastHeartClick = double.NegativeInfinity;
+        _heartPressMouse = null;
         if (_dragged != null) _dragged.Retract(false);
         _dragged = null;
     }

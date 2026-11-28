@@ -5052,6 +5052,7 @@ MonoBehaviour:
     abillityValue: 3
   gaugeUI: {fileID: 1757432375}
   miniMap: {fileID: 1587534037}
+  miniMapDisplay: {fileID: 2081912239}
 --- !u!1 &713542954
 GameObject:
   m_ObjectHideFlags: 0
