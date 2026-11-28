@@ -10,6 +10,7 @@ namespace Hyunwoo.CoreLib
         
         public Vector2 MoveDir { get; private set; }
         public Vector2 TurnDir { get; private set; }
+        public bool SprintHeld { get; private set; }
 
         public void SetEnable()
         {
@@ -36,6 +37,11 @@ namespace Hyunwoo.CoreLib
         public void OnTurn(InputAction.CallbackContext context)
         {
             TurnDir = context.ReadValue<Vector2>();
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            SprintHeld = context.ReadValueAsButton();
         }
     }
 }
