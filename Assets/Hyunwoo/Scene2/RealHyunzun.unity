@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
-  m_Color: {r: 0.08, g: 0.08, b: 0.08, a: 0.88}
+  m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5523,6 +5523,7 @@ MonoBehaviour:
   gaugeUI: {fileID: 1757432375}
   miniMap: {fileID: 1587534037}
   miniMapDisplay: {fileID: 2081912239}
+  wantGauge: 0
 --- !u!1 &713542954
 GameObject:
   m_ObjectHideFlags: 0
@@ -6565,6 +6566,7 @@ MonoBehaviour:
   - needBloodGauge: 20
     abillityValue: 1
   gaugeUI: {fileID: 1287336105}
+  bloodPerMark: 5
 --- !u!1 &1163783274
 GameObject:
   m_ObjectHideFlags: 0
@@ -6634,7 +6636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
-  m_Color: {r: 0.08, g: 0.08, b: 0.08, a: 0.88}
+  m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7000,7 +7002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
-  m_Color: {r: 0.08, g: 0.08, b: 0.08, a: 0.88}
+  m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8125,7 +8127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
-  m_Color: {r: 0.08, g: 0.08, b: 0.08, a: 0.88}
+  m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8592,7 +8594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: ffa77f1d2eb260e49be3562ddaffeb14, type: 2}
-  m_Color: {r: 0.08, g: 0.08, b: 0.08, a: 0.88}
+  m_Color: {r: 0.27672952, g: 0.27672952, b: 0.27672952, a: 0.63529414}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8713,6 +8715,8 @@ MonoBehaviour:
     abillityValue: 4
   gaugeUI: {fileID: 1933349047}
   playerMove: {fileID: 4000000010}
+  sprintSpeedMultiplier: 1.7
+  sprintDrainMultiplier: 2
 --- !u!1 &1980975344
 GameObject:
   m_ObjectHideFlags: 0
@@ -12461,6 +12465,10 @@ MonoBehaviour:
   heart: {fileID: 1385264451}
   trailLength: 0.43
   peakHeightMultiplier: 2
+  startDistance: 6
+  fullEffectDistance: 1
+  closeTrailMultiplier: 0.4
+  closeHeightMultiplier: 1.5
 --- !u!1 &4811200000
 GameObject:
   m_ObjectHideFlags: 0
@@ -12526,6 +12534,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
+  deepColor: {r: 0.22352941, g: 0.03137255, b: 0.09803922, a: 1}
+  litColor: {r: 0.7254902, g: 0.15294118, b: 0.20392157, a: 1}
+  rimColor: {r: 0.9098039, g: 0.41960785, b: 0.36862746, a: 1}
   fillLevel: 0.79
   sloshHeight: 0.19
   damping: 9

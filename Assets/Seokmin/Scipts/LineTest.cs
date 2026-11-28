@@ -35,11 +35,19 @@ public class LineTest : MonoBehaviour
     [SerializeField, Range(0.01f, 1f)] private float _instSpeed;
     [SerializeField, Min(0.05f), Tooltip("클릭한 장기에 혈관 끝이 닿기까지 걸리는 시간(초)")]
     private float _extensionDuration = 0.45f;
+    [SerializeField, InspectorName("연결 후 흔들림 시간 (초)"), Min(0f)]
+    private float _settleDuration = 0.35f;
+    [SerializeField, InspectorName("심장으로 회수되는 시간 (초)"), Min(0.05f)]
+    private float _retractDuration = 0.45f;
+    [SerializeField, Range(0f, 0.25f), InspectorName("움직일 때 휘어짐"),
+     Tooltip("심장과 기관 사이 거리에 비례하는 연결 곡선과 회수 반동의 크기")]
+    private float _motionBend = 0.12f;
     private float _extensionElapsed;
-    private float _timer = 0f;
+    private float _settleRemaining;
+    private float _retractElapsed;
     private Vector3[] _releaseShape;
-    private float _releaseTime;
-    private bool _rebound;
+    private float[] _releaseDistances;
+    private Vector3 _releaseBend;
 
     private void Awake()
     {
@@ -51,96 +59,119 @@ public class LineTest : MonoBehaviour
         _cam = Camera.main;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (_isClick && DragMouse != null && DragMouse.added)
+        if (_isRest)
         {
-            _timer = 0f;
+            UpdateRetraction();
+            return;
+        }
+        if (_isCon)
+        {
+            if (_settleRemaining <= 0f || _points.Count < 2 || Time.deltaTime <= 0f) return;
+            SettleConnectedLine();
+        }
+        else if (_isClick && DragMouse != null && DragMouse.added)
+        {
             _mousePos = insManager.Instance.GetBloodPoint(_cam, DragMouse.position.ReadValue());
-            MoveTip(_mousePos);
+            PullTip(_mousePos);
         }
-        else if (_isRest && !_isCon)
-        {
-            _timer = 0f;
-            _releaseTime += Time.deltaTime;
-            const float duration = 0.32f;
-            float t = Mathf.Clamp01(_releaseTime / duration);
-            float length = 1f - Mathf.SmoothStep(0f, 1f, t);
-            if (_rebound) length += Mathf.Sin(t * Mathf.PI * 4f) * Mathf.Exp(-12f * t) * 0.09f;
-            for (int i = 1; i < _points.Count; i++)
-                _points[i]._pos = Vector3.LerpUnclamped(_startPos, _releaseShape[i], length);
-            if (t >= 1f)
-            {
-                _isRest = false;
-                gameObject.SetActive(false);
-            }
-        }
-        else if (_isCon)
-        {
-            MoveTip(_endPos);
-            _timer += Time.deltaTime;
-        }
+        Render();
     }
 
-    private void MoveTip(Vector3 tip)
+    private void SettleConnectedLine()
     {
         int last = _points.Count - 1;
-        if (last < 1) return;
-        Vector3 span = tip - _startPos;
-        float length = span.magnitude;
-        float spacing = length / last;
-        _restLength = _isCon
-            ? Mathf.MoveTowards(_restLength, spacing, _returnSpeed * Time.deltaTime)
-            : spacing;
-        _bendRestLength = _restLength * 2f;
-        _points[last]._pos = _points[last]._prePos = tip;
-        for (int i = 1; i < last; i++)
-            _points[i].ResetAcc();
-
-        SpringCon();
-        DistanceCon();
-        BendCon();
-        _points[last]._pos = tip;
-
-        Vector3 direction = length > 0f ? span / length : Vector3.zero;
+        float step = Mathf.Min(Time.deltaTime, _settleRemaining);
+        float damping = step / _settleRemaining;
+        _settleRemaining -= step;
         for (int i = 1; i < last; i++)
         {
             var point = _points[i];
-            point.Simulate();
-            float t = (float)i / last;
-            Vector3 centre = _startPos + span * t;
-            float maxBend = length * 0.5f * t * (1f - t);
-            // 각 점의 진행 방향 간격은 고정하고, 현재 위치와 이전 위치 모두 옆으로만 휘게 한다.
-            point._pos = KeepLateralBend(point._pos, centre, direction, maxBend);
-            point._prePos = KeepLateralBend(point._prePos, centre, direction, maxBend);
+            point._prePos = Vector3.Lerp(point._prePos, point._pos, damping);
         }
+        float spacing = Vector3.Distance(_endPos, _startPos) / last;
+        _restLength = Mathf.MoveTowards(_restLength, spacing, _returnSpeed * step);
+        _bendRestLength = _restLength * 2f;
+        ResetInteriorAcceleration();
+        SimulatePoints(last);
+        _points[last]._pos = _endPos;
     }
 
-    private static Vector3 KeepLateralBend(Vector3 position, Vector3 centre, Vector3 direction, float maxBend)
+    private void UpdateRetraction()
     {
-        Vector3 lateral = Vector3.ProjectOnPlane(position - centre, direction);
-        return centre + Vector3.ClampMagnitude(lateral, maxBend);
+        _retractElapsed += Time.deltaTime;
+        float t = Mathf.Clamp01(_retractElapsed / Mathf.Max(0.05f, _retractDuration));
+        float remaining = 1f - Mathf.SmoothStep(0f, 1f, t);
+        int segment = 1;
+        for (int i = 1; i < _points.Count; i++)
+        {
+            // 분리 직전 줄을 따라 심장 쪽으로 되감는다.
+            float distance = _releaseDistances[i] * remaining;
+            while (segment < i && _releaseDistances[segment] < distance) segment++;
+            float along = Mathf.InverseLerp(_releaseDistances[segment - 1], _releaseDistances[segment], distance);
+            Vector3 onLine = Vector3.Lerp(_releaseShape[segment - 1], _releaseShape[segment], along);
+
+            // 끝이 먼저 풀리고, 살짝 휘는 반동이 다음 마디로 전달된다.
+            float u = (float)i / (_points.Count - 1);
+            float delay = 0.2f * (1f - u);
+            float phase = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(delay, delay + 0.65f, t));
+            float recoil = Mathf.Sin(Mathf.PI * phase) * (1f - phase);
+            _points[i]._pos = onLine + _releaseBend * (u * recoil * remaining);
+        }
+        Render();
+        if (t < 1f) return;
+        _isRest = false;
+        gameObject.SetActive(false);
+    }
+
+    private void PullTip(Vector3 tip)
+    {
+        int last = _points.Count - 1;
+        if (last < 1) return;
+        _restLength = Vector3.Distance(tip, _startPos) / last;
+        _bendRestLength = _restLength * 2f;
+        _points[last]._pos = tip;
+        ResetInteriorAcceleration();
+        SimulatePoints(last);
+    }
+
+    private void ResetInteriorAcceleration()
+    {
+        for (int i = 1; i < _pointCount - 1; i++)
+            _points[i].ResetAcc();
+    }
+
+    private void SimulatePoints(int endExclusive)
+    {
+        SpringCon();
+        DistanceCon();
+        BendCon();
+        for (int i = 1; i < endExclusive; i++)
+            _points[i].Simulate();
     }
 
     public bool ExtendTowards(Vector3 target)
     {
         _extensionElapsed += Time.deltaTime;
         float t = Mathf.Clamp01(_extensionElapsed / Mathf.Max(0.05f, _extensionDuration));
-        float progress = Mathf.SmoothStep(0f, 1f, t);
+        float reach = Mathf.SmoothStep(0f, 1f, t);
         Vector3 travel = target - _startPos;
-        Vector3 sideways = Vector3.Cross(Vector3.forward, travel);
-        // 손으로 끌 때처럼 중간에서만 살짝 휘고 양 끝에서는 정확히 붙는다.
-        float bend = 0.24f * progress * (1f - progress);
-        MoveTip(_startPos + travel * progress + sideways * bend);
-        return t >= 1f;
-    }
-
-    private void LateUpdate()
-    {
-        if (_timer <= 5f)
+        Vector3 bend = Vector3.Cross(Vector3.forward, travel) * _motionBend;
+        int last = _points.Count - 1;
+        for (int i = 1; i <= last; i++)
         {
-            Render();
+            float u = (float)i / last;
+            // 끝이 먼저 나가고 가운데 마디는 잠시 뒤따라온다.
+            float along = u * reach * (1f - 0.4f * (1f - u) * (1f - reach));
+            float bow = 4f * along * (1f - along) * (1f - 0.55f * reach * reach);
+            var point = _points[i];
+            point._prePos = point._pos;
+            point._pos = _startPos + travel * along + bend * bow;
         }
+        if (last > 0)
+            _restLength = Vector3.Distance(_startPos, _points[last]._pos) / last;
+        return t >= 1f;
     }
 
     public void IsDrClick(Vector3 heartPos, Mouse mouse = null)
@@ -149,7 +180,6 @@ public class LineTest : MonoBehaviour
         _isClick = mouse != null;
         _isRest = false;
         _isCon = false;
-        _timer = 0f;
         _restLength = 0f;
         _extensionElapsed = 0f;
         _lR.positionCount = _pointCount;
@@ -199,24 +229,37 @@ public class LineTest : MonoBehaviour
     public void AttachTo(Vector3 endPos)
     {
         _endPos = endPos;
-        if (_points.Count > 1 && _points[_points.Count - 1]._pos != endPos)
-            MoveTip(endPos);
         _isRest = false;
         _isCon = true;
+        _settleRemaining = _settleDuration;
+        if (_points.Count > 1)
+        {
+            var tip = _points[_points.Count - 1];
+            tip._pos = tip._prePos = endPos;
+            Render();
+        }
         ReleasePointer();
     }
 
-    public void Retract(bool rebound)
+    public void Retract()
     {
         ReleasePointer();
         _isCon = false;
         _isRest = true;
-        _rebound = rebound;
-        _releaseTime = 0f;
+        _retractElapsed = 0f;
         if (_releaseShape == null || _releaseShape.Length != _points.Count)
+        {
             _releaseShape = new Vector3[_points.Count];
+            _releaseDistances = new float[_points.Count];
+        }
         for (int i = 0; i < _points.Count; i++)
+        {
             _releaseShape[i] = _points[i]._pos;
+            if (i > 0)
+                _releaseDistances[i] = _releaseDistances[i - 1] + Vector3.Distance(_releaseShape[i - 1], _releaseShape[i]);
+        }
+        if (_points.Count > 1)
+            _releaseBend = Vector3.Cross(Vector3.forward, _releaseShape[_points.Count - 1] - _startPos) * _motionBend;
         _lR.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 1f);
     }
 

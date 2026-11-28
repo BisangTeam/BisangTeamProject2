@@ -30,15 +30,20 @@ public class insManager : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < LineTest.Length; ++i)
+        for (int i = 0; i < LineTest.Length; i++)
         {
-            GameObject inst = Instantiate(_linePrefab, _bloodCav.transform);
-            inst.transform.position = Vector3.zero;
-            if (_bloodCamera != null)
-                inst.GetComponent<LineRenderer>().useWorldSpace = true;
-            inst.SetActive(false);
-            LineTest[i] = inst.GetComponent<LineTest>();
+            if (LineTest[i] == null) LineTest[i] = CreateLine();
         }
+    }
+
+    private LineTest CreateLine()
+    {
+        GameObject inst = Instantiate(_linePrefab, _bloodCav.transform);
+        inst.transform.position = Vector3.zero;
+        if (_bloodCamera != null)
+            inst.GetComponent<LineRenderer>().useWorldSpace = true;
+        inst.SetActive(false);
+        return inst.GetComponent<LineTest>();
     }
 
     public Vector3 GetBloodPoint(Camera inputCamera, Vector2 screenPoint)
@@ -77,25 +82,29 @@ public class insManager : MonoBehaviour
     public LineTest GetLine()
     {
         int available = -1;
+        int inUse = 0;
         for (int i = 0; i < LineTest.Length; i++)
         {
             var line = LineTest[i];
-            if (line == null || line._isCon || line._isClick) continue;
-            if (!line.gameObject.activeSelf)
+            if (line == null || !line.gameObject.activeSelf)
             {
-                available = i;
-                break;
+                if (available < 0) available = i;
             }
-            // 모든 혈관이 사용 중일 때만 회수 중인 선을 다시 꺼낸다.
-            if (available < 0 && line._isRest) available = i;
+            else if (!line._isRest) inUse++;
         }
 
-        if (available < 0) return null;
+        if (inUse >= InstCount) return null;
+        if (available < 0)
+        {
+            // 회수 중인 줄이 끝까지 보이도록 새 연결에는 별도 슬롯을 쓴다.
+            var pool = LineTest;
+            available = pool.Length;
+            System.Array.Resize(ref pool, available + 1);
+            LineTest = pool;
+        }
+        if (LineTest[available] == null) LineTest[available] = CreateLine();
         _nowLine = LineTest[available];
-        if (_nowLine.gameObject.activeSelf) _nowLine.gameObject.SetActive(false);
         _nowLine.nowCount = available;
         return _nowLine;
     }
-    
-    
 }
